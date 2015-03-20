@@ -8,7 +8,7 @@
     <parent>
         <groupId>com.telefonica.iot</groupId>
         <artifactId>paas-manager-server</artifactId>
-        <version>1.4.2-SNAPSHOT</version>
+        <version>1.4.2</version>
     </parent>
 
     <dependencies>
