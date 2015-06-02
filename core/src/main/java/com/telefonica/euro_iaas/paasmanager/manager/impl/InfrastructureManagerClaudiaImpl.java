@@ -391,7 +391,7 @@ public class InfrastructureManagerClaudiaImpl implements InfrastructureManager {
             if (networkInstanceManager.exists(data, networkInst, tier.getRegion())) {
                 log.info("the network inst " + networkInst.getNetworkName() + " already exists");
                 networkInst = networkInstanceManager
-                        .load(networkInst.getNetworkName(), data.getVdc(), tier.getRegion());
+                        .load(networkInst.getNetworkName(), data, tier.getRegion());
             } else {
                 try {
                     log.info("the network inst " + networkInst.getNetworkName() + " do not exists");

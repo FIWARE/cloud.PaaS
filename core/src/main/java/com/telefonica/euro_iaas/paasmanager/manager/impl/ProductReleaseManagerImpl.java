@@ -118,6 +118,7 @@ public class ProductReleaseManagerImpl implements ProductReleaseManager {
                         newAttribute.setKey(attribute.getKey());
                         newAttribute.setValue(attribute.getValue());
                         newAttribute.setDescription(attribute.getDescription());
+                        newAttribute.setType(attribute.getType());
                         newAttribute = attributeDao.create(newAttribute);
                         productRelease.addAttribute(newAttribute);
                     }

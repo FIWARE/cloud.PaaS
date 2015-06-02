@@ -27,6 +27,7 @@ package com.telefonica.euro_iaas.paasmanager.claudia.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.telefonica.fiware.commons.openstack.auth.OpenStackAccess;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -513,18 +514,19 @@ public class OpenstackNetworkClientImpl implements NetworkClient {
      * @return
      */
     public String getNetworkId (ClaudiaData claudiaData, NetworkInstance network, String region)  {
+        String networkId = null;
         try {
             List<NetworkInstance> loadAllNetworks = this.loadAllNetwork(claudiaData, region);
             for (NetworkInstance net : loadAllNetworks) {
                 if (net.getNetworkName().equals(network.getNetworkName()) &&
-                    net.getTenantId().equals(claudiaData.getVdc())) {
-                    return net.getIdNetwork();
+                    (net.getShared() || net.getTenantId().equals(claudiaData.getVdc()))) {
+                    networkId = net.getIdNetwork();
                 }
             }
         } catch (InfrastructureException e) {
-            return null;
+            return networkId;
         }
-        return null;
+        return networkId;
     }
 
     /**

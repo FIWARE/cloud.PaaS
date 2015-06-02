@@ -57,17 +57,22 @@ public class OpenStackConfigUtilImplTest {
 
     private OpenStackRegion openStackRegion;
 
-    String CONTENT_NETWORKS = "{ " + "\"networks\": [ " + "{ " + "\"status\": \"ACTIVE\", " + "\"subnets\": [ "
-            + "\"81f10269-e0a2-46b0-9583-2c83aa4cc76f\" " + " ], " + "\"name\": \"jesuspg-net\", "
-            + "\"provider:physical_network\": null, " + "\"admin_state_up\": true, "
-            + "\"tenant_id\": \"67c979f51c5b4e89b85c1f876bdffe31\", " + "\"router:external\": false, "
-            + "\"shared\": false, " + "\"id\": \"047e6dd3-3101-434e-af1e-eea571ab57a4\", "
-            + "\"provider:segmentation_id\": 29 " + "}, " + "{ " + "\"status\": \"ACTIVE\", " + "\"subnets\": [ "
-            + "\"e2d10e6b-33c3-400c-88d6-f905d4cd02f2\" " + " ], " + "\"name\": \"ext-net\", "
-            + "\"provider:physical_network\": null, " + "\"admin_state_up\": true, "
-            + "\"tenant_id\": \"08bed031f6c54c9d9b35b42aa06b51c0\", " + "\"router:external\": true, "
-            + "\"shared\": false, " + "\"id\": \"080b5f2a-668f-45e0-be23-361c3a7d11d0\", "
-            + "\"provider:segmentation_id\": 1 " + "} ]} ";
+    String CONTENT_NETWORKS = "{\"networks\": [{\"status\": \"ACTIVE\", \"subnets\":" +
+        " [\"f948cae1-fec2-4afe-bde6-337ebf7ca522\"], \"name\": \"federation-ext-net-01\", " +
+        "\"provider:physical_network\": \"phy-ex-2\", \"admin_state_up\": true, \"tenant_id\": " +
+        "\"0ccaf1d0ed9e4b19bf4aba6e0f1e4d6f\", \"provider:network_type\": \"flat\", \"router:external\": " +
+        "true, \"shared\": false, \"id\": \"2514b343-1913-41e4-9744-fbe34a446548\", " +
+        "\"provider:segmentation_id\": null}, {\"status\": \"ACTIVE\", \"subnets\": " +
+        "[\"074437be-4a13-42f7-bab9-f488ea7f9395\"], \"name\": \"public-ext-net-01\", " +
+        "\"provider:physical_network\": \"phy-ex\", \"admin_state_up\": true, \"tenant_id\":" +
+        " \"0ccaf1d0ed9e4b19bf4aba6e0f1e4d6f\", \"provider:network_type\": \"flat\", " +
+        "\"router:external\": true, \"shared\": false, \"id\": \"83c3d979-4a43-4ce3-ac39-ef7bfb0b89e5\"," +
+        " \"provider:segmentation_id\": null}, {\"status\": \"ACTIVE\", " +
+        "\"subnets\": [\"3b1d048c-aa96-47bb-9449-383021324e68\"], \"name\": \"public-ext-net-02\"," +
+        " \"provider:physical_network\": \"phy-ex-3\", \"admin_state_up\": true, \"tenant_id\": " +
+        "\"0ccaf1d0ed9e4b19bf4aba6e0f1e4d6f\", \"provider:network_type\": \"flat\", \"router:external\":" +
+        " true, \"shared\": false, \"id\": \"c3eb6a02-571b-4510-84af-d1ff82bc015a\", " +
+        "\"provider:segmentation_id\": null}]}";
 
     String ROUTER = " { " + "\"routers\": [ {" + "\"status\": \"ACTIVE\", " + " \"external_gateway_info\": { "
             + " \"network_id\": \"080b5f2a-668f-45e0-be23-361c3a7d11d0\" " + " }, " + " \"name\": \"test-rt1\", "
@@ -151,7 +156,7 @@ public class OpenStackConfigUtilImplTest {
 
         // then
         assertNotNull(net);
-        assertEquals(net, "080b5f2a-668f-45e0-be23-361c3a7d11d0");
+        assertEquals(net, "83c3d979-4a43-4ce3-ac39-ef7bfb0b89e5");
     }
 
     @Test
@@ -170,9 +175,10 @@ public class OpenStackConfigUtilImplTest {
 
         // then
         assertNotNull(net);
-        assertEquals(net, "ext-net");
+        assertEquals(net, "public-ext-net-01");
 
     }
+
 
     @Test
     public void shouldObtainPublicRouter() throws OpenStackException, IOException {

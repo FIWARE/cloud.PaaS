@@ -51,6 +51,7 @@ import com.telefonica.euro_iaas.paasmanager.installator.sdc.util.SDCClient;
 import com.telefonica.euro_iaas.paasmanager.installator.sdc.util.SDCUtil;
 import com.telefonica.euro_iaas.paasmanager.model.ClaudiaData;
 import com.telefonica.euro_iaas.paasmanager.model.Metadata;
+import com.telefonica.euro_iaas.paasmanager.model.Attribute;
 import com.telefonica.euro_iaas.paasmanager.model.ProductRelease;
 import com.telefonica.fiware.commons.util.PoolHttpClient;
 import com.telefonica.euro_iaas.sdc.client.exception.ResourceNotFoundException;
@@ -113,6 +114,14 @@ public class ProductReleaseSdcDaoImpl implements ProductReleaseSdcDao {
                 metadata.setValue(sdcMetadata.getValue());
                 metadata.setDescription(sdcMetadata.getDescription());
                 p.addMetadata(metadata);
+            }
+            for (com.telefonica.euro_iaas.sdc.model.Attribute att : prod.getProduct().getAttributes()) {
+                Attribute attribute = new Attribute();
+                attribute.setKey(att.getKey());
+                attribute.setValue(att.getValue());
+                attribute.setType(att.getType());
+                attribute.setDescription(att.getDescription());
+                p.addAttribute(attribute);
             }
 
         } catch (OpenStackException e) {

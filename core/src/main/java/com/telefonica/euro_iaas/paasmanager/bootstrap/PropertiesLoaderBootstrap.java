@@ -35,9 +35,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import com.telefonica.euro_iaas.commons.properties.PropertiesProvider;
-import com.telefonica.euro_iaas.commons.properties.impl.PropertiesProviderFactoryImpl;
 import com.telefonica.euro_iaas.paasmanager.exception.PaasManagerServerRuntimeException;
+import com.telefonica.fiware.commons.properties.PropertiesProvider;
+import com.telefonica.fiware.commons.properties.impl.PropertiesProviderFactoryImpl;
 
 /**
  * Class in charge to persist the system properties in data base on bootstrap time.

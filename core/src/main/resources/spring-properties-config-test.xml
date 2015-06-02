@@ -6,11 +6,11 @@
        default-autowire="no">
 
     <bean id="propertiesDAO"
-          class="com.telefonica.euro_iaas.commons.properties.impl.PropertiesDAOJPAImpl">
+          class="com.telefonica.fiware.commons.properties.impl.PropertiesDAOJPAImpl">
     </bean>
 
     <bean id="propertiesProvider"
-          class="com.telefonica.euro_iaas.commons.properties.impl.PropertiesProviderImpl">
+          class="com.telefonica.fiware.commons.properties.impl.PropertiesProviderImpl">
         <constructor-arg index="0" ref="propertiesDAO"/>
     </bean>
 

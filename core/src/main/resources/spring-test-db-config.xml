@@ -23,7 +23,7 @@
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="packagesToScan"
-                  value="com.telefonica.euro_iaas.paasmanager.model, com.telefonica.euro_iaas.commons.properties"/>
+                  value="com.telefonica.euro_iaas.paasmanager.model, com.telefonica.fiware.commons.properties"/>
         <property name="jpaVendorAdapter">
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
                 <property name="database" value="HSQL"/>

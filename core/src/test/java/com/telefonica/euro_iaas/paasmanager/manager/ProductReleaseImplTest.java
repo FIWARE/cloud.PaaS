@@ -111,4 +111,14 @@ public class ProductReleaseImplTest extends TestCase {
         
     }
 
+    @Test
+    public void testLoadProductReleaseAttributeType() throws EntityNotFoundException, AlreadyExistsEntityException, InvalidEntityException {
+        ProductRelease productRelease2 = new ProductRelease("product", "2.0");
+        productRelease2.addAttribute(new Attribute("openports", "8080", "des", "type"));
+        when(productReleaseDao.load(any(String.class))).thenReturn(productRelease2);
+        productRelease2 = productReleaseManager.load("product", "2.0");
+        assertEquals(productRelease2.getName(), "product-2.0");
+        assertEquals(productRelease2.getAttribute("openports").getType(), "type");
+    }
+
 }

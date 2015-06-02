@@ -5,14 +5,14 @@
     <artifactId>paas-manager-server</artifactId>
     <packaging>pom</packaging>
     <name>Pegasus - PaaS Manager</name>
-    <version>1.6.0</version>
+    <version>1.7.0</version>
     <properties>
 
         <!-- TDigital PROPERTIES -->
         <!-- This properties will be added to sonar as manual measures -->
         <product.area.name>Industrial IoT</product.area.name>
         <product.name>FIWARE</product.name>
-        <product.release>4.3.1</product.release>
+        <product.release>4.3.2</product.release>
 
         <repoName>fiware-paas</repoName>
 
@@ -222,12 +222,7 @@
             <dependency>
                 <groupId>com.telefonica.iot</groupId>
                 <artifactId>commons</artifactId>
-                <version>2.0.0</version>
-            </dependency>
-            <dependency>
-                <groupId>com.telefonica.euro_iaas</groupId>
-                <artifactId>commons-properties</artifactId>
-                <version>1.2.1-SNAPSHOT</version>
+                <version>2.1.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -310,15 +305,10 @@
                     <!-- aggregated reports for multi-module projects -->
                     <aggregate>true</aggregate>
                     <instrumentation>
-                        <ignores>
-                            <ignore>org.openstack.docs.common.api.v1.*</ignore>
-                        </ignores>
                         <excludes>
                             <exclude>**/*Test*.class</exclude>
                             <exclude>**/model/**.class</exclude>
                             <exclude>**/bean/**.class</exclude>
-                            <exclude>org/openstack/**/*</exclude>
-                            <exclude>org/w3/**/*</exclude>
                         </excludes>
                     </instrumentation>
                 </configuration>

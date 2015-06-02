@@ -27,7 +27,10 @@ package com.telefonica.euro_iaas.paasmanager.claudia.impl;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.net.URI;
+import java.net.URISyntaxException;
 
+import com.telefonica.fiware.commons.openstack.auth.OpenStackAccess;
 import net.sf.json.JSONArray;
 
 import org.apache.commons.codec.binary.Base64;
@@ -187,7 +190,7 @@ public class ClaudiaClientOpenStackImpl implements ClaudiaClient {
         String file = null;
         String hostname = tierInstance.getVM().getHostname();
         String chefServerUrl;
-        String puppetUrl;
+        String puppetHostname;
         try {
             file = fileUtils.readFile(systemPropertiesProvider.getProperty("user_data_path"));
             log.debug("File userdata read");
@@ -205,8 +208,8 @@ public class ClaudiaClientOpenStackImpl implements ClaudiaClient {
         }
 
         try {
-            puppetUrl = openStackRegion.getPuppetMasterEndPoint(tierInstance.getTier().getRegion());
-
+            String puppetUrl = openStackRegion.getPuppetMasterEndPoint(tierInstance.getTier().getRegion());
+            puppetHostname = this.getPuppetMasterHostname(puppetUrl);
         } catch (Exception e1) {
             log.warn("Error to obtain the puppetmaster url" + e1.getMessage());
             return file;
@@ -222,9 +225,30 @@ public class ClaudiaClientOpenStackImpl implements ClaudiaClient {
 
         file = file.replace("{node_name}", hostname).replace("{server_url}", chefServerUrl)
                 .replace("{validation_key}", chefValidationKey).replace("{networks}", writeInterfaces(tierInstance))
-                .replace("{if_up}", generateIfUp(tierInstance)).replace("{puppet_master}", puppetUrl);
+                .replace("{if_up}", generateIfUp(tierInstance)).replace("{puppet_master}", puppetHostname);
         log.debug("payload " + file);
         return file;
+
+    }
+
+
+    /**
+     * It obtains the puppet master hostname, required for user data.
+     * @param puppetMasterUrl
+     * @return
+     */
+    public String getPuppetMasterHostname (String puppetMasterUrl){
+        String host;
+        try{
+            URI uri = new URI(puppetMasterUrl); // may throw URISyntaxException
+            host = uri.getHost();
+            if (host == null) {
+                host = puppetMasterUrl;
+            }
+        } catch (URISyntaxException ex) {
+            host = puppetMasterUrl;
+        }
+        return host;
 
     }
 
@@ -285,63 +309,38 @@ public class ClaudiaClientOpenStackImpl implements ClaudiaClient {
             return;
 
         }
-        List<NetworkInstance> networkNoSharedInstances = loadNotSharedNetworksUser(networkInstances,
-                claudiaData.getVdc(), region);
-        if (networkNoSharedInstances.isEmpty()) {
-            log.debug("There is not any network associated to the user");
-            Network net = new Network(claudiaData.getUser().getTenantName(), vdc, region);
-            SubNetwork subNet = new SubNetwork("default" + vdc, vdc, region);
-            net.addSubNet(subNet);
-            NetworkInstance netinstance = net.toNetworkInstance();
-            NetworkInstance networkInstance = networkInstanceManager.create(claudiaData, netinstance, region);
-            networkInstance.setDefaultNet(true);
-            tierInstance.addNetworkInstance(networkInstance);
-            tierInstanceManager.update(tierInstance);
-        } else {
-            log.debug("Getting the default network ");
-            NetworkInstance defaulNet = getDefaultNetwork(networkNoSharedInstances, vdc);
-            if (defaulNet == null) {
+
+        log.debug("Getting the default network ");
+        NetworkInstance networkInstance = getDefaultNetwork(networkInstances, claudiaData, region);
+        if (networkInstance == null) {
+            List<NetworkInstance> userNetworks = getUserNetworks(networkInstances, claudiaData, region);
+            if (userNetworks.isEmpty())
+            {
+                log.debug("There is not any network associated to the user");
+                Network net = new Network(claudiaData.getUser().getTenantName(), vdc, region);
+                SubNetwork subNet = new SubNetwork("default" + vdc, vdc, region);
+                net.addSubNet(subNet);
+                NetworkInstance netinstance = net.toNetworkInstance();
+                networkInstance = networkInstanceManager.create(claudiaData, netinstance, region);
+                networkInstance.setDefaultNet(true);
+            } else {
                 log.debug("There is not a default network. Getting the first one");
-                tierInstance.addNetworkInstance(getFirstNetwork(networkNoSharedInstances, vdc, region));
-                tierInstanceManager.update(tierInstance);
-            }
-
-        }
-    }
-
-    private NetworkInstance getFirstNetwork(List<NetworkInstance> lNetworkInstance, String vdc, String region)
-            throws InvalidEntityException {
-        NetworkInstance netInstance = null;
-        try {
-            netInstance = networkInstanceManager.load(lNetworkInstance.get(0).getNetworkName(), vdc, region);
-        } catch (EntityNotFoundException e) {
-            try {
-                netInstance = networkInstanceManager.createInDB(lNetworkInstance.get(0));
-            } catch (Exception e1) {
-                throw new InvalidEntityException("It is not possible to create in DB the network "
-                        + lNetworkInstance.get(0).getNetworkName());
+                networkInstance = getFirstNetwork(userNetworks, claudiaData, region);
             }
         }
-        return netInstance;
+
+        tierInstance.addNetworkInstance(networkInstance);
+        tierInstanceManager.update(tierInstance);
     }
 
-    private NetworkInstance getDefaultNetwork(List<NetworkInstance> networkInstances, String vdc)
-            throws EntityNotFoundException {
-        for (NetworkInstance net : networkInstances) {
-            if (net.isDefaultNet()) {
-                return net;
-            }
-        }
-        return null;
-    }
+    private List<NetworkInstance> getUserNetworks(List<NetworkInstance> networks, ClaudiaData data,
+                                                           String region) throws InfrastructureException {
 
-    private List<NetworkInstance> loadNotSharedNetworksUser(List<NetworkInstance> networks, String tenantId,
-            String region) throws InfrastructureException {
-        List<NetworkInstance> networksNotShared = new ArrayList<NetworkInstance>();
+        List<NetworkInstance> tenantNetworks = new ArrayList<NetworkInstance>();
         for (NetworkInstance net : networks) {
-            if (!net.getShared() && net.getTenantId().equals(tenantId)) {
+            if ( net.getTenantId().equals(data.getVdc())) {
                 try {
-                    networksNotShared.add(loadNetworkInstance(net, tenantId, region));
+                    tenantNetworks.add(loadNetworkInstance(net, data, region));
                 } catch (Exception e) {
                     log.error("The network " + net.getNetworkName() + " cannot be added");
 
@@ -349,13 +348,56 @@ public class ClaudiaClientOpenStackImpl implements ClaudiaClient {
 
             }
         }
-        return networksNotShared;
+        return tenantNetworks;
     }
 
-    private NetworkInstance loadNetworkInstance(NetworkInstance networkInstance, String tenantId, String region)
+    private NetworkInstance getFirstNetwork(List<NetworkInstance> lNetworkInstance, ClaudiaData data, String region)
+            throws InvalidEntityException {
+        return getNetworkInstance(lNetworkInstance.get(0), data.getVdc(), data, region);
+    }
+
+    private NetworkInstance getNetworkInstance (NetworkInstance net, String vdc, ClaudiaData data, String region)
+        throws InvalidEntityException {
+        NetworkInstance netInstance = null;
+        try {
+            netInstance = networkInstanceManager.load(net.getNetworkName(), data, region);
+        } catch (EntityNotFoundException e) {
+            try {
+                netInstance = networkInstanceManager.createInBD(data, net, region);
+            } catch (Exception e1) {
+                throw new InvalidEntityException("It is not possible to create in DB the network "
+                    + net.getNetworkName());
+            }
+        }
+        return netInstance;
+
+    }
+
+    private NetworkInstance getDefaultNetwork(List<NetworkInstance> networkInstances, ClaudiaData data, String region)
+        throws InvalidEntityException {
+        for (NetworkInstance net : networkInstances) {
+            if (net.getShared()) {
+                net.setDefaultNet(true);
+                return getNetworkInstance(net, getAdminTenantId(data), data, region);
+            }
+        }
+        return null;
+    }
+
+    private String getAdminTenantId (ClaudiaData data) {
+        try {
+            OpenStackAccess openStackAccess = openStackRegion.getTokenAdmin();
+            return openStackAccess.getTenantId();
+        } catch (Exception e) {
+            return null;
+
+        }
+    }
+
+    private NetworkInstance loadNetworkInstance(NetworkInstance networkInstance, ClaudiaData data, String region)
             throws InvalidEntityException, AlreadyExistsEntityException {
         try {
-            networkInstance = networkInstanceManager.load(networkInstance.getNetworkName(), tenantId, region);
+            networkInstance = networkInstanceManager.load(networkInstance.getNetworkName(), data, region);
             // check if it exists in Openstack
         } catch (Exception e) {
             log.warn("The network " + networkInstance.getNetworkName() + " is in Openstack but not in DB");
@@ -605,24 +647,34 @@ public class ClaudiaClientOpenStackImpl implements ClaudiaClient {
         return null;  // To change body of implemented methods use File | Settings | File Templates.
     }
 
+    /**
+     * It undeploys a VM
+     * @param claudiaData
+     * @param tierInstance
+     * @throws InfrastructureException
+     */
     public void undeployVMReplica(ClaudiaData claudiaData, TierInstance tierInstance) throws InfrastructureException {
         log.debug("Undeploy VM replica " + tierInstance.getName() + " for region " + tierInstance.getTier().getRegion()
-                + " and user " + tierInstance.getTier().getVdc());
+            + " and user " + tierInstance.getTier().getVdc());
         try {
-
+            OpenStackAccess openStackAccess = openStackRegion.getTokenAdmin();
             String region = tierInstance.getTier().getRegion();
-            String token = claudiaData.getUser().getToken();
-            String vdc = tierInstance.getTier().getVdc();
+            String tenantAdminId =  openStackAccess.getTenantId();
+            String tokenAdminId =  openStackAccess.getToken();
+            log.debug("tenantId " + tenantAdminId );
+            log.debug("token " + tokenAdminId);
 
-            openStackUtil.deleteServer(tierInstance.getVM().getVmid(), region, token, vdc);
+            openStackUtil.deleteServer(tierInstance.getVM().getVmid(), region,
+                tokenAdminId, tenantAdminId);
 
             checkDeleteServerTaskStatus(tierInstance, claudiaData);
             log.debug("Undeployed VM replica " + tierInstance.getName() + " for region "
-                    + tierInstance.getTier().getRegion() + " and user " + tierInstance.getTier().getVdc());
+                + region + " and user " + tierInstance.getTier().getVdc());
 
             if (tierInstance.getTier().getFloatingip().equals("true")) {
                 log.debug("Delete floating ip ");
-                openStackUtil.disAllocateFloatingIP(region, token, vdc, tierInstance.getVM().getFloatingIp());
+                openStackUtil.disAllocateFloatingIP(region, tokenAdminId, tenantAdminId,
+                    tierInstance.getVM().getFloatingIp());
             }
 
         } catch (OpenStackException oes) {

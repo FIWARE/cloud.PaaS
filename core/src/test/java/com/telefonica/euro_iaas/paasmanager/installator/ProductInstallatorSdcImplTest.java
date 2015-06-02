@@ -368,4 +368,26 @@ public class ProductInstallatorSdcImplTest {
         assertEquals("111.111.111.111,222.222.222.222", newAtt.getValue());
 
     }
+
+    @Test
+    public void testResolveMacroDefaultValue() {
+        ProductInstallatorSdcImpl installator = new ProductInstallatorSdcImpl();
+        com.telefonica.euro_iaas.sdc.model.Attribute att = new com.telefonica.euro_iaas.sdc.model.Attribute("key",
+            "default", "desc", "IP");
+        com.telefonica.euro_iaas.sdc.model.Attribute newAtt = installator.resolveAttributeTypeValue(att, tierInstance,
+            environmentInstance);
+        assertEquals("default", newAtt.getValue());
+
+    }
+
+    @Test
+    public void testResolveMacroWrongValue() {
+        ProductInstallatorSdcImpl installator = new ProductInstallatorSdcImpl();
+        com.telefonica.euro_iaas.sdc.model.Attribute att = new com.telefonica.euro_iaas.sdc.model.Attribute("key",
+            "IP(wrong", "desc", "IP");
+        com.telefonica.euro_iaas.sdc.model.Attribute newAtt = installator.resolveAttributeTypeValue(att, tierInstance,
+            environmentInstance);
+        assertEquals("IP(wrong", newAtt.getValue());
+
+    }
 }

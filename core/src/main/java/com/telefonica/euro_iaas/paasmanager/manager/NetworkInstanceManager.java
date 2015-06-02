@@ -89,6 +89,18 @@ public interface NetworkInstanceManager {
         throws InvalidEntityException, AlreadyExistsEntityException;
 
     /**
+     * It creates the network in DB.
+     * @param data
+     * @param netInstance
+     * @param region
+     * @return
+     */
+    NetworkInstance createInBD (ClaudiaData data,
+                                NetworkInstance netInstance,
+                                String region) throws EntityNotFoundException,
+        AlreadyExistsEntityException, InvalidEntityException;
+
+    /**
      * Retrieve all Network created in the system.
      * @return the existent networks.
      **/
@@ -98,7 +110,7 @@ public interface NetworkInstanceManager {
      * Load the network.
      * @return the network.
      */
-    NetworkInstance load(String networkName, String vdc, String region)
+    NetworkInstance load(String networkName, ClaudiaData data, String region)
         throws EntityNotFoundException;
 
     /**

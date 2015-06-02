@@ -209,32 +209,35 @@ public class ProductInstallatorSdcImpl implements ProductInstallator {
         newAtt.setDescription(attribute.getDescription());
         newAtt.setKey(attribute.getKey());
         newAtt.setType(attribute.getType());
+        newAtt.setValue(attribute.getValue());
 
-        String name = extractTierNameFromMacro(attribute);
+        if (attribute.getValue().contains("(") && attribute.getValue().contains(")")) {
 
-        String compoundName;
+            String name = extractTierNameFromMacro(attribute);
+            String compoundName;
 
-        if (TYPE_IP.equals(attribute.getType())) {
-            compoundName = infrastructureManager.generateVMName(environmentInstance.getBlueprintName(), name, 1,
-                    environmentInstance.getVdc());
-            for (TierInstance ti : environmentInstance.getTierInstances()) {
-                if (ti.getName().equals(compoundName)) {
-                    newAtt.setValue(ti.getVM().getIp());
+            if (TYPE_IP.equals(attribute.getType())) {
+                compoundName = infrastructureManager.generateVMName(environmentInstance.getBlueprintName(),
+                    name, 1, environmentInstance.getVdc());
+                for (TierInstance ti : environmentInstance.getTierInstances()) {
+                    if (ti.getName().equals(compoundName)) {
+                        newAtt.setValue(ti.getVM().getIp());
+                    }
                 }
-            }
-        } else if (TYPE_IPALL.equals(attribute.getType())) {
-            String ips = "";
-            for (TierInstance ti : environmentInstance.getTierInstances()) {
-                compoundName = infrastructureManager.generateVMName(environmentInstance.getBlueprintName(), name,
+            } else if (TYPE_IPALL.equals(attribute.getType())) {
+                String ips = "";
+                for (TierInstance ti : environmentInstance.getTierInstances()) {
+                    compoundName = infrastructureManager.generateVMName(environmentInstance.getBlueprintName(), name,
                         ti.getNumberReplica(), environmentInstance.getVdc());
-                if (ti.getName().equals(compoundName)) {
-                    ips = ips + ti.getVM().getIp() + ",";
+                    if (ti.getName().equals(compoundName)) {
+                        ips = ips + ti.getVM().getIp() + ",";
+                    }
                 }
+                ips = ips.substring(0, ips.length() - 1);
+                newAtt.setValue(ips);
+            } else {
+                newAtt.setValue(attribute.getValue());
             }
-            ips = ips.substring(0, ips.length() - 1);
-            newAtt.setValue(ips);
-        } else {
-            newAtt.setValue(attribute.getValue());
         }
 
         return newAtt;
@@ -243,9 +246,12 @@ public class ProductInstallatorSdcImpl implements ProductInstallator {
     private String extractTierNameFromMacro(com.telefonica.euro_iaas.sdc.model.Attribute attribute) {
 
         String name = "";
+        String value = attribute.getValue();
         if (TYPE_IP.equals(attribute.getType()) || TYPE_IPALL.equals(attribute.getType())) {
-            name = attribute.getValue().substring(attribute.getValue().indexOf("(") + 1,
-                    attribute.getValue().indexOf(")"));
+            if (value.indexOf("(") != -1 && value.indexOf(")") != -1) {
+                name = value.substring(value.indexOf("(") + 1,
+                    value.indexOf(")"));
+            }
         }
         return name;
     }

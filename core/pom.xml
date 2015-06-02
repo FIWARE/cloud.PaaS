@@ -8,7 +8,7 @@
     <parent>
         <groupId>com.telefonica.iot</groupId>
         <artifactId>paas-manager-server</artifactId>
-        <version>1.6.0</version>
+        <version>1.7.0</version>
     </parent>
 
 
@@ -58,28 +58,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.telefonica.claudia</groupId>
-            <artifactId>claudia-client</artifactId>
-            <version>0.3.33</version>
-        </dependency>
-
-        <!-- Claudia TCloud-schemas needed or RECManager -->
-        <!--  <dependency>
-              <groupId>com.telefonica.claudia</groupId>
-              <artifactId>ovf-generated-schemas</artifactId>
-              <version>0.3.33</version>
-              <scope>compile</scope>
-              <type>jar</type>
-          </dependency>
-          <dependency>
-              <groupId>com.telefonica.claudia</groupId>
-              <artifactId>ovf-utils</artifactId>
-              <version>0.3.33</version>
-              <scope>compile</scope>
-              <type>ejb</type>
-          </dependency>
-         -->
-        <dependency>
             <groupId>com.telefonica.iot</groupId>
             <artifactId>sdc-client</artifactId>
             <version>2.6.0</version>
@@ -98,16 +76,6 @@
         <dependency>
             <groupId>com.telefonica.iot</groupId>
             <artifactId>commons</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.telefonica.euro_iaas</groupId>
-            <artifactId>commons-properties</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>persistence-api</artifactId>
-                    <groupId>javax.persistence</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
 

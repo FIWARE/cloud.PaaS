@@ -268,7 +268,7 @@ public class InfrastructureManagerClaudiaImplTest {
                 .thenReturn(tier);
 
         Mockito.doThrow(EntityNotFoundException.class).when(networkInstanceManager)
-                .load(any(String.class), any(String.class), any(String.class));
+                .load(any(String.class), any(ClaudiaData.class), any(String.class));
 
         manager.deployNetworks(claudiaData, tierInstance);
 
@@ -293,7 +293,7 @@ public class InfrastructureManagerClaudiaImplTest {
                 .thenReturn(net.toNetworkInstance());
         when(networkManager.load(any(String.class), any(String.class), any(String.class))).thenReturn(net);
         Mockito.doThrow(EntityNotFoundException.class).when(networkInstanceManager)
-                .load(any(String.class), any(String.class), any(String.class));
+                .load(any(String.class), any(ClaudiaData.class), any(String.class));
 
         manager.deployNetworks(claudiaData, tierInstance);
 
@@ -322,7 +322,7 @@ public class InfrastructureManagerClaudiaImplTest {
                 .thenReturn(net.toNetworkInstance());
 
         Mockito.doThrow(EntityNotFoundException.class).when(networkInstanceManager)
-                .load(any(String.class), any(String.class), any(String.class));
+                .load(any(String.class), any(ClaudiaData.class), any(String.class));
 
         manager.deleteNetworksInTierInstance(claudiaData, tierInstance);
 

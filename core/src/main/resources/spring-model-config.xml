@@ -166,6 +166,7 @@ http://www.springframework.org/schema/beans/spring-beans.xsd">
         <property name="networkClient" ref="networkClient"/>
         <property name="subNetworkInstanceManager" ref="subNetworkInstanceManager"/>
         <property name="routerManager" ref="routerManager"/>
+        <property name="openStackRegion" ref="openStackRegion"/>
         <property name="systemPropertiesProvider" ref="systemPropertiesProvider"/>
     </bean>
 

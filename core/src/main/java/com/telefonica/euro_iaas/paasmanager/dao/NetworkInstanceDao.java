@@ -39,7 +39,6 @@ import java.util.List;
  */
 public interface NetworkInstanceDao extends BaseDAO<NetworkInstance, String> {
 
-
     /**
      * It obtains the networkInstance from DB.
      * @param name
