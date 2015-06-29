@@ -25,7 +25,9 @@ package com.telefonica.euro_iaas.paasmanager.rest.auth;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
@@ -38,9 +40,8 @@ import javax.servlet.http.HttpSession;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
@@ -94,8 +95,9 @@ public class OpenStackAuthenticationFilterTest {
         Authentication authResult = mock(Authentication.class);
         PaasManagerUser paasUser = mock(PaasManagerUser.class);
 
-        when(servletRequest.getHeader(anyString())).thenReturn("3df25213cac246f8bccad5c70cb3582e")
-                .thenReturn("00000000000000000000000000000194").thenReturn("1234");
+        when(servletRequest.getHeader(OpenStackAuthenticationFilter.OPENSTACK_HEADER_TOKEN))
+                .thenReturn("3df25213cac246f8bccad5c70cb3582e").thenReturn("00000000000000000000000000000194")
+                .thenReturn("1234");
         when(servletRequest.getRequestURI()).thenReturn("/vdc/00000000000000000000000000000194/");
         when(servletRequest.getPathInfo()).thenReturn("/path");
         when(servletRequest.getSession()).thenReturn(httpSession);
@@ -108,7 +110,7 @@ public class OpenStackAuthenticationFilterTest {
     }
 
     @Test(expected = AccessDeniedException.class)
-    public void doFilterOtherTennantAccess() throws IOException, ServletException {
+    public void doFilterOtherTenantAccess() throws IOException, ServletException {
         HttpServletRequest servletRequest = mock(HttpServletRequest.class);
         HttpServletResponse servletResponse = mock(HttpServletResponse.class);
         FilterChain filterChain = mock(FilterChain.class);
@@ -116,8 +118,12 @@ public class OpenStackAuthenticationFilterTest {
         Authentication authResult = mock(Authentication.class);
         PaasManagerUser paasUser = mock(PaasManagerUser.class);
 
-        when(servletRequest.getHeader(anyString())).thenReturn("3df25213cac246f8bccad5c70cb3582e")
-                .thenReturn("00000000000000000000000000000194").thenReturn("1234");
+        when(servletRequest.getHeader(OpenStackAuthenticationFilter.OPENSTACK_HEADER_TOKEN)).thenReturn(
+                "3df25213cac246f8bccad5c70cb3582e");
+        when(servletRequest.getHeader(OpenStackAuthenticationFilter.HEADER_ACCEPT)).thenReturn("application/json");
+        when(servletRequest.getHeader(OpenStackAuthenticationFilter.OPENSTACK_HEADER_TENANTID)).thenReturn(
+                "00000000000000000000000000000194");
+
         when(servletRequest.getRequestURI()).thenReturn("/vdc/00000000000000000000000000000001/");
         when(servletRequest.getPathInfo()).thenReturn("/path");
         when(servletRequest.getSession()).thenReturn(httpSession);
@@ -126,7 +132,14 @@ public class OpenStackAuthenticationFilterTest {
 
         when(authResult.getPrincipal()).thenReturn(paasUser);
 
+        // when
         openStackAuthenticationFilter.doFilter(servletRequest, servletResponse, filterChain);
+
+        // then
+        verify(servletRequest).getHeader(OpenStackAuthenticationFilter.OPENSTACK_HEADER_TOKEN);
+        verify(servletRequest).getHeader(OpenStackAuthenticationFilter.HEADER_ACCEPT);
+        verify(httpSession).getId();
+
     }
 
     @Test
@@ -150,4 +163,20 @@ public class OpenStackAuthenticationFilterTest {
 
         openStackAuthenticationFilter.doFilter(servletRequest, servletResponse, filterChain);
     }
+
+    @Test
+    public void shouldReturn406WhenAcceptHeaderIsTextPlain() throws IOException, ServletException {
+        // given
+        HttpServletRequest servletRequest = mock(HttpServletRequest.class);
+        HttpServletResponse servletResponse = mock(HttpServletResponse.class);
+        FilterChain filterChain = mock(FilterChain.class);
+        when(servletRequest.getHeader(OpenStackAuthenticationFilter.HEADER_ACCEPT)).thenReturn("text/plain");
+
+        // when
+        openStackAuthenticationFilter.doFilter(servletRequest, servletResponse, filterChain);
+        // then
+        verify(servletResponse).sendError(eq(HttpServletResponse.SC_NOT_ACCEPTABLE), anyString());
+
+    }
+
 }

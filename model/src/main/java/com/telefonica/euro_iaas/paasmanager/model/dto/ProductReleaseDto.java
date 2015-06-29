@@ -31,11 +31,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.telefonica.euro_iaas.paasmanager.model.Attribute;
+import com.telefonica.euro_iaas.paasmanager.model.Metadata;
 import com.telefonica.euro_iaas.paasmanager.model.ProductRelease;
 
 /**
  * DTO to receive rest request with the product releases objects.
- *
+ * 
  * @author Jesus M. Movilla *
  */
 
@@ -47,7 +48,7 @@ public class ProductReleaseDto {
     private String productDescription;
     private String version;
     private Set<Attribute> attributes;
-
+    private Set<Metadata> metatadas;
 
     /**
      */
@@ -57,10 +58,6 @@ public class ProductReleaseDto {
     /**
      * @param productName
      * @param version
-     * @param releaseNotes
-     * @param privateAttributes
-     * @param supportedOS
-     * @param transitableReleases
      */
     public ProductReleaseDto(String productName, String productDescription, String version) {
         this.productName = productName;
@@ -70,8 +67,11 @@ public class ProductReleaseDto {
 
     /**
      * Constructor.
-     * @param productName   Name of the product.
-     * @param version       Version of the product.
+     * 
+     * @param productName
+     *            Name of the product.
+     * @param version
+     *            Version of the product.
      */
     public ProductReleaseDto(String productName, String version) {
         this.productName = productName;
@@ -102,10 +102,6 @@ public class ProductReleaseDto {
         this.version = version;
     }
 
-    /*
-     * public String getReleaseNotes() { return releaseNotes; } public void setReleaseNotes(String releaseNotes) {
-     * this.releaseNotes = releaseNotes; }
-     */
     public Set<Attribute> getPrivateAttributes() {
         return attributes;
     }
@@ -114,15 +110,17 @@ public class ProductReleaseDto {
         this.attributes = attributes;
     }
 
-    /*
-     * public List<OS> getSupportedOS() { return supportedOS; } public void setSupportedOS(List<OS> supportedOS) {
-     * this.supportedOS = supportedOS; } public List<ProductRelease> getTransitableReleases() { return
-     * transitableReleases; } public void setTransitableReleases(List<ProductRelease> transitableReleases) {
-     * this.transitableReleases = transitableReleases; }
-     */
+    public Set<Metadata> getMetatadas() {
+        return metatadas;
+    }
+
+    public void setMetatadas(Set<Metadata> metatadas) {
+        this.metatadas = metatadas;
+    }
 
     /**
      * Get a Product Release from the Dto.
+     * 
      * @return
      */
     public ProductRelease fromDto() {
@@ -131,11 +129,9 @@ public class ProductReleaseDto {
     }
 
     /**
-     * Constructs a <code>String</code> with all attributes
-     * in name = value format.
-     *
-     * @return a <code>String</code> representation
-     * of this object.
+     * Constructs a <code>String</code> with all attributes in name = value format.
+     * 
+     * @return a <code>String</code> representation of this object.
      */
     public String toString() {
         StringBuilder sb = new StringBuilder("[[ProductReleaseDto]");
@@ -143,9 +139,9 @@ public class ProductReleaseDto {
         sb.append("[productDescription = ").append(this.productDescription).append("]");
         sb.append("[version = ").append(this.version).append("]");
         sb.append("[attributes = ").append(this.attributes).append("]");
+        sb.append("[metadatas = ").append(this.metatadas).append("]");
         sb.append("]");
         return sb.toString();
     }
-
 
 }

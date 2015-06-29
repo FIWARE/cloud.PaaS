@@ -74,6 +74,10 @@ public class ClaudiaClientOpenStackImplTest {
     private SystemPropertiesProvider systemPropertiesProvider;
 
     public static String HOSTNAME = "puppet-master.lab.fi-ware.org";
+    String json = "{\n" +
+         "    \"Spain2\": \"key1\",\n" +
+         "    \"Node\": \"key2\"\n" +
+         "}";
 
     @Before
     public void setUp() throws Exception {
@@ -411,6 +415,19 @@ public class ClaudiaClientOpenStackImplTest {
         assertEquals(hostname, HOSTNAME);
     }
 
+    @Test
+    public void testGetSupportKey() throws Exception {
+        when(fileUtils.readFile(anyString())).thenReturn(json);
+        String key= claudiaClientOpenStack.getSupportKey("Spain2");
+        assertEquals(key, "key1");
+    }
+
+    @Test
+    public void testGetSupportKeyNoValid() throws Exception {
+        when(fileUtils.readFile(anyString())).thenReturn(json);
+        String key= claudiaClientOpenStack.getSupportKey("novalid");
+        assertEquals(key, "");
+    }
     @Test
     public void testReadFile() throws Exception {
         FileUtilsImpl fileUtil = new FileUtilsImpl();

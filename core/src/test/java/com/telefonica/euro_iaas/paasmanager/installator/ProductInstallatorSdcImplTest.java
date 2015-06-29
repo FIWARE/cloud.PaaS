@@ -84,6 +84,7 @@ public class ProductInstallatorSdcImplTest {
     private final VM host = new VM("fqn", "ip", "hostname", "domain");
     private Task task;
     private com.telefonica.euro_iaas.sdc.model.ProductInstance pInstanceSDC;
+    private com.telefonica.euro_iaas.sdc.model.dto.ProductInstanceDto pInstanceSDCDto;
     ClaudiaData data;
     private EnvironmentInstance environmentInstance;
     private TierInstance tierInstance2;
@@ -136,14 +137,16 @@ public class ProductInstallatorSdcImplTest {
         task = new Task();
         task.setHref("http://130.206.80.119:8081/sdc2/rest/vdc/60b4125450fc4a109f50357894ba2e28/task/581");
 
+        pInstanceSDCDto = mock(com.telefonica.euro_iaas.sdc.model.dto.ProductInstanceDto.class);
         pInstanceSDC = mock(com.telefonica.euro_iaas.sdc.model.ProductInstance.class);
         when(pInstanceSDC.getVm()).thenReturn(new com.telefonica.euro_iaas.sdc.model.dto.VM("aa", "bb", "cc", "dd"));
-
+        when(pInstanceSDCDto.getVm()).thenReturn(new com.telefonica.euro_iaas.sdc.model.dto.VM("aa", "bb", "cc", "dd"));
+        
         service = mock(ProductInstanceService.class);
         when(
                 service.install(Mockito.anyString(), Mockito.any(ProductInstanceDto.class), Mockito.anyString(),
                         Mockito.anyString())).thenReturn(task);
-        when(service.load(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(pInstanceSDC);
+        when(service.load(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(pInstanceSDCDto);
 
         sdcClient = mock(SDCClient.class);
         when(sdcClient.getProductInstanceService(Mockito.anyString(), Mockito.anyString())).thenReturn(service);

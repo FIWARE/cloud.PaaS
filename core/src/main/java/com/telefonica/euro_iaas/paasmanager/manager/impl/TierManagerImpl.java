@@ -43,6 +43,7 @@ import com.telefonica.euro_iaas.paasmanager.model.Environment;
 import com.telefonica.euro_iaas.paasmanager.model.Metadata;
 import com.telefonica.euro_iaas.paasmanager.model.Network;
 import com.telefonica.euro_iaas.paasmanager.model.ProductRelease;
+import com.telefonica.euro_iaas.paasmanager.model.SubNetwork;
 import com.telefonica.euro_iaas.paasmanager.model.Tier;
 import com.telefonica.euro_iaas.paasmanager.model.searchcriteria.TierSearchCriteria;
 import com.telefonica.euro_iaas.paasmanager.util.SystemPropertiesProvider;
@@ -141,6 +142,9 @@ public class TierManagerImpl implements TierManager {
             if (networkManager.exists(network.getNetworkName(), network.getVdc(), tier.getRegion())) {
                 log.info("the network " + network.getNetworkName() + " already exists");
                 network = networkManager.load(network.getNetworkName(), network.getVdc(), tier.getRegion());
+                for (SubNetwork subnet : network.getSubNets()) {
+                    networkManager.createSubNetwork(network, subnet);
+                }
 
             } else {
                 network = networkManager.create(network);

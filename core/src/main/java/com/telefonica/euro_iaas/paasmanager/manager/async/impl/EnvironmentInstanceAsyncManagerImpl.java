@@ -77,6 +77,7 @@ public class EnvironmentInstanceAsyncManagerImpl implements EnvironmentInstanceA
         } catch (TaskNotFoundException tnfe) {
             String errorMsg = "Unable to update task: " + tnfe.getTask().getHref() + ". Description: "
                     + tnfe.getMessage();
+            log.error(errorMsg);
             updateErrorTaskOnInstall(environmentInstance, claudiaData.getVdc(), task, errorMsg, tnfe);
         } catch (EntityNotFoundException e) {
             try {
@@ -86,29 +87,37 @@ public class EnvironmentInstanceAsyncManagerImpl implements EnvironmentInstanceA
                         + " has been CORRECTLY provisioned");
             } catch (EntityNotFoundException enf) {
                 String errorMsg = "The Environment " + environmentInstance.getBlueprintName() + " is not in the System";
+                log.error(errorMsg);
                 updateErrorTaskOnInstall(environmentInstance, claudiaData.getVdc(), task, errorMsg, enf);
             } catch (InvalidEntityException iee) {
                 String errorMsg = "The Environment " + environmentInstance.getBlueprintName() + " is Invalid";
+                log.error(errorMsg);
                 updateErrorTaskOnInstall(environmentInstance, claudiaData.getVdc(), task, errorMsg, iee);
             } catch (AlreadyExistsEntityException aee) {
                 String errorMsg = "The Environment " + environmentInstance.getBlueprintName() + " already exists";
+                log.error(errorMsg);
                 updateErrorTaskOnInstall(environmentInstance, claudiaData.getVdc(), task, errorMsg, aee);
             } catch (InfrastructureException ie) {
                 String errorMsg = "Infrastructure error " + ie.getLocalizedMessage();
+                log.error(errorMsg);
                 updateErrorTaskOnInstall(environmentInstance, claudiaData.getVdc(), task, errorMsg, ie);
             } catch (IPNotRetrievedException ipe) {
                 String errorMsg = " The ip of a VM could not be retrieved ";
+                log.error(errorMsg);
                 updateErrorTaskOnInstall(environmentInstance, claudiaData.getVdc(), task, errorMsg, ipe);
             } catch (ProductInstallatorException pie) {
                 String errorMsg = "Error installing a product. Description:" + pie.getMessage();
+                log.error(errorMsg);
                 updateErrorTaskOnInstall(environmentInstance, claudiaData.getVdc(), task, errorMsg, pie);
             } catch (TaskNotFoundException tne) {
                 String errorMsg = "Unable to update task: " + tne.getTask().getHref() + ". Description: "
                         + tne.getMessage();
+                log.error(errorMsg);
                 updateErrorTaskOnInstall(environmentInstance, claudiaData.getVdc(), task, errorMsg, tne);
             } catch (Exception e2) {
                 String errorMsg = "Unexpected error creating environment: " + environmentInstance + ". Description:"
                         + e2.getMessage();
+                log.error(errorMsg);
                 updateErrorTaskOnInstall(environmentInstance, claudiaData.getVdc(), task, errorMsg, e2);
             } finally {
                 notifyTask(callback, task);
@@ -132,10 +141,12 @@ public class EnvironmentInstanceAsyncManagerImpl implements EnvironmentInstanceA
         } catch (InvalidEntityException e) {
             String errorMsg = "InvalidEntity at destroying  environmentInstance: " + environmentInstance.getName()
                     + ". Description:" + e.getMessage();
+            log.error(errorMsg);
             updateErrorTaskOnInstall(environmentInstance, claudiaData.getVdc(), task, errorMsg, e);
         } catch (Exception e) {
             String errorMsg = "Unexpected error destroying  environmentInstance: " + environmentInstance.getName()
                     + ". Description:" + e.getMessage();
+            log.error(errorMsg);
             updateErrorTaskOnInstall(environmentInstance, claudiaData.getVdc(), task, errorMsg, e);
         } finally {
             notifyTask(callback, task);

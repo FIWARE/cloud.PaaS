@@ -343,3 +343,6 @@ ALTER TABLE tier drop CONSTRAINT fk_tier_securitygroup;
 --changeset jmms392:7-5
 ALTER TABLE tier DROP COLUMN securitygroup_id;
 
+--changeset 8-1
+DROP TABLE PRODUCTRELEASE_PRODUCTRELEASE;
+

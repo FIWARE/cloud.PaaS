@@ -420,9 +420,11 @@ public class OpenOperationUtilImpl implements OpenOperationUtil {
                 } else {
                     log.debug(" HttpResponse " + response.getStatusLine().getStatusCode());
                     if (result.indexOf("badRequest") != -1 || result.indexOf("itemNotFound") != -1) {
-                        String error = result.substring(result.indexOf("message") + "message".length() + 3,
-                                result.indexOf("code") - 3);
-                        log.debug("Error in the request " + error);
+                        int i = result.indexOf("message");
+                        int j = result.lastIndexOf("message");
+
+                        String error = result.substring(i + "message".length() + 1, j - 2);
+                        log.info("Error in the request, message: " + error);
                         throw new OpenStackException(error);
                     }
 
@@ -435,7 +437,7 @@ public class OpenOperationUtilImpl implements OpenOperationUtil {
             }
 
         } catch (Exception e) {
-            log.warn("Error to execute the request " + e.getMessage());
+            log.warn("Error in the request, message:" + e.getMessage());
             if (response.getStatusLine().getStatusCode() == http_code_accepted) {
                 return response.getStatusLine().getReasonPhrase();
             } else {

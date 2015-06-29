@@ -24,14 +24,10 @@
 
 package com.telefonica.euro_iaas.paasmanager.dao;
 
-import java.util.List;
-
+import com.telefonica.euro_iaas.paasmanager.model.ProductRelease;
 import com.telefonica.fiware.commons.dao.BaseDAO;
 import com.telefonica.fiware.commons.dao.EntityNotFoundException;
 import com.telefonica.fiware.commons.dao.InvalidEntityException;
-import com.telefonica.euro_iaas.paasmanager.model.ProductRelease;
-import com.telefonica.euro_iaas.paasmanager.model.Tier;
-import com.telefonica.euro_iaas.paasmanager.model.searchcriteria.ProductReleaseSearchCriteria;
 
 /**
  * Defines the methods needed to persist ProductRelease objects.
@@ -39,7 +35,7 @@ import com.telefonica.euro_iaas.paasmanager.model.searchcriteria.ProductReleaseS
  * @author Jesus M. Movilla
  */
 public interface ProductReleaseDao extends BaseDAO<ProductRelease, String> {
-    
+
     /**
      * @param product
      * @param version
@@ -49,11 +45,18 @@ public interface ProductReleaseDao extends BaseDAO<ProductRelease, String> {
      * @throws InvalidEntityException
      */
     ProductRelease load(String product, String version, String tierName) throws EntityNotFoundException;
-   
+
     /**
-     * 
      * @param name
      * @return
      */
     ProductRelease loadProductReleaseWithMetadata(String name) throws EntityNotFoundException;
+
+    /**
+     * Remove all attributes and metadata from product and return the updated productRelease
+     * 
+     * @param productRelease
+     * @return
+     */
+    ProductRelease removeAttributesAndMetadatas(ProductRelease productRelease);
 }

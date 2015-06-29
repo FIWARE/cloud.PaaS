@@ -8,10 +8,22 @@
 # This example assumes the instance is 12.04 (precise)
 
 
+
 # The default is to install from packages.
 {networks}
 
 {if_up}
+
+users:
+- default
+- name: support
+  gecos: Support user
+  lock-passwd: false
+  ssh-authorized-keys:
+  - {support_key}
+  sudo: ALL=(ALL) NOPASSWD:ALL
+
+ssh_pwauth: False
 
 # Start daemonized chef-client and DEM monitoring
 # Key from http://apt.opscode.com/packages@opscode.com.gpg.key
@@ -65,8 +77,6 @@ puppet:
      server: "{puppet_master}"
      runinterval: "60"
      pluginsync: true
-
-
 
 # Capture all subprocess output into a logfile
 # Useful for troubleshooting cloud-init issues

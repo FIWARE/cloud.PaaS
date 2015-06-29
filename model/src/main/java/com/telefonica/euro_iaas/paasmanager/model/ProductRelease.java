@@ -45,14 +45,14 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import com.telefonica.euro_iaas.paasmanager.model.dto.ProductReleaseDto;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import com.telefonica.euro_iaas.paasmanager.model.dto.ProductReleaseDto;
+
 /**
  * A product release is a concrete version of a given product.
- *
+ * 
  * @author Jesus M. Movilla
  */
 
@@ -96,17 +96,12 @@ public class ProductRelease {
     // @OneToMany(cascade = CascadeType.ALL)
     // private List<Attribute> attributesPort;
 
-    @XmlTransient
-    @ManyToMany
-    private List<ProductRelease> transitableReleases = null;
-
     @ManyToMany
     @JoinTable(name = "productRelease_has_ooss")
     private List<OS> supportedOOSS = null;
 
     @Column(nullable = true)
     private Boolean withArtifact = false;
-
 
     /**
      * Constructor.
@@ -119,13 +114,9 @@ public class ProductRelease {
 
     /**
      * Constructor.
-     *
+     * 
      * @param product
      * @param version
-     * @param object2
-     * @param list
-     * @param product2
-     * @param object
      */
     public ProductRelease(String product, String version) {
         this.name = product + "-" + version;
@@ -152,7 +143,7 @@ public class ProductRelease {
 
     /**
      * Add an attribute to the product release.
-     *
+     * 
      * @param attribute
      */
     public void addAttribute(Attribute attribute) {
@@ -164,7 +155,7 @@ public class ProductRelease {
 
     /**
      * Add a metadata.
-     *
+     * 
      * @param metadata
      */
     public void addMetadata(Metadata metadata) {
@@ -175,39 +166,27 @@ public class ProductRelease {
     }
 
     /**
-     * Add a transitable release.
-     *
-     * @param transitableRelease the new release.
-     */
-    public void addTransitableRelease(ProductRelease transitableRelease) {
-        if (transitableReleases == null) {
-            transitableReleases = new ArrayList<ProductRelease>();
-        }
-        transitableReleases.add(transitableRelease);
-    }
-    
-    /**
      * Remove a metadata .
-     *
+     * 
      * @param metadata
      */
     public void deleteMetadata(Metadata metadata) {
         if (metadatas.contains(metadata)) {
-        	metadatas.remove(metadata);
+            metadatas.remove(metadata);
         }
     }
-    
+
     /**
      * Remove a attribute .
-     *
+     * 
      * @param attribute
      */
     public void deleteAttribute(Attribute attribute) {
         if (attributes.contains(attribute)) {
-        	attributes.remove(attribute);
+            attributes.remove(attribute);
         }
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -232,7 +211,6 @@ public class ProductRelease {
         return true;
     }
 
-
     private JSONObject formatJsonArray(JSONObject productJson, String tag) {
         String stringProductJson = productJson.toString();
         if (stringProductJson.contains("\"" + tag + "\":{")) {
@@ -248,7 +226,7 @@ public class ProductRelease {
 
     /**
      * the json.
-     *
+     * 
      * @param jsonNode
      */
     public void fromSdcJson(JSONObject jsonNode) {
@@ -304,7 +282,7 @@ public class ProductRelease {
 
     /**
      * Get the attribute with the key.
-     *
+     * 
      * @param key
      * @return
      */
@@ -343,7 +321,7 @@ public class ProductRelease {
 
     /**
      * Get the metadata from the key.
-     *
+     * 
      * @param key
      * @return
      */
@@ -391,13 +369,6 @@ public class ProductRelease {
     }
 
     /**
-     * @return the transitableReleases
-     */
-    public List<ProductRelease> getTransitableReleases() {
-        return transitableReleases;
-    }
-
-    /**
      * @return the version
      */
     public String getVersion() {
@@ -419,7 +390,6 @@ public class ProductRelease {
         return this.tierName;
     }
 
-
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -429,78 +399,80 @@ public class ProductRelease {
     }
 
     /**
-     * @param attributes the attributes to set
+     * @param attributes
+     *            the attributes to set
      */
     public void setAttributes(Set<Attribute> attributes) {
         this.attributes = attributes;
     }
 
     /**
-     * @param description the description to set
+     * @param description
+     *            the description to set
      */
     public void setDescription(String description) {
         this.description = description;
     }
 
     /**
-     * @param id the id to set
+     * @param id
+     *            the id to set
      */
     public void setId(Long id) {
         this.id = id;
     }
 
     /**
-     * @param metadatas the metadatas to set
+     * @param metadatas
+     *            the metadatas to set
      */
     public void setMetadatas(Set<Metadata> metadatas) {
         this.metadatas = metadatas;
     }
 
     /**
-     * @param name the name to set
+     * @param name
+     *            the name to set
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * @param product the product to set
+     * @param product
+     *            the product to set
      */
     public void setProduct(String product) {
         this.product = product;
     }
 
-
     /**
-     * @param supportedOOSS the supportedOOSS to set
+     * @param supportedOOSS
+     *            the supportedOOSS to set
      */
     public void setSupportedOOSS(List<OS> supportedOOSS) {
         this.supportedOOSS = supportedOOSS;
     }
 
     /**
-     * @param transitableReleases the transitableReleases to set
-     */
-    public void setTransitableReleases(List<ProductRelease> transitableReleases) {
-        this.transitableReleases = transitableReleases;
-    }
-
-    /**
-     * @param version the version to set
+     * @param version
+     *            the version to set
      */
     public void setVersion(String version) {
         this.version = version;
     }
 
     /**
-     * @param withArtifact the withArtifact to set
+     * @param withArtifact
+     *            the withArtifact to set
      */
     public void setWithArtifact(Boolean withArtifact) {
         this.withArtifact = withArtifact;
     }
 
     /**
-     * @param tierName the tierName to set
+     * @param tierName
+     *            the tierName to set
      */
     public void setTierName(String tierName) {
         this.tierName = tierName;
@@ -508,7 +480,7 @@ public class ProductRelease {
 
     /**
      * the dto representation.
-     *
+     * 
      * @return
      */
     public ProductReleaseDto toDto() {
@@ -529,11 +501,9 @@ public class ProductRelease {
     }
 
     /**
-     * Constructs a <code>String</code> with all attributes
-     * in name = value format.
-     *
-     * @return a <code>String</code> representation
-     * of this object.
+     * Constructs a <code>String</code> with all attributes in name = value format.
+     * 
+     * @return a <code>String</code> representation of this object.
      */
     public String toString() {
         StringBuilder sb = new StringBuilder("[[ProductRelease]");
@@ -545,12 +515,10 @@ public class ProductRelease {
         sb.append("[tierName = ").append(this.tierName).append("]");
         sb.append("[attributes = ").append(this.attributes).append("]");
         sb.append("[metadatas = ").append(this.metadatas).append("]");
-        sb.append("[transitableReleases = ").append(this.transitableReleases).append("]");
         sb.append("[supportedOOSS = ").append(this.supportedOOSS).append("]");
         sb.append("[withArtifact = ").append(this.withArtifact).append("]");
         sb.append("]");
         return sb.toString();
     }
-
 
 }

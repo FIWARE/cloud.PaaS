@@ -48,6 +48,7 @@ TIER_FLAVOUR = "tier_flavour"
 TIER_KEYPAIR = "tier_keypair"
 TIER_FLOATINGIP = "tier_floatingip"
 TIER_REGION = "tier_region"
+REGION_DEFAULT_SHAREDNET_PROPERTY = "region_default_sharednet"
 
 # METADATA constants
 METADATA_NID = "nid"

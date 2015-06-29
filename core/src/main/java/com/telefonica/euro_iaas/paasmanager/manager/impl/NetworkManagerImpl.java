@@ -24,15 +24,11 @@
 
 package com.telefonica.euro_iaas.paasmanager.manager.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.telefonica.fiware.commons.dao.AlreadyExistsEntityException;
-import com.telefonica.fiware.commons.dao.EntityNotFoundException;
-import com.telefonica.fiware.commons.dao.InvalidEntityException;
 import com.telefonica.euro_iaas.paasmanager.dao.NetworkDao;
 import com.telefonica.euro_iaas.paasmanager.exception.InfrastructureException;
 import com.telefonica.euro_iaas.paasmanager.manager.NetworkInstanceManager;
@@ -40,9 +36,12 @@ import com.telefonica.euro_iaas.paasmanager.manager.NetworkManager;
 import com.telefonica.euro_iaas.paasmanager.manager.SubNetworkManager;
 import com.telefonica.euro_iaas.paasmanager.model.Network;
 import com.telefonica.euro_iaas.paasmanager.model.SubNetwork;
+import com.telefonica.fiware.commons.dao.AlreadyExistsEntityException;
+import com.telefonica.fiware.commons.dao.EntityNotFoundException;
+import com.telefonica.fiware.commons.dao.InvalidEntityException;
 
 /**
- * @author henar
+ * Manager from networks
  */
 public class NetworkManagerImpl implements NetworkManager {
 
@@ -80,7 +79,7 @@ public class NetworkManagerImpl implements NetworkManager {
 
             if (networkDB.getSubNets().isEmpty()) {
                 log.info("There is not a associated subnet");
-                createDefaultSubNetwork(networkDB);
+                defineDefaultSubNetwork(networkDB);
             }
 
             for (SubNetwork subnet : network.getSubNets()) {
@@ -93,22 +92,15 @@ public class NetworkManagerImpl implements NetworkManager {
             networkDao.update(networkDB);
 
         } else {
-            for (SubNetwork subnet : network.getSubNets()) {
-                createSubNetwork(network, subnet);
-            }
 
             if (network.getSubNets().isEmpty()) {
-                createDefaultSubNetwork(network);
+                defineDefaultSubNetwork(network);
             }
-
             networkDB = networkDao.create(network);
+
         }
 
         return networkDB;
-    }
-
-    public void createPublicNetwork() {
-
     }
 
     /**
@@ -122,7 +114,7 @@ public class NetworkManagerImpl implements NetworkManager {
      * @throws EntityNotFoundException
      * @throws InfrastructureException
      */
-    private void createSubNetwork(Network network, SubNetwork subNetwork) throws InvalidEntityException,
+    public void createSubNetwork(Network network, SubNetwork subNetwork) throws InvalidEntityException,
             AlreadyExistsEntityException, EntityNotFoundException {
         log.info("Creating subnect " + subNetwork.getName());
         try {
@@ -135,50 +127,31 @@ public class NetworkManagerImpl implements NetworkManager {
     }
 
     /**
-     * It creates a subnet in the network.
+     * It creates a subnet object in the network.
      * 
      * @param network
      * @throws AlreadyExistsEntityException
      * @throws InvalidEntityException
      * @throws EntityNotFoundException
      */
-    private void createDefaultSubNetwork(Network network) throws InvalidEntityException, AlreadyExistsEntityException,
+    private void defineDefaultSubNetwork(Network network) throws InvalidEntityException, AlreadyExistsEntityException,
             EntityNotFoundException {
         SubNetwork subNet = new SubNetwork("sub-net-" + network.getNetworkName(), network.getVdc(), network.getRegion());
-        createSubNetwork(network, subNet);
+        network.addSubNet(subNet);
     }
 
     /**
      * To remove a network.
      * 
-     * @params claudiaData
      * @params network
      */
     public void delete(Network network) throws EntityNotFoundException, InvalidEntityException {
         log.info("Destroying network " + network.getNetworkName());
 
-        log.info("Deleting the subnets");
-        List<SubNetwork> subNetsAux = new ArrayList<SubNetwork>();
-        for (SubNetwork subNet : network.getSubNets()) {
-            subNetsAux.add(subNet);
-        }
-
-        try {
-            for (SubNetwork subNet : subNetsAux) {
-                network.deleteSubNet(subNet);
-                networkDao.update(network);
-                subNetworkManager.delete(subNet);
-            }
-        } catch (Exception e) {
-            log.error("Error to delete the network " + e.getMessage());
-            throw new InvalidEntityException(network);
-        }
-
-        log.info("Deleting the network");
         try {
             networkDao.remove(network);
         } catch (Exception e) {
-            log.error("Error to remove the network in BD " + e.getMessage());
+            log.error("Error to remove the network/subNetworks from BD " + e.getMessage());
             throw new InvalidEntityException(network);
         }
 

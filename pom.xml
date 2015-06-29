@@ -5,14 +5,14 @@
     <artifactId>paas-manager-server</artifactId>
     <packaging>pom</packaging>
     <name>Pegasus - PaaS Manager</name>
-    <version>1.7.0</version>
+    <version>1.8.0</version>
     <properties>
 
         <!-- TDigital PROPERTIES -->
         <!-- This properties will be added to sonar as manual measures -->
         <product.area.name>Industrial IoT</product.area.name>
         <product.name>FIWARE</product.name>
-        <product.release>4.3.2</product.release>
+        <product.release>4.3.3</product.release>
 
         <repoName>fiware-paas</repoName>
 

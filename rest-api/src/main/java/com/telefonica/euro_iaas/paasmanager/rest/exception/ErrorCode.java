@@ -42,8 +42,8 @@ public enum ErrorCode {
             "The environment is being used by an instance",
             "(.*)InvalidEntityException: (.*)is being used(.*)",
             403),
-    INVALID_NUMBER_INITIAL_VMS_IN_TIER(70, "Invalid Tier. Number of Initial VMs is not correct", 
-            		"(.*)InvalidEntityException(.*)Error in the Number initial(.*)", 400),
+    INVALID_NUMBER_INITIAL_VMS_IN_TIER(70, "Invalid Tier. Initial, minimum or maximun number of instances are not correct", 
+            		"(.*)InvalidEntityException(.*)Error in the initial number of instances(.*)", 400),
     NAME_NO_VALID(41, "The name is not valid", "(.*)InvalidEntityException:(.*)", 400),
     OPENSTACK_ERROR_CREATINGSERVER (50, "Openstack error creating a server/assigning floating ip", "(.*)InfrastructureException(.*)Error interacting with OpenStack(.*)", 500),
     OPENSTACK_ERROR_FEDERATING_NETWORKS (51, "Error federating the networks", "(.*)InfrastructureException(.*)Error federating the networks(.*)", 500),
@@ -54,7 +54,7 @@ public enum ErrorCode {
     		"(.*)InvalidEntityException:(.*)The number of replicas is not valid(.*)",
     		400),
  	PRODUCTINSTANCE_ALREADY_EXIST (90, "ProductInstance Already Exist", "(.*)ProductInstallatorException (.*)already exists(.*)", 400),
- 	ERROR_INSTALLING_A_PRODUCT (91, "Error installing a product ", "(.*)ProductInstallatorException (.*)Error installing product(.*)", 400),
+ 	ERROR_INSTALLING_A_PRODUCT (91, "Error installing a product ", "(.*)ProductInstallatorException (.*)Error installing product(.*)", 412),
     DEFAULT(500, "Internal PaasManager Server error", "(?s).*", 500);
 
     private final int code;

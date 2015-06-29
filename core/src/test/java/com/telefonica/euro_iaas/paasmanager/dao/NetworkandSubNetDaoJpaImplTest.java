@@ -152,7 +152,6 @@ public class NetworkandSubNetDaoJpaImplTest {
 
         int number = networks.size();
         SubNetwork subNet = new SubNetwork(SUB_NETWORK_NAME, VDC, REGION);
-        subNet = subNetworkDao.create(subNet);
 
         Set<SubNetwork> subNets = new HashSet<SubNetwork>();
         subNets.add(subNet);
@@ -180,20 +179,15 @@ public class NetworkandSubNetDaoJpaImplTest {
 
         // Given
         SubNetwork subNet = new SubNetwork(SUB_NETWORK_NAME, VDC, REGION);
-        subNet = subNetworkDao.create(subNet);
         Set<SubNetwork> subNets = new HashSet<SubNetwork>();
         subNets.add(subNet);
         Network network = new Network(NETWORK_NAME, VDC, REGION);
         network.setSubNets(subNets);
 
         network = networkDao.create(network);
-        Set<SubNetwork> subNetAux = network.cloneSubNets();
 
-        networkDao.remove(network);
         // When
-        for (SubNetwork subNet2 : subNetAux) {
-            subNetworkDao.remove(subNet2);
-        }
+        networkDao.remove(network);
 
         // then
         try {

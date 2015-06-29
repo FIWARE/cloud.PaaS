@@ -36,4 +36,9 @@ public class InvalidEntityException extends Exception {
     public InvalidEntityException(Throwable e) {
         super(e);
     }
+
+    public InvalidEntityException(String msg, Throwable e) {
+        super(msg, e);
+    }
+
 }

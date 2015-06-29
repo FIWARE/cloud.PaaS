@@ -25,11 +25,13 @@ from lettuce_tools.dataset_utils.dataset_utils import DatasetUtils
 from tools import http, environment_request, environment_instance_request
 from tools.environment_instance import EnvironmentInstance
 import json
-from tools.constants import NAME, DESCRIPTION, METADATA_NID_NOVA_KEY, METADATA_NID
+from tools.constants import NAME, DESCRIPTION, METADATA_NID_NOVA_KEY, METADATA_NID, REGION_DEFAULT_SHAREDNET_PROPERTY,\
+    PAAS
 from common_steps import sdc_product_provisioning_steps, paas_environment_provisioning
 from tools.utils import raw_httplib_request_to_python_dic
 from nose.tools import assert_equal, assert_is_not_none, assert_equals, assert_in
-from tools.nova_request import get_server_id_by_partial_name, get_metadata_value, get_ports_from_rules
+from tools.nova_request import get_server_id_by_partial_name, get_metadata_value, get_ports_from_rules,\
+    get_network_name_list
 
 dataset_utils = DatasetUtils()
 
@@ -185,3 +187,37 @@ def the_created_sec_group_has_rules(step, protocol, open_ports):
     assert_equals(len(open_ports_list), len(rules_tcp_ports_list))
     for expected_port in open_ports_list:
         assert_in(expected_port, rules_tcp_ports_list)
+
+
+@step(u'the expected networks are connected to the instances')
+def the_networks_are_connected_to_instance(step):
+
+    # Get Server list from Nova
+    raw_response = world.nova_request.get_server_list()
+    assert_equal(raw_response.status, 200, "Error to obtain Server list. HTTP status code is not the expected")
+    server_list = raw_httplib_request_to_python_dic(raw_response)
+
+    # For each tier, check Networks
+    for tier in world.tiers:
+        # Get Server id
+        sub_instance_name = "{}-{}".format(world.instance_name, tier.name)
+        server_id = get_server_id_by_partial_name(server_list, sub_instance_name)
+
+        # Get Server details
+        raw_response = world.nova_request.get_server_details(server_id)
+        assert_equal(raw_response.status, 200, "Error to obtain Server details. HTTP status code is not the expected")
+        server_details = raw_httplib_request_to_python_dic(raw_response)
+
+        connected_networks_list = get_network_name_list(server_details)
+
+        if tier.networks is None or tier.networks == []:
+            assert_equal(len(connected_networks_list), 1,
+                         "The number of connected networks is not the expected one")
+            assert_equal(connected_networks_list[0], world.config[PAAS][REGION_DEFAULT_SHAREDNET_PROPERTY],
+                         "The connected network is not the configured as Shared-Net")
+        else:
+            assert_equal(len(connected_networks_list), len(tier.networks),
+                         "The number of connected networks is not the expected one")
+            for network in tier.networks:
+                assert_in(network.network_name, connected_networks_list,
+                          "The network '%s' is not connected to the instance".format(network.network_name))

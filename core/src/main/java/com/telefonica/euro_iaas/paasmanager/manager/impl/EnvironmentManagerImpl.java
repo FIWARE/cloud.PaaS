@@ -90,9 +90,11 @@ public class EnvironmentManagerImpl implements EnvironmentManager {
 
         } catch (AlreadyExistsEntityException aee) {
             String errorMessage = "The Environment Object " + environment.getName() + " already exist in Database";
+            log.error(errorMessage);
             throw new InvalidEnvironmentRequestException(errorMessage);
         } catch (Exception aee) {
             String errorMessage = "The Environment Object " + environment.getName() + " is " + "NOT valid";
+            log.error(errorMessage);
             throw new InvalidEnvironmentRequestException(errorMessage);
         }
 

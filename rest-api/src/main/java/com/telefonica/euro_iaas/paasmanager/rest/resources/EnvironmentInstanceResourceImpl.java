@@ -38,7 +38,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.telefonica.fiware.commons.dao.EntityNotFoundException;
 import com.telefonica.euro_iaas.paasmanager.exception.InvalidEntityException;
 import com.telefonica.euro_iaas.paasmanager.exception.QuotaExceededException;
 import com.telefonica.euro_iaas.paasmanager.manager.EnvironmentInstanceManager;
@@ -58,6 +57,7 @@ import com.telefonica.euro_iaas.paasmanager.rest.auth.OpenStackAuthenticationPro
 import com.telefonica.euro_iaas.paasmanager.rest.exception.APIException;
 import com.telefonica.euro_iaas.paasmanager.rest.validation.EnvironmentInstanceResourceValidator;
 import com.telefonica.euro_iaas.paasmanager.util.SystemPropertiesProvider;
+import com.telefonica.fiware.commons.dao.EntityNotFoundException;
 
 /**
  * Default EnvironmentInstanceResource implementation.
@@ -211,7 +211,7 @@ public class EnvironmentInstanceResourceImpl implements EnvironmentInstanceResou
      */
     public Task destroy(String org, String vdc, String name, String callback) throws APIException {
 
-        log.info("Destroy env isntna " + name + " vdc " + vdc);
+        log.info("Destroy environment instance " + name + " vdc " + vdc);
         EnvironmentInstance environmentInstance = null;
         try {
             environmentInstance = environmentInstanceManager.load(vdc, name);

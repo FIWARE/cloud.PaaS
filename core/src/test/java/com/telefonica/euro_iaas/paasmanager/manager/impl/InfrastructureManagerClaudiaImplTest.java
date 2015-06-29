@@ -44,7 +44,7 @@ import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
 
-import com.telefonica.fiware.commons.dao.EntityNotFoundException;
+import com.telefonica.euro_iaas.paasmanager.bean.PaasManagerUser;
 import com.telefonica.euro_iaas.paasmanager.claudia.ClaudiaClient;
 import com.telefonica.euro_iaas.paasmanager.dao.EnvironmentInstanceDao;
 import com.telefonica.euro_iaas.paasmanager.manager.NetworkInstanceManager;
@@ -58,13 +58,12 @@ import com.telefonica.euro_iaas.paasmanager.model.Network;
 import com.telefonica.euro_iaas.paasmanager.model.NetworkInstance;
 import com.telefonica.euro_iaas.paasmanager.model.Tier;
 import com.telefonica.euro_iaas.paasmanager.model.TierInstance;
-import com.telefonica.euro_iaas.paasmanager.bean.PaasManagerUser;
 import com.telefonica.euro_iaas.paasmanager.model.dto.VM;
 import com.telefonica.euro_iaas.paasmanager.util.ClaudiaResponseAnalyser;
 import com.telefonica.euro_iaas.paasmanager.util.SystemPropertiesProvider;
+import com.telefonica.fiware.commons.dao.EntityNotFoundException;
 
 /**
- * @author jesus.movilla
  */
 public class InfrastructureManagerClaudiaImplTest {
 
@@ -162,9 +161,8 @@ public class InfrastructureManagerClaudiaImplTest {
                 .thenReturn(ips);
         when(claudiaClient.browseService(any(ClaudiaData.class))).thenReturn("vapp");
         when(environmentInstanceDao.update(any(EnvironmentInstance.class))).thenReturn(envInst);
-        when(
-                claudiaClient.browseVMReplica(any(ClaudiaData.class), any(String.class), anyInt(), any(VM.class),
-                        anyString())).thenReturn("vapp");
+        when(claudiaClient.existsVMReplica(any(ClaudiaData.class), any(String.class), any(VM.class), anyString()))
+                .thenReturn(true);
 
         Mockito.doThrow(new EntityNotFoundException(TierInstance.class, "test", tierInstance))
                 .when(tierInstanceManager).load(any(String.class));
@@ -209,9 +207,8 @@ public class InfrastructureManagerClaudiaImplTest {
         tierInstance.setVM(vm);
         envInst.addTierInstance(tierInstance);
 
-        when(
-                claudiaClient.browseVMReplica(any(ClaudiaData.class), any(String.class), anyInt(), any(VM.class),
-                        anyString())).thenReturn("vapp");
+        when(claudiaClient.existsVMReplica(any(ClaudiaData.class), any(String.class), any(VM.class), anyString()))
+                .thenReturn(true);
         Mockito.doNothing().when(claudiaClient).undeployVMReplica(any(ClaudiaData.class), any(TierInstance.class));
         Mockito.doNothing().when(networkInstanceManager)
                 .delete(any(ClaudiaData.class), any(NetworkInstance.class), anyString());

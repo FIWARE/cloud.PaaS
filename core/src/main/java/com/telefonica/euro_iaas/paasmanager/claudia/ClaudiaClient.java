@@ -26,6 +26,7 @@ package com.telefonica.euro_iaas.paasmanager.claudia;
 
 import java.util.List;
 
+import com.telefonica.euro_iaas.paasmanager.bean.PaasManagerUser;
 import com.telefonica.euro_iaas.paasmanager.exception.ClaudiaResourceNotFoundException;
 import com.telefonica.euro_iaas.paasmanager.exception.ClaudiaRetrieveInfoException;
 import com.telefonica.euro_iaas.paasmanager.exception.IPNotRetrievedException;
@@ -35,7 +36,6 @@ import com.telefonica.euro_iaas.paasmanager.exception.OSNotRetrievedException;
 import com.telefonica.euro_iaas.paasmanager.exception.VMStatusNotRetrievedException;
 import com.telefonica.euro_iaas.paasmanager.model.ClaudiaData;
 import com.telefonica.euro_iaas.paasmanager.model.TierInstance;
-import com.telefonica.euro_iaas.paasmanager.bean.PaasManagerUser;
 import com.telefonica.euro_iaas.paasmanager.model.dto.VM;
 
 /**
@@ -194,12 +194,12 @@ public interface ClaudiaClient {
 
     /**
      * @param claudiaData
-     * @param replica
+     * @param tierName
+     * @param vm
+     * @param region
      * @return
-     * @throws ClaudiaResourceNotFoundException
      */
-    String browseVMReplica(ClaudiaData claudiaData, String tierName, int replica, VM vm, String region)
-            throws ClaudiaResourceNotFoundException;
+    boolean existsVMReplica(ClaudiaData claudiaData, String tierName, VM vm, String region);
 
     /**
      * Recover all vmids associated to a certaint tenantId.

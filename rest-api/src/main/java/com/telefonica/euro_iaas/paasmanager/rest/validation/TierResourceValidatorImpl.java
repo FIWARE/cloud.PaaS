@@ -161,15 +161,14 @@ public class TierResourceValidatorImpl implements TierResourceValidator {
     private void validataDefaultTier(TierDto tierDto) throws InvalidEntityException {
         if (tierDto.getMaximumNumberInstances() == null || tierDto.getMinimumNumberInstances() == null
                 || tierDto.getInitialNumberInstances() == null) {
-        	String menError ="Error in the Number initial, maximun o minimul from environmentDto. Some of them are null";
+        	String menError ="Error in the initial number of instances, maximun o minimum from environmentDto. Some of them are null";
         	log.error(menError);
             throw new InvalidEntityException(menError);
         }
 
         if (!(tierDto.getMinimumNumberInstances() <= tierDto.getInitialNumberInstances() && tierDto
                 .getMaximumNumberInstances() >= tierDto.getInitialNumberInstances())) {
-            String men = "The number of replicas is not valid. Error in the Number initial " 
-                + tierDto.getInitialNumberInstances() + " with number min "
+            String men = "Error in the initial number of instances " + tierDto.getInitialNumberInstances() + " with number min "
                     + tierDto.getMinimumNumberInstances() + " and number max " + tierDto.getMaximumNumberInstances();
             log.error(men);
             throw new InvalidEntityException(men);

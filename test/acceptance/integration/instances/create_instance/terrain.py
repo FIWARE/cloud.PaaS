@@ -88,10 +88,10 @@ def before_each_scenario(scenario):
     terrain_steps.init_products_in_sdc()
 
 
-@before.outline
-def before_outline(param1, param2, param3, param4):
-    """ Hook: Will be executed before each Scenario Outline. Same behaviour as 'before_each_scenario'"""
-    before_each_scenario(None)
+@after.outline
+def after_outline(param1, param2, param3, param4):
+    """ Hook: Will be executed after each Scenario Outline. Same behaviour as 'after_each_scenario'"""
+    after_each_scenario(None)
 
 
 @after.each_scenario
@@ -106,8 +106,16 @@ def after_each_scenario(scenario):
                                                              product_and_release['product_release'])
 
 
-@after.outline
-def after_outline(param1, param2, param3, param4):
-    """ Hook: Will be executed after each Scenario Outline. Same behaviour as 'after_each_scenario'"""
-    after_each_scenario(None)
+@before.outline
+def before_outline(param1, param2, param3, param4):
+    """ Hook: Will be executed before each Scenario Outline. Same behaviour as 'before_each_scenario'"""
+    before_each_scenario(None)
 
+
+@after.each_feature
+def after_feature(feature):
+    """Hook: Will be executed after the feature"""
+    # Remove SDC product data
+    for product_and_release in world.product_and_release_list:
+        world.product_sdc_request.delete_product_and_release(product_and_release['product_name'],
+                                                             product_and_release['product_release'])

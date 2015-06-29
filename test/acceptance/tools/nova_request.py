@@ -178,3 +178,16 @@ def get_ports_from_rules(body_response_sec_group_list, sec_group_name, protocol=
                     port_list.append(port)
 
     return port_list
+
+
+def get_network_name_list(body_response_server_details):
+    """
+    Retrieve the list of network names where this server is connected
+    :param body_response_server_details: (dic) Parsed response. Server details data
+    :return: (list) The list of linked networks to the server
+    """
+    network_list = list()
+    for address in body_response_server_details['server']['addresses']:
+        network_list.append(address)
+
+    return network_list

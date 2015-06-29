@@ -26,12 +26,12 @@ package com.telefonica.euro_iaas.paasmanager.manager;
 
 import java.util.List;
 
+import com.telefonica.euro_iaas.paasmanager.exception.InfrastructureException;
+import com.telefonica.euro_iaas.paasmanager.model.Network;
+import com.telefonica.euro_iaas.paasmanager.model.SubNetwork;
 import com.telefonica.fiware.commons.dao.AlreadyExistsEntityException;
 import com.telefonica.fiware.commons.dao.EntityNotFoundException;
 import com.telefonica.fiware.commons.dao.InvalidEntityException;
-import com.telefonica.euro_iaas.paasmanager.exception.InfrastructureException;
-import com.telefonica.euro_iaas.paasmanager.model.ClaudiaData;
-import com.telefonica.euro_iaas.paasmanager.model.Network;
 
 /**
  * @author henar
@@ -46,7 +46,8 @@ public interface NetworkManager {
      * @throws AlreadyExistsEntityException
      * @throws EntityNotFoundException
      */
-	Network create(Network network) throws EntityNotFoundException, InvalidEntityException, AlreadyExistsEntityException;
+    Network create(Network network) throws EntityNotFoundException, InvalidEntityException,
+            AlreadyExistsEntityException;
 
     /**
      * Delete a Network.
@@ -87,5 +88,16 @@ public interface NetworkManager {
      */
     Network update(Network network) throws InvalidEntityException;
 
+    /**
+     * Create subNetwork from network.
+     * 
+     * @param network
+     * @param subNetwork
+     * @throws InvalidEntityException
+     * @throws AlreadyExistsEntityException
+     * @throws EntityNotFoundException
+     */
+    void createSubNetwork(Network network, SubNetwork subNetwork) throws InvalidEntityException,
+            AlreadyExistsEntityException, EntityNotFoundException;
 
 }

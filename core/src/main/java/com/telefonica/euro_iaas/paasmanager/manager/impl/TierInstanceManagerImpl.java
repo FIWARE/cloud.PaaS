@@ -114,7 +114,7 @@ public class TierInstanceManagerImpl implements TierInstanceManager {
             log.info("The tier already exists " + tierDB.getName() + " " + tierDB.getFloatingip() + " " + envName + " "
                     + data.getVdc());
         } catch (EntityNotFoundException e) {
-            log.error("Error to load the Tier " + tierInstance.getTier().getName() + " : " + e.getMessage());
+            log.warn("Error to load the Tier " + tierInstance.getTier().getName() + " : " + e.getMessage());
             throw new InvalidEntityException("Error to load the Tier " + tierInstance.getTier().getName() + " : "
                     + e.getMessage());
         }
@@ -123,12 +123,12 @@ public class TierInstanceManagerImpl implements TierInstanceManager {
             tierInstance.setTier(tierDB);
             createSecurityGroups(data, tierInstance);
         } catch (InvalidSecurityGroupRequestException isgre) {
-            String secGroupMen = "The securityGroupRequest creation is invalid"; 
-            log.error(secGroupMen);
-            throw new InvalidEntityException(secGroupMen + " : " + isgre.getMessage());
+            String secGroupMen = "The securityGroupRequest creation is invalid " + isgre.getMessage();
+            log.warn(secGroupMen);
+            throw new InvalidEntityException(secGroupMen, isgre);
         } catch (EntityNotFoundException enfe) {
-            String men = "ProductRelease in tier " + tierInstance.getTier().getName() + "does not exist"; 
-            log.error(men);
+            String men = "ProductRelease in tier " + tierInstance.getTier().getName() + " does not exist";
+            log.warn(men);
             throw new InvalidEntityException(men + " : " + enfe.getMessage());
         }
         

@@ -27,6 +27,7 @@ package com.telefonica.euro_iaas.paasmanager.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -39,13 +40,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-
 import com.telefonica.euro_iaas.paasmanager.model.dto.NetworkDto;
 import com.telefonica.euro_iaas.paasmanager.model.dto.SubNetworkDto;
 
 /**
  * A network.
- *
+ * 
  * @author Henar Munoz
  */
 
@@ -71,8 +71,7 @@ public class Network {
 
     private String federatedRange = "0";
 
-
-    @OneToMany
+    @OneToMany(cascade = { CascadeType.ALL })
     private Set<SubNetwork> subNets;
 
     /**
@@ -92,10 +91,9 @@ public class Network {
         subNets = new HashSet<SubNetwork>();
     }
 
-
     /**
      * It adds a subnet to the network.
-     *
+     * 
      * @param subNet
      * @return
      */
@@ -108,7 +106,7 @@ public class Network {
 
     /**
      * It does a copy of the collection.
-     *
+     * 
      * @return
      */
     public Set<SubNetwork> cloneSubNets() {
@@ -121,7 +119,7 @@ public class Network {
 
     /**
      * It deletes a subnet to the network.
-     *
+     * 
      * @param subNet
      * @return
      */
@@ -133,7 +131,7 @@ public class Network {
 
     /**
      * It updates a subnet to the network.
-     *
+     * 
      * @param subNet
      * @return
      */
@@ -152,7 +150,6 @@ public class Network {
         return subNets.contains(subNet);
     }
 
-
     /**
      * @return the networkName
      */
@@ -163,7 +160,6 @@ public class Network {
     public String getRegion() {
         return region;
     }
-
 
     public void setNetworkName(String name) {
         this.name = name;
@@ -183,6 +179,7 @@ public class Network {
 
     /**
      * Get the federated network.
+     * 
      * @return
      */
     public boolean getfederatedNetwork() {
@@ -197,10 +194,9 @@ public class Network {
         return this.federatedRange;
     }
 
-
     /**
      * It gets the subnets.
-     *
+     * 
      * @return List<SubNetwork>
      */
     public Set<SubNetwork> getSubNets() {
@@ -209,17 +205,16 @@ public class Network {
 
     /**
      * It add the subnet collection.
-     *
+     * 
      * @param subNets
      */
     public void setSubNets(Set<SubNetwork> subNets) {
         this.subNets = subNets;
     }
 
-
     /**
      * the dto entity.
-     *
+     * 
      * @return
      */
     public NetworkDto toDto() {
@@ -233,7 +228,7 @@ public class Network {
 
     /**
      * the network instance.
-     *
+     * 
      * @return
      */
     public NetworkInstance toNetworkInstance() {
@@ -282,11 +277,9 @@ public class Network {
     }
 
     /**
-     * Constructs a <code>String</code> with all attributes
-     * in name = value format.
-     *
-     * @return a <code>String</code> representation
-     * of this object.
+     * Constructs a <code>String</code> with all attributes in name = value format.
+     * 
+     * @return a <code>String</code> representation of this object.
      */
     public String toString() {
         StringBuilder sb = new StringBuilder("[[Network]");
@@ -300,6 +293,5 @@ public class Network {
         sb.append("]");
         return sb.toString();
     }
-
 
 }

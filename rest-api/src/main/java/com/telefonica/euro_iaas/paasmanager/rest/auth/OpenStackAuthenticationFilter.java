@@ -55,8 +55,6 @@ import com.telefonica.euro_iaas.paasmanager.util.SystemPropertiesProvider;
 
 /**
  * The Class OpenStackAuthenticationFilter.
- * 
- * @author fernandolopezaguilar
  */
 public class OpenStackAuthenticationFilter extends GenericFilterBean {
 
@@ -84,9 +82,9 @@ public class OpenStackAuthenticationFilter extends GenericFilterBean {
      */
     private RememberMeServices rememberMeServices = new NullRememberMeServices();
     /**
-     * The Constant OPENSTACK_IDENTIFIER.
+     * The Constant Accept header
      */
-    public static final String OPENSTACK_IDENTIFIER = "openstack";
+    public static final String HEADER_ACCEPT = "Accept";
     /**
      * The Constant OPENSTACK_HEADER_TOKEN.
      */
@@ -144,10 +142,15 @@ public class OpenStackAuthenticationFilter extends GenericFilterBean {
         final HttpServletRequest request = (HttpServletRequest) req;
         final HttpServletResponse response = (HttpServletResponse) res;
 
-        String header = request.getHeader(OPENSTACK_HEADER_TOKEN);
+        String headerToken = request.getHeader(OPENSTACK_HEADER_TOKEN);
         String pathInfo = request.getPathInfo();
-        logger.debug(header);
+        logger.debug(headerToken);
         logger.debug(pathInfo);
+
+        // first of all, check HTTP if exists accept header
+        if (!validateAcceptHeader(request, response)) {
+            return;
+        }
 
         MDC.put("txId", ((HttpServletRequest) req).getSession().getId());
 
@@ -158,12 +161,12 @@ public class OpenStackAuthenticationFilter extends GenericFilterBean {
             logger.debug("Operation does not need to Authenticate");
         } else {
 
-            if (header == null) {
-                header = "";
+            if (headerToken == null) {
+                headerToken = "";
             }
 
             try {
-                String token = header;
+                String token = headerToken;
                 if ("".equals(token)) {
                     String str = "Missing token header";
                     logger.info(str);
@@ -256,6 +259,30 @@ public class OpenStackAuthenticationFilter extends GenericFilterBean {
         // TODO jesuspg: question:add APIException
         chain.doFilter(request, response);
 
+    }
+
+    /**
+     * validate Accept Header
+     * 
+     * @param request
+     * @param response
+     * @return
+     * @throws IOException
+     */
+    private boolean validateAcceptHeader(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String headerAccept = request.getHeader(HEADER_ACCEPT);
+        if (headerAccept != null) {
+            headerAccept = headerAccept.toLowerCase();
+            boolean someValidValue = headerAccept.equals("*/*") || headerAccept.equals("application/json")
+                    || headerAccept.equals("application/xml");
+
+            if (!someValidValue) {
+                response.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE,
+                        "'Accept' header should be application/xml or " + "application/json");
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

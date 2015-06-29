@@ -173,11 +173,13 @@ public class ProductInstallatorSdcImpl implements ProductInstallator {
             tierInstanceManager.update(claudiaData, environmentInstance.getName(), tierInstance);
             sDCUtil.checkTaskStatus(task, claudiaData.getUser().getToken(), tierInstance.getVdc());
 
-            com.telefonica.euro_iaas.sdc.model.ProductInstance pInstanceSDC = pIService.load(tierInstance.getVdc(),
+            //com.telefonica.euro_iaas.sdc.model.ProductInstance pInstanceSDC = pIService.load(tierInstance.getVdc(),
+            com.telefonica.euro_iaas.sdc.model.dto.ProductInstanceDto pInstanceSDCDto = pIService.load(tierInstance.getVdc(),
                     productInstanceDto.getVm().getFqn() + "_" + productInstanceDto.getProduct().getName() + "_"
                             + productInstanceDto.getProduct().getVersion(), claudiaData.getUser().getToken());
             // Set the domain
-            tierInstance.getVM().setDomain(pInstanceSDC.getVm().getDomain());
+            //tierInstance.getVM().setDomain(pInstanceSDC.getVm().getDomain());
+            tierInstance.getVM().setDomain(pInstanceSDCDto.getVm().getDomain());
             tierInstanceManager.update(claudiaData, environmentInstance.getName(), tierInstance);
 
         } catch (Exception e) {

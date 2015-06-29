@@ -31,11 +31,11 @@ import javax.persistence.Query;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.telefonica.fiware.commons.dao.AbstractBaseDao;
-import com.telefonica.fiware.commons.dao.EntityNotFoundException;
 import com.telefonica.euro_iaas.paasmanager.dao.ProductReleaseDao;
 import com.telefonica.euro_iaas.paasmanager.model.ProductRelease;
 import com.telefonica.euro_iaas.paasmanager.model.Tier;
+import com.telefonica.fiware.commons.dao.AbstractBaseDao;
+import com.telefonica.fiware.commons.dao.EntityNotFoundException;
 
 @Transactional(propagation = Propagation.REQUIRED)
 public class ProductReleaseDaoJpaImpl extends AbstractBaseDao<ProductRelease, String> implements ProductReleaseDao {
@@ -68,7 +68,22 @@ public class ProductReleaseDaoJpaImpl extends AbstractBaseDao<ProductRelease, St
         }
         return productRelease;
     }
- 
+
+    /**
+     * Remove all attributes and metadata from product and return the updated productRelease
+     * 
+     * @param productRelease
+     * @return
+     */
+    @Override
+    public ProductRelease removeAttributesAndMetadatas(ProductRelease productRelease) {
+
+        productRelease.setAttributes(null);
+        productRelease.setMetadatas(null);
+
+        return update(productRelease);
+    }
+
     private ProductRelease findByProductReleaseWithMetadataAndAtt(String name) throws EntityNotFoundException {
 
         Query query = getEntityManager().createQuery(

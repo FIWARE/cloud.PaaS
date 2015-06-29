@@ -83,11 +83,15 @@ public class Tier {
     private String payload;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "tier_has_productReleases", joinColumns = { @JoinColumn(name = "tier_ID", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "productRelease_ID", nullable = false, updatable = false) })
+    @JoinTable(name = "tier_has_productReleases", joinColumns =
+            { @JoinColumn(name = "tier_ID", nullable = false, updatable = false) },
+              inverseJoinColumns = { @JoinColumn(name = "productRelease_ID", nullable = false, updatable = false) })
     private List<ProductRelease> productReleases;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "tier_has_networks", joinColumns = { @JoinColumn(name = "tier_ID", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "network_ID", nullable = false, updatable = false) })
+    @JoinTable(name = "tier_has_networks", joinColumns =
+            { @JoinColumn(name = "tier_ID", nullable = false, updatable = false) },
+              inverseJoinColumns = { @JoinColumn(name = "network_ID", nullable = false, updatable = false) })
     private Set<Network> networks;
 
     private String region = "";
@@ -369,6 +373,10 @@ public class Tier {
         return productReleases;
     }
 
+    /*
+     * public SecurityGroup getSecurityGroup() { return this.securityGroup; }
+     */
+
     public String getVdc() {
         return vdc;
     } /*
@@ -493,6 +501,10 @@ public class Tier {
         this.productReleases = productReleases;
     }
 
+    /*
+     * public void setSecurityGroup(SecurityGroup securityGroup) { this.securityGroup = securityGroup; }
+     */
+
     /**
      * Set a vdc.
      * 
@@ -535,6 +547,7 @@ public class Tier {
                 pReleaseDto.setProductName(pRelease.getProduct());
                 pReleaseDto.setVersion(pRelease.getVersion());
                 pReleaseDto.setPrivateAttributes(pRelease.getAttributes());
+                pReleaseDto.setMetatadas(pRelease.getMetadatas());
 
                 if (pRelease.getDescription() != null) {
                     pReleaseDto.setProductDescription(pRelease.getDescription());
@@ -618,6 +631,7 @@ public class Tier {
         sb.append("[minimumNumberInstances = ").append(this.minimumNumberInstances).append("]");
         sb.append("[initialNumberInstances = ").append(this.initialNumberInstances).append("]");
         sb.append("[payload = ").append(this.payload).append("]");
+
         if (Hibernate.isInitialized(this.productReleases)) {
             sb.append("[productReleases = ").append(this.productReleases).append("]");
         }

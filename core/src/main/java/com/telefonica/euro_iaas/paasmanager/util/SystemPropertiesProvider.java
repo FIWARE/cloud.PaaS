@@ -35,7 +35,6 @@ import java.util.Properties;
  */
 public interface SystemPropertiesProvider {
 
-
     String PAAS_MANAGER_URL = "paas_manager_url";
 
     /** The Constant KEYSTONE_URL. */
@@ -53,10 +52,16 @@ public interface SystemPropertiesProvider {
     String KEYSTONE_TENANT = "openstack-tcloud.keystone.tenant";
 
     /** Path for the user data **/
-    String USER_DATA_PATH= "user_data_path";
-    
+    String USER_DATA_PATH = "user_data_path";
+
+    String SUPPORT_KEY = "support_key";
+
     String AVAILABLE_ATTRIBUTE_TYPES = "available.attribute.types";
 
+    /**
+     * max num of retries in requests to openStack.
+     */
+    String OPENSTACK_RETRIES = "openstack-tcloud.retries";
 
     /**
      * Get the property for a given key.

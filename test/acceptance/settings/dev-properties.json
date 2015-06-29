@@ -25,6 +25,7 @@
         "tier_flavour": "2",
         "tier_keypair": "default",
         "tier_floatingip": "false",
-        "tier_region": "Trento"
+        "tier_region": "Trento",
+        "region_default_sharednet": "shared-net"
     }
 }

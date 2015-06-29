@@ -29,15 +29,15 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.telefonica.fiware.commons.dao.AlreadyExistsEntityException;
-import com.telefonica.fiware.commons.dao.EntityNotFoundException;
-import com.telefonica.fiware.commons.dao.InvalidEntityException;
 import com.telefonica.euro_iaas.paasmanager.dao.SubNetworkDao;
 import com.telefonica.euro_iaas.paasmanager.manager.SubNetworkManager;
 import com.telefonica.euro_iaas.paasmanager.model.SubNetwork;
+import com.telefonica.fiware.commons.dao.AlreadyExistsEntityException;
+import com.telefonica.fiware.commons.dao.EntityNotFoundException;
+import com.telefonica.fiware.commons.dao.InvalidEntityException;
 
 /**
- * @author henar
+ * Manager from subNetworks
  */
 public class SubNetworkManagerImpl implements SubNetworkManager {
 
@@ -101,7 +101,7 @@ public class SubNetworkManagerImpl implements SubNetworkManager {
      * 
      * @param name
      * @param vdc
-     * @param networkName
+     * @param region
      * @return the network
      */
     public SubNetwork load(String name, String vdc, String region) throws EntityNotFoundException {

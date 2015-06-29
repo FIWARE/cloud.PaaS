@@ -45,11 +45,11 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.telefonica.euro_iaas.paasmanager.bean.PaasManagerUser;
-import com.telefonica.fiware.commons.openstack.auth.exception.OpenStackException;
 import com.telefonica.euro_iaas.paasmanager.model.NetworkInstance;
 import com.telefonica.euro_iaas.paasmanager.model.RouterInstance;
 import com.telefonica.euro_iaas.paasmanager.model.SubNetworkInstance;
 import com.telefonica.fiware.commons.openstack.auth.OpenStackAccess;
+import com.telefonica.fiware.commons.openstack.auth.exception.OpenStackException;
 
 /**
  * @author jesus.movilla
@@ -856,10 +856,31 @@ public class OpenStackUtilImpl implements OpenStackUtil {
 
         } catch (Exception e) {
             String errorMessage = "Error getting server " + serverId + " from OpenStack: " + e;
-            log.error(errorMessage);
+            log.warn(errorMessage);
             throw new OpenStackException(errorMessage);
         }
         return response;
+    }
+
+    public boolean existsServerForDelete(String serverId, String region, String token, String vdc) {
+        // throw new UnsupportedOperationException("Not supported yet.");
+        // I need to know X-Auth-Token, orgID-Tennat, IP and Port
+        // curl -v -H 'X-Auth-Token: a92287ea7c2243d78a7180ef3f7a5757'
+        // -H "Content-Type: application/xml" -H "Accept: application/json"
+        // -X GET
+        // "http://10.95.171.115:8774/v2/30c60771b6d144d2861b21e442f0bef9/servers/88y6ga216ad4s33ra6asd5fgrg7"
+
+
+        try {
+            HttpUriRequest request = openOperationUtil.createNovaGetRequest(RESOURCE_SERVERS + "/" + serverId,
+                    APPLICATION_XML, region, token, vdc);
+            openOperationUtil.executeNovaRequest(request);
+        } catch (Exception e) {
+            String errorMessage = "Server " + serverId + "  no longer exists in OpenStack: " + e;
+            log.info(errorMessage);
+            return false;
+        }
+        return true;
     }
 
     /**
