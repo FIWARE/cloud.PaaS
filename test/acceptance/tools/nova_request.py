@@ -191,3 +191,22 @@ def get_network_name_list(body_response_server_details):
         network_list.append(address)
 
     return network_list
+
+
+def get_floating_ip(body_response_server_details, network_name):
+    """
+    Retrieve the first floating IP from the given network attached to VM
+    :param body_response_server_details: (dic) Parsed response. Server details data
+    :param network_name (String): Name of the network where floating IP is allocated.
+    :return: (String) The floating IP. None if floating IP not found in the given network (VM)
+    """
+    floating_ip = None
+    addresses = body_response_server_details['server']['addresses']
+    for address in addresses:
+        if address == network_name:
+            for net in addresses[address]:
+                if net['OS-EXT-IPS:type'] == "floating":
+                    floating_ip = net['addr']
+                    break
+
+    return floating_ip

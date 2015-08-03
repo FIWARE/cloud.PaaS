@@ -49,6 +49,9 @@ TIER_KEYPAIR = "tier_keypair"
 TIER_FLOATINGIP = "tier_floatingip"
 TIER_REGION = "tier_region"
 REGION_DEFAULT_SHAREDNET_PROPERTY = "region_default_sharednet"
+CONFIG_SUPPORT_USER = "support_user"
+CONFIG_SUPPORT_KEY_FILE = "support_key_file"
+
 
 # METADATA constants
 METADATA_NID = "nid"
@@ -68,3 +71,9 @@ TIER_REQUEST_FLAVOUR = "flavour"
 TIER_REQUEST_KEYPAIR = "keypair"
 TIER_REQUEST_FLOATINGIP = "floatingip"
 TIER_REQUEST_REGION = "region"
+
+# E2E Testing
+MAX_CHECKS_SSH_CONNECTION = 5
+SLEEP_TIME_CHECKS = 5  # seconds
+PRODUCT_FILE_NAME_FORMAT = u'{product_name}_{product_version}_{installator}'
+INSTALLATION_PRODUCT_DIR = u'/tmp'

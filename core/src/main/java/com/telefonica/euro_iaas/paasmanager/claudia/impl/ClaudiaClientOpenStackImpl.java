@@ -310,7 +310,7 @@ public class ClaudiaClientOpenStackImpl implements ClaudiaClient {
         int networkNoPublic = tierInstance.getNetworkNumberNoPublic();
         String interfaces = "\nbootcmd:\n";
         for (int i = 0; i < networkNoPublic; i++) {
-            interfaces = interfaces + "     - ifup eth" + i + " \n";
+            interfaces = interfaces + "     - ifdown eth" + i + " \n" + "     - ifup eth" + i + " \n";
         }
         return interfaces;
     }

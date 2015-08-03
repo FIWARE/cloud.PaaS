@@ -26,6 +26,8 @@
         "tier_keypair": "default",
         "tier_floatingip": "false",
         "tier_region": "Trento",
-        "region_default_sharednet": "shared-net"
+        "region_default_sharednet": "shared-net",
+        "support_user": "support",
+        "support_key_file": ""
     }
 }
