@@ -31,6 +31,7 @@ from qa_utils.rest_client_utils import HEADER_REPRESENTATION_XML, HEADER_CONTENT
 from qa_utils.logger_utils import get_logger
 from paasmanagerclient.environment_resource_client import EnvironmentResourceClient
 from paasmanagerclient.tier_resource_client import TierResourceClient
+from paasmanagerclient.environment_instance_resource_client import EnvironmentInstanceResourceClient
 
 logger = get_logger("paasmanagerClient")
 
@@ -189,12 +190,25 @@ class PaaSManagerClient():
     def getTierResourceClient(self):
         """
         Create an API resource REST client
-        :return: Rest client for 'Environment' API resource
+        :return: Rest client for 'Tier' API resource
         """
         split_regex = "(.*)://(.*):(\d*)/(.*)"
         regex_matches = re.search(split_regex, self.endpoint_url)
 
         logger.info("Creating TierResourceClient")
         return TierResourceClient(protocol=regex_matches.group(1), host=regex_matches.group(2),
+                                         port=regex_matches.group(3), tenant_id=self.tenant_id,
+                                         resource=regex_matches.group(4), headers=self.headers)
+
+    def getEnvironmentInstanceResourceClient(self):
+        """
+        Create an API resource REST client
+        :return: Rest client for 'EnvironmentInstance' API resource
+        """
+        split_regex = "(.*)://(.*):(\d*)/(.*)"
+        regex_matches = re.search(split_regex, self.endpoint_url)
+
+        logger.info("Creating EnvironmentInstanceResourceClient")
+        return EnvironmentInstanceResourceClient(protocol=regex_matches.group(1), host=regex_matches.group(2),
                                          port=regex_matches.group(3), tenant_id=self.tenant_id,
                                          resource=regex_matches.group(4), headers=self.headers)
