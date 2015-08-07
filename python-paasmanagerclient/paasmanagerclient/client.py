@@ -184,3 +184,16 @@ class PaaSManagerClient():
         return EnvironmentResourceClient(protocol=regex_matches.group(1), host=regex_matches.group(2),
                                          port=regex_matches.group(3), tenant_id=self.tenant_id,
                                          resource=regex_matches.group(4), headers=self.headers)
+
+    def getTierResourceClient(self):
+        """
+        Create an API resource REST client
+        :return: Rest client for 'Environment' API resource
+        """
+        split_regex = "(.*)://(.*):(\d*)/(.*)"
+        regex_matches = re.search(split_regex, self.endpoint_url)
+
+        logger.info("Creating TierResourceClient")
+        return TierResourceClient(protocol=regex_matches.group(1), host=regex_matches.group(2),
+                                         port=regex_matches.group(3), tenant_id=self.tenant_id,
+                                         resource=regex_matches.group(4), headers=self.headers)

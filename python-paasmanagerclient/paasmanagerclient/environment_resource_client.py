@@ -34,11 +34,11 @@ PAASMANAGER_BASE_URI = "{" + API_ROOT_URL_ARG_NAME + "}"
 ENVIRONMENT_RESOURCE_ROOT_URI = PAASMANAGER_BASE_URI + "/catalog/org/FIWARE/vdc/{tenant_id}/environment"
 ENVIRONMENT_RESOURCE_DETAIL_URI = ENVIRONMENT_RESOURCE_ROOT_URI + "/{environment_name}"
 
+
 # BODY ELEMENTS
 ENVIRONMENT_BODY_ROOT = "environmentDto"
 ENVIRONMENT_BODY_NAME = "name"
 ENVIRONMENT_BODY_DESCRIPTION = "description"
-
 
 class EnvironmentResourceClient(RestClient):
 
