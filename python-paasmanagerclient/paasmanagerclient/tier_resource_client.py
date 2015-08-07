@@ -90,9 +90,25 @@ class TierResourceClient(RestClient):
     def delete_tier(self, environment_name, name):
         """
         Delete a Tier (Tenant)
-        :param name: Name of the environment to be deleted
+        :param environment_name: Name of the environment to which tier belongs
+        :param name: Name of the tier to be deleted
         :return: 'Request' response
         """
         logger.info("Deleting environment")
         return self.delete(TIER_RESOURCE_DETAIL_URI, headers=self.headers, parameters=None,
                            tenant_id=self.tenant_id, environment_name=environment_name, tier_name=name)
+
+    def get_tier(self, environment_name, name):
+        """
+        Get a Tier of a Environment  (Tenant)
+        :param environment_name: Name of the environment to which tier belongs
+        :param name: Name of the tier to be deleted
+        :return:
+        """
+        logger.info("Get tier")
+        response = self.get(TIER_RESOURCE_DETAIL_URI, headers=self.headers, parameters=None,
+                           tenant_id=self.tenant_id, environment_name=environment_name, tier_name=name)
+
+        sr_response = response_body_to_dict(response, self.headers[HEADER_CONTENT_TYPE],
+                                          xml_root_element_name=TIER_BODY_ROOT)
+        return sr_response
