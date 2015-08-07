@@ -22,8 +22,8 @@
 # contact with opensource@tid.es
 
 
-from qa_utils.rest_client_utils import RestClient, API_ROOT_URL_ARG_NAME, model_to_request_body, HEADER_CONTENT_TYPE, \
-    HEADER_REPRESENTATION_XML
+from qa_utils.rest_client_utils import RestClient, API_ROOT_URL_ARG_NAME, model_to_request_body,  \
+    response_body_to_dict, HEADER_CONTENT_TYPE, HEADER_REPRESENTATION_XML
 from qa_utils.logger_utils import get_logger
 
 logger = get_logger("paasmanagerClient")
@@ -81,3 +81,16 @@ class EnvironmentResourceClient(RestClient):
         logger.info("Deleting environment")
         return self.delete(ENVIRONMENT_RESOURCE_DETAIL_URI, headers=self.headers, parameters=None,
                            tenant_id=self.tenant_id, environment_name=name)
+
+def get_environment(self, name):
+        """
+        Get an environment (Tenant)
+        :return:
+        """
+        logger.info("Get environment")
+        response = self.get(ENVIRONMENT_RESOURCE_DETAIL_URI, headers=self.headers, parameters=None,
+                           tenant_id=self.tenant_id, environment_name=name)
+
+        sr_response = response_body_to_dict(response, self.headers[HEADER_CONTENT_TYPE],
+                                          xml_root_element_name=ENVIRONMENT_BODY_ROOT)
+        return sr_response
