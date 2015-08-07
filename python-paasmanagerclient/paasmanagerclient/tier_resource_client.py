@@ -45,6 +45,13 @@ TIER_BODY_FLAVOUR = "flavour"
 TIER_BODY_KEYPAIR = "keypair"
 TIER_BODY_FLOATINGIP = "floatingip"
 TIER_BODY_REGION = "region"
+TIER_BODY_PRODUCTRELEASE = "productReleaseDtos"
+TIER_BODY_PRODUCTRELEASE_NAME = "productName"
+TIER_BODY_PRODUCTRELEASE_VERSION = "version"
+TIER_BODY_NETWORK = "networkDto"
+TIER_BODY_NETWORK_NAME = "networkName"
+TIER_BODY_SUBNETWORK = "subNetworkDto"
+TIER_BODY_SUBNETWORK_NAME = "subnetName"
 
 class TierResourceClient(RestClient):
 
@@ -65,7 +72,8 @@ class TierResourceClient(RestClient):
         self.tenant_id = tenant_id
         super(TierResourceClient, self).__init__(protocol, host, port, resource=resource)
 
-    def create_tier(self, environment_name, name, image, region):
+    def create_tier(self, environment_name, name, image, region_name, keypair=None, product_name=None,
+                    product_version=None, network_name=None, subnetwork_name=None):
         """
         Add a Tier to an already existing Environment (Tenant)
         :param name: Name of the environment
@@ -74,14 +82,32 @@ class TierResourceClient(RestClient):
         :return: 'Requests' response
         """
         logger.info("Add tier to environment")
-        tier_model = {TIER_BODY_ROOT: {TIER_BODY_NAME: name,
-                                            TIER_BODY_INITIAL_INSTANCES: "1",
-                                            TIER_BODY_MAXIMUM_INSTANCES: "1",
-                                            TIER_BODY_MINIMUM_INSTANCES: "1",
-                                            TIER_BODY_IMAGE: image,
-                                            TIER_BODY_FLAVOUR: "2",
-                                            TIER_BODY_FLOATINGIP: "False",
-                                            TIER_BODY_REGION: region}}
+        tier_model =    {TIER_BODY_ROOT:
+                            {
+                                TIER_BODY_NAME: name,
+                                TIER_BODY_INITIAL_INSTANCES: "1",
+                                TIER_BODY_MAXIMUM_INSTANCES: "1",
+                                TIER_BODY_MINIMUM_INSTANCES: "1",
+                                TIER_BODY_IMAGE: image,
+                                TIER_BODY_FLAVOUR: "2",
+                                TIER_BODY_KEYPAIR: keypair,
+                                TIER_BODY_FLOATINGIP: "False",
+                                TIER_BODY_REGION: region_name,
+                                TIER_BODY_PRODUCTRELEASE :
+                                    {
+                                        TIER_BODY_PRODUCTRELEASE_NAME : product_name,
+                                        TIER_BODY_PRODUCTRELEASE_VERSION : product_version
+                                    },
+                                TIER_BODY_NETWORK :
+                                    {
+                                        TIER_BODY_NETWORK_NAME : network_name,
+                                        TIER_BODY_SUBNETWORK :
+                                            {
+                                                TIER_BODY_SUBNETWORK_NAME: subnetwork_name
+                                            }
+                                    }
+                            }
+                        }
 
         body = model_to_request_body(tier_model, self.headers[HEADER_CONTENT_TYPE])
         return self.post(TIER_RESOURCE_ROOT_URI, body, self.headers, parameters=None, tenant_id=self.tenant_id,
