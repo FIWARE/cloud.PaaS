@@ -82,7 +82,7 @@ class EnvironmentResourceClient(RestClient):
         return self.delete(ENVIRONMENT_RESOURCE_DETAIL_URI, headers=self.headers, parameters=None,
                            tenant_id=self.tenant_id, environment_name=name)
 
-def get_environment(self, name):
+    def get_environment(self, name):
         """
         Get an environment (Tenant)
         :return:
