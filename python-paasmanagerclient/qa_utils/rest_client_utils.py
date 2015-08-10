@@ -276,3 +276,5 @@ def delete_element_when_value_none(data_structure):
                 del data_structure[element]
             else:
                 delete_element_when_value_none(data_structure[element])
+                if len(data_structure[element]) == 0:
+                        del data_structure[element]

@@ -175,6 +175,12 @@ class PaaSManagerClient():
         logger.debug("Setting headers: " + str(headers))
         self.headers = headers
 
+    def get_taskid (task_url):
+        split_regex = "(.*)://(.*):(\d*)/(.*)/(.*)/(.*)/(.*)/(.*)/(.*)"
+        regex_matches = re.search(split_regex, task_url)
+
+        return regex_matches.group(9)
+
     def getEnvironmentResourceClient(self):
         """
         Create an API resource REST client

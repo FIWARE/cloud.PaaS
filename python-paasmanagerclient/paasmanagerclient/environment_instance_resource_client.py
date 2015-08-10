@@ -92,6 +92,11 @@ class EnvironmentInstanceResourceClient(RestClient):
         :return: 'Requests' response
         """
         logger.info("Creating new environment  instance")
+        if description is None:
+            description = "Description of " + name
+        if environment_description is None:
+            environment_description = "Description of " + environment_name
+
         env_model = {ENVIRONMENT_INSTANCE_BODY_ROOT:
                          {
                              ENVIRONMENT_INSTANCE_BODY_NAME: name,

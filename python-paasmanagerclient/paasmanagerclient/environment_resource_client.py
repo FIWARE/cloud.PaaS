@@ -67,6 +67,9 @@ class EnvironmentResourceClient(RestClient):
         :return: 'Requests' response
         """
         logger.info("Creating new environment")
+        if description is None:
+            description = "Description of " + name
+
         env_model = {ENVIRONMENT_BODY_ROOT: {ENVIRONMENT_BODY_NAME: name,
                                              ENVIRONMENT_BODY_DESCRIPTION: description}}
         body = model_to_request_body(env_model, self.headers[HEADER_CONTENT_TYPE])
