@@ -253,3 +253,26 @@ def model_to_request_body(body_model, content_type, body_model_root_element=None
         except Exception, e:
             logger.error("Error parsing the body model to JSON. Exception:" + str(e))
             raise e
+
+def delete_element_when_value_none(data_structure):
+    """
+    This method remove all entries in a Python dict when its value is None.
+    :param data_structure: Python dict (lists are supported). e.i:
+            [{"element1": "e1",
+              "element2": {"element2.1": "e2",
+                        "element2.2": None},
+              "element3": "e3"},
+            {"elementA": "eA",
+             "elementB": {"elementB.1": None,
+             "elementB2": ["a", "b"]}}]
+    :return: None. The data_structure is modified
+    """
+    if isinstance(data_structure, list):
+        for element in data_structure:
+            delete_element_when_value_none(element)
+    elif isinstance(data_structure, dict):
+        for element in data_structure.keys():
+            if data_structure[element] is None:
+                del data_structure[element]
+            else:
+                delete_element_when_value_none(data_structure[element])

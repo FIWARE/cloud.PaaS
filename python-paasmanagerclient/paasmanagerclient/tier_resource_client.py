@@ -23,7 +23,7 @@
 
 
 from qa_utils.rest_client_utils import RestClient, API_ROOT_URL_ARG_NAME, model_to_request_body,  \
-    response_body_to_dict, HEADER_CONTENT_TYPE, HEADER_REPRESENTATION_XML
+    response_body_to_dict, delete_element_when_value_none, HEADER_CONTENT_TYPE, HEADER_REPRESENTATION_XML
 from qa_utils.logger_utils import get_logger
 
 logger = get_logger("paasmanagerClient")
@@ -108,6 +108,9 @@ class TierResourceClient(RestClient):
                                     }
                             }
                         }
+
+        #Removing keys whose values are None
+        delete_element_when_value_none(tier_model)
 
         body = model_to_request_body(tier_model, self.headers[HEADER_CONTENT_TYPE])
         return self.post(TIER_RESOURCE_ROOT_URI, body, self.headers, parameters=None, tenant_id=self.tenant_id,

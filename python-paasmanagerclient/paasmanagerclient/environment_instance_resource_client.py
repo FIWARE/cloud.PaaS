@@ -23,7 +23,7 @@
 
 
 from qa_utils.rest_client_utils import RestClient, API_ROOT_URL_ARG_NAME, model_to_request_body,  \
-    response_body_to_dict, HEADER_CONTENT_TYPE, HEADER_REPRESENTATION_XML
+    delete_element_when_value_none, response_body_to_dict, HEADER_CONTENT_TYPE, HEADER_REPRESENTATION_XML
 from qa_utils.logger_utils import get_logger
 
 logger = get_logger("paasmanagerClient")
@@ -83,8 +83,8 @@ class EnvironmentInstanceResourceClient(RestClient):
         super(EnvironmentInstanceResourceClient, self).__init__(protocol, host, port, resource=resource)
 
     def create_environment_instance(self, name, environment_name, tier_name, image, region_name,
-                                    description="", environment_description="", keypair="", product_name="",
-                                    product_version="", network_name="", subnetwork_name=""):
+                                    description=None, environment_description=None, keypair=None, product_name=None,
+                                    product_version=None, network_name=None, subnetwork_name=None):
         """
         Create a new environment (Tenant)
         :param name: Name of the environment
@@ -128,6 +128,9 @@ class EnvironmentInstanceResourceClient(RestClient):
                                 }
                          }
                     }
+        #Removing keys whose values are None
+        delete_element_when_value_none(env_model)
+        #Converting json to body request
         body = model_to_request_body(env_model, self.headers[HEADER_CONTENT_TYPE])
         return self.post(ENVIRONMENT_INSTANCE_RESOURCE_ROOT_URI, body, self.headers, parameters=None,
                          tenant_id=self.tenant_id)
