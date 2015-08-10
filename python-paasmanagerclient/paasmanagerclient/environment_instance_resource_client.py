@@ -83,15 +83,15 @@ class EnvironmentInstanceResourceClient(RestClient):
         super(EnvironmentInstanceResourceClient, self).__init__(protocol, host, port, resource=resource)
 
     def create_environment_instance(self, name, environment_name, tier_name, image, region_name,
-                                    description=None, environment_description=None, keypair=None, product_name=None,
-                                    product_version=None, network_name=None, subnetwork_name=None):
+                                    description="", environment_description="", keypair="", product_name="",
+                                    product_version="", network_name="", subnetwork_name=""):
         """
         Create a new environment (Tenant)
         :param name: Name of the environment
         :param description: Description of the environment
         :return: 'Requests' response
         """
-        logger.info("Creating new environment")
+        logger.info("Creating new environment  instance")
         env_model = {ENVIRONMENT_INSTANCE_BODY_ROOT:
                          {
                              ENVIRONMENT_INSTANCE_BODY_NAME: name,
