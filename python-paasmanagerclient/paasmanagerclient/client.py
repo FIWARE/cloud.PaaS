@@ -32,6 +32,7 @@ from qa_utils.logger_utils import get_logger
 from paasmanagerclient.environment_resource_client import EnvironmentResourceClient
 from paasmanagerclient.tier_resource_client import TierResourceClient
 from paasmanagerclient.environment_instance_resource_client import EnvironmentInstanceResourceClient
+from task_resource_client import TaskResourceClient
 
 logger = get_logger("paasmanagerClient")
 
@@ -210,5 +211,18 @@ class PaaSManagerClient():
 
         logger.info("Creating EnvironmentInstanceResourceClient")
         return EnvironmentInstanceResourceClient(protocol=regex_matches.group(1), host=regex_matches.group(2),
+                                         port=regex_matches.group(3), tenant_id=self.tenant_id,
+                                         resource=regex_matches.group(4), headers=self.headers)
+
+    def getTaskResourceClient(self):
+        """
+        Create an API resource REST client
+        :return: Rest client for 'Task' API resource
+        """
+        split_regex = "(.*)://(.*):(\d*)/(.*)"
+        regex_matches = re.search(split_regex, self.endpoint_url)
+
+        logger.info("Creating TaskResourceClient")
+        return TaskResourceClient(protocol=regex_matches.group(1), host=regex_matches.group(2),
                                          port=regex_matches.group(3), tenant_id=self.tenant_id,
                                          resource=regex_matches.group(4), headers=self.headers)

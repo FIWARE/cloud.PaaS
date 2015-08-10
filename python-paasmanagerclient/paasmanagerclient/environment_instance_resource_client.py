@@ -32,7 +32,7 @@ logger = get_logger("paasmanagerClient")
 #URI ELEMENT
 PAASMANAGER_BASE_URI = "{" + API_ROOT_URL_ARG_NAME + "}"
 ENVIRONMENT_INSTANCE_RESOURCE_ROOT_URI = PAASMANAGER_BASE_URI + \
-                                         "/envInst/org/FIWARE/vdc/{tenant_id}}/environmentInstance"
+                                         "/envInst/org/FIWARE/vdc/{tenant_id}/environmentInstance"
 ENVIRONMENT_INSTANCE_RESOURCE_DETAIL_URI = ENVIRONMENT_INSTANCE_RESOURCE_ROOT_URI + "/{environment_instance_name}"
 
 
