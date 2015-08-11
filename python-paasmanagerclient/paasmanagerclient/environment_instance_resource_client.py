@@ -45,7 +45,7 @@ ENVIRONMENT_BODY_ROOT = "environmentDto"
 ENVIRONMENT_BODY_NAME = "name"
 ENVIRONMENT_BODY_DESCRIPTION = "description"
 
-TIER_BODY_ROOT = "tierDto"
+TIER_BODY_ROOT = "tierDtos"
 TIER_BODY_INITIAL_INSTANCES = "initialNumberInstances"
 TIER_BODY_MAXIMUM_INSTANCES = "maximumNumberInstances"
 TIER_BODY_MINIMUM_INSTANCES = "minimumNumberInstances"
