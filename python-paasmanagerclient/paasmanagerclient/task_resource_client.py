@@ -22,11 +22,11 @@
 # contact with opensource@tid.es
 
 
-from qa_utils.rest_client_utils import RestClient, API_ROOT_URL_ARG_NAME, response_body_to_dict,\
+from utils.rest_client_utils import RestClient, API_ROOT_URL_ARG_NAME, response_body_to_dict,\
      HEADER_CONTENT_TYPE, HEADER_REPRESENTATION_XML
-from qa_utils.logger_utils import get_logger
+from utils.logger_utils import get_logger
 
-logger = get_logger("paasmanagerClient")
+logger = get_logger(__name__)
 
 
 #URI ELEMENT

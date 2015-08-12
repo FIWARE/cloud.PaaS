@@ -27,14 +27,14 @@ import re
 
 from keystoneclient.v2_0 import Client as KeystoneClient
 
-from qa_utils.rest_client_utils import HEADER_REPRESENTATION_XML, HEADER_CONTENT_TYPE, HEADER_TRANSACTION_ID
-from qa_utils.logger_utils import get_logger
+from utils.rest_client_utils import HEADER_REPRESENTATION_XML, HEADER_CONTENT_TYPE, HEADER_TRANSACTION_ID
+from utils.logger_utils import get_logger
 from paasmanagerclient.environment_resource_client import EnvironmentResourceClient
 from paasmanagerclient.tier_resource_client import TierResourceClient
 from paasmanagerclient.environment_instance_resource_client import EnvironmentInstanceResourceClient
 from task_resource_client import TaskResourceClient
 
-logger = get_logger("paasmanagerClient")
+logger = get_logger(__name__)
 
 # HEADERS
 X_AUTH_TOKEN = "X-Auth-Token"
