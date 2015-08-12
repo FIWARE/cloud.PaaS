@@ -1,0 +1,6 @@
+-e git+https://github.com/telefonicaid/fiware-paas.git@CLAUDIA-5368#egg=python-paasmanagerclient&subdirectory=python-paasmanagerclient
+-e git+https://github.com/telefonicaid/fiware-sdc.git@CLAUDIA-5368#egg=python-sdcclient&subdirectory=python-sdcclient
+oslo.config==1.13.0
+oslo.i18n==1.7.0
+oslo.serialization==1.6.0
+oslo.utils==1.7.0
