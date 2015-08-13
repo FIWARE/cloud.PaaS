@@ -27,6 +27,7 @@ import argparse
 import xmltodict
 import time
 import requests
+import datetime
 
 from sdcclient.client import SDCClient
 from paasmanagerclient.client import PaaSManagerClient
@@ -192,6 +193,10 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
 
         logger.info("Creating Environment Instance " + blueprint_name)
         print ("Creating Environment Instance " + blueprint_name)
+
+        initial_time = time.strftime("%H:%M:%S")
+        initial_time_datetime = datetime.datetime.now()
+
         environment_instance_task = environment_instance_client.create_environment_instance\
         (
             name=blueprint_name,
@@ -222,30 +227,36 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
             print "Polling every 60 seconds - Task status: " + task_status
             logger.info("Polling every 60 seconds - Task status: " + task_status)
 
+        final_time = time.strftime("%H:%M:%S")
+        final_time_datetime = datetime.datetime.now()
+        interval =  final_time_datetime - initial_time_datetime
+
         if task_status=='SUCCESS':
             print ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
-                " SUCCESS to deploy")
+                " SUCCESS to deploy in " + final_time_datetime.strftime("%H:%M:%S") + " hh::mm:ss \n")
             logger.info ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
-                " SUCCESS to deploy")
+                " SUCCESS to deploy in : " + final_time_datetime.strftime("%H:%M:%S") + " hh::mm:ss  \n")
             report_file.write ("Image name: " + image_name + ". Product Release: " + product_name + "-"
-                               + product_version + " SUCCESS to deploy \n")
+                               + product_version + " SUCCESS to deploy in : " + final_time_datetime.strftime("%H:%M:%S")
+                               + " hh::mm:ss  \n")
         elif task_status =='ERROR':
             task_error = task['error']
             major_error_desc = task_error['majorErrorCode']
             error_message = task_error['message']
             minorErrorCode = task_error['minorErrorCode']
             print ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
-                " ERROR to deploy")
+                " ERROR to deploy in " + final_time_datetime.strftime("%H:%M:%S") + " hh::mm:ss  \n")
             print ("ERROR Major Error Description : " + str(major_error_desc))
             print ("ERROR Message : " + str(error_message))
             print ("ERROR Minor Error Code : " + str(minorErrorCode))
             logger.info ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
-                " ERROR to deploy")
+                " ERROR to deploy in " + final_time_datetime.strftime("%H:%M:%S") + " hh::mm:ss \n")
             logger.info("ERROR Major Error Description : " + str(major_error_desc))
             logger.info("ERROR Message : " + str(error_message))
             logger.info("ERROR Minor Error Code : " + str(minorErrorCode))
             report_file.write ("Image name: " + image_name + ". Product Release: " + product_name + "-"
-                               + product_version + " ERROR to deploy \n")
+                               + product_version + " ERROR to deploy in " + final_time_datetime.strftime("%H:%M:%S")
+                               + " hh::mm:ss  \n")
             report_file.write("ERROR Major Error Description : " + str(major_error_desc) + "\n")
             report_file.write("ERROR Message : " + str(error_message) + "\n")
             report_file.write("ERROR Minor Error Code : " + str(minorErrorCode) + "\n")
@@ -269,14 +280,14 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
 
         if task_status=='SUCCESS':
             print ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
-                " SUCCESS to delete ")
+                " SUCCESS to delete  in " + final_time_datetime.strftime("%H:%M:%S") + " hh::mm:ss \n")
             logger.info ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
-                " SUCCESS to delete")
+                " SUCCESS to delete in " + final_time_datetime.strftime("%H:%M:%S") + " hh::mm:ss \n")
         elif task_status =='ERROR':
             print ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
-                " ERROR to delete")
+                " ERROR to delete in " + final_time_datetime.strftime("%H:%M:%S") + " hh::mm:ss \n")
             logger.info ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
-                " ERROR to delete")
+                " ERROR to delete in " + final_time_datetime.strftime("%H:%M:%S") + " hh::mm:ss \n")
 
         logger.info("Deleting Tier " + tier_name)
         print ("Deleting Tier " + tier_name)
