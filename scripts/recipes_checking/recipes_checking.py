@@ -227,8 +227,8 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
         logger.info("Creating Environment Instance " + blueprint_name)
         print ("Creating Environment Instance " + blueprint_name)
 
-        initial_time = time.strftime("%H:%M:%S")
-        initial_time_datetime = datetime.datetime.now()
+        initial_time_deploy = time.strftime("%H:%M:%S")
+        initial_time_deploy_datetime = datetime.datetime.now()
 
         environment_instance_task = environment_instance_client.create_environment_instance\
         (
@@ -260,36 +260,36 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
             print "Polling every 60 seconds - Task status: " + task_status
             logger.info("Polling every " + str(TIME_INTERVAL_TO_DEPLOY) +" seconds - Task status: " + task_status)
 
-        final_time = time.strftime("%H:%M:%S")
-        final_time_datetime = datetime.datetime.now()
-        interval =  final_time_datetime - initial_time_datetime
+        final_time_deploy = time.strftime("%H:%M:%S")
+        final_time_deploy_datetime = datetime.datetime.now()
+        interval_deploy =  final_time_deploy_datetime - initial_time_deploy_datetime
 
         if task_status==TASK_STATUS_SUCCESS:
             print ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
-                " SUCCESS to deploy in " + final_time_datetime.strftime("%H:%M:%S") + " hh::mm:ss \n")
+                " SUCCESS to deploy in " + interval_deploy + " hh::mm:ss \n")
             logger.info ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
-                " SUCCESS to deploy in : " + final_time_datetime.strftime("%H:%M:%S") + " hh::mm:ss  \n")
+                " SUCCESS to deploy in : " + interval_deploy + " hh::mm:ss  \n")
             report_file.write ("Image name: " + image_name + ". Product Release: " + product_name + "-"
-                               + product_version + " SUCCESS to deploy in : " + final_time_datetime.strftime("%H:%M:%S")
+                               + product_version + " SUCCESS to deploy in : " + interval_deploy
                                + " hh::mm:ss  \n")
         elif task_status == TASK_STATUS_ERROR:
             task_error = task[TASK_BODY_ERROR]
             major_error_desc = task_error[TASK_BODY_ERROR_MAJORCODE]
             error_message = task_error[TASK_BODY_ERROR_MESSAGE]
             minorErrorCode = task_error[TASK_BODY_ERROR_MINORCODE]
-            
+
             print ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
-                " ERROR to deploy in " + final_time_datetime.strftime("%H:%M:%S") + " hh::mm:ss  \n")
+                " ERROR to deploy in " + interval_deploy + " hh::mm:ss  \n")
             print ("ERROR Major Error Description : " + str(major_error_desc))
             print ("ERROR Message : " + str(error_message))
             print ("ERROR Minor Error Code : " + str(minorErrorCode))
             logger.info ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
-                " ERROR to deploy in " + final_time_datetime.strftime("%H:%M:%S") + " hh::mm:ss \n")
+                " ERROR to deploy in " + interval_deploy + " hh::mm:ss \n")
             logger.info("ERROR Major Error Description : " + str(major_error_desc))
             logger.info("ERROR Message : " + str(error_message))
             logger.info("ERROR Minor Error Code : " + str(minorErrorCode))
             report_file.write ("Image name: " + image_name + ". Product Release: " + product_name + "-"
-                               + product_version + " ERROR to deploy in " + final_time_datetime.strftime("%H:%M:%S")
+                               + product_version + " ERROR to deploy in " + interval_deploy
                                + " hh::mm:ss  \n")
             report_file.write("ERROR Major Error Description : " + str(major_error_desc) + "\n")
             report_file.write("ERROR Message : " + str(error_message) + "\n")
@@ -297,6 +297,10 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
 
         logger.info("Deleting Environment Instance " + blueprint_name)
         print ("Deleting Environment Instance " + blueprint_name)
+
+        initial_time_delete = time.strftime("%H:%M:%S")
+        initial_time_delete_datetime = datetime.now()
+
         environment_instance_task = environment_instance_client.delete_environment_instance(blueprint_name)
 
         logger.info("Waiting for Environment Instance " + blueprint_name + "Instance to be deleted")
@@ -312,27 +316,37 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
             task_status = task['status']
             print "Polling every " + str(TIME_INTERVAL_TO_DELETE) + " seconds - Task status: " + task_status
 
+        final_time_delete = time.strftime("%H:%M:%S")
+        final_time_delete_datetime = datetime.datetime.now()
+        interval_delete =  final_time_delete_datetime - initial_time_delete_datetime
+
         if task_status==TASK_STATUS_SUCCESS:
             print ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
-                " SUCCESS to delete  in " + final_time_datetime.strftime("%H:%M:%S") + " hh::mm:ss \n")
+                " SUCCESS to delete  in " + interval_delete + " hh::mm:ss \n")
             logger.info ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
-                " SUCCESS to delete in " + final_time_datetime.strftime("%H:%M:%S") + " hh::mm:ss \n")
+                " SUCCESS to delete in " + interval_delete + " hh::mm:ss \n")
         elif task_status ==TASK_STATUS_ERROR:
             print ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
-                " ERROR to delete in " + final_time_datetime.strftime("%H:%M:%S") + " hh::mm:ss \n")
+                " ERROR to delete in " + interval_delete + " hh::mm:ss \n")
             logger.info ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
-                " ERROR to delete in " + final_time_datetime.strftime("%H:%M:%S") + " hh::mm:ss \n")
+                " ERROR to delete in " + interval_delete + " hh::mm:ss \n")
 
-        logger.info("Deleting Tier " + tier_name)
-        print ("Deleting Tier " + tier_name)
-        tier_client.delete_tier(env_name, tier_name)
+    '''
+    env_name = envName + "8"
+    tier_name = "tierName" + env_name
+    blueprint_name = env_name + "Instance"
 
-        logger.info("Deleting Environment " + env_name)
-        print ("Deleting Environment " + env_name)
-        environment_client.delete_environment(env_name)
+    logger.info("Deleting Tier " + tier_name)
+    print ("Deleting Tier " + tier_name)
+    tier_client.delete_tier(env_name, tier_name)
 
-        logger.info("Environment " + env_name + " FINISHED")
-        print ("Environment " + env_name + " FINISHED")
+    logger.info("Deleting Environment " + env_name)
+    print ("Deleting Environment " + env_name)
+    environment_client.delete_environment(env_name)
+
+    logger.info("Environment " + env_name + " FINISHED")
+    print ("Environment " + env_name + " FINISHED")
+    '''
 
 def getTaskUrl (environment_instance_response):
     task_dict = xmltodict.parse(environment_instance_response._content, attr_prefix='')
