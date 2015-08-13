@@ -79,7 +79,8 @@ class EnvironmentInstanceResourceClient(RestClient):
         :return: None
         """
         if headers is None:
-            self.headers = {HEADER_CONTENT_TYPE: HEADER_REPRESENTATION_XML}
+            self.headers = {HEADER_CONTENT_TYPE: HEADER_REPRESENTATION_XML,
+                            HEADER_ACCEPT: HEADER_REPRESENTATION_XML}
         self.headers = headers
         self.tenant_id = tenant_id
         super(EnvironmentInstanceResourceClient, self).__init__(protocol, host, port, resource=resource)

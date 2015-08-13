@@ -23,7 +23,7 @@
 
 
 from utils.rest_client_utils import RestClient, API_ROOT_URL_ARG_NAME, response_body_to_dict,\
-     HEADER_CONTENT_TYPE, HEADER_REPRESENTATION_XML
+     HEADER_CONTENT_TYPE, HEADER_ACCEPT, HEADER_REPRESENTATION_XML
 from utils.logger_utils import get_logger
 
 logger = get_logger(__name__)
@@ -51,7 +51,8 @@ class TaskResourceClient(RestClient):
         :return: None
         """
         if headers is None:
-            self.headers = {HEADER_CONTENT_TYPE: HEADER_REPRESENTATION_XML}
+            self.headers = {HEADER_CONTENT_TYPE: HEADER_REPRESENTATION_XML,
+                            HEADER_ACCEPT: HEADER_REPRESENTATION_XML}
         self.headers = headers
         self.tenant_id = tenant_id
         super(TaskResourceClient, self).__init__(protocol, host, port, resource=resource)
@@ -66,6 +67,6 @@ class TaskResourceClient(RestClient):
         response = self.get(TASK_RESOURCE_DETAIL_URI, headers=self.headers, parameters=None,
                            tenant_id=self.tenant_id, task_id=task_id)
 
-        sr_response = response_body_to_dict(response, self.headers[HEADER_CONTENT_TYPE],
+        sr_response = response_body_to_dict(response, self.headers[HEADER_ACCEPT],
                                           xml_root_element_name=TASK_BODY_ROOT)
         return sr_response

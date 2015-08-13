@@ -23,7 +23,7 @@
 
 
 from utils.rest_client_utils import RestClient, API_ROOT_URL_ARG_NAME, model_to_request_body,  \
-    response_body_to_dict, HEADER_CONTENT_TYPE, HEADER_REPRESENTATION_XML
+    response_body_to_dict, HEADER_CONTENT_TYPE, HEADER_ACCEPT, HEADER_REPRESENTATION_XML
 from utils.logger_utils import get_logger
 
 logger = get_logger(__name__)
@@ -54,7 +54,8 @@ class EnvironmentResourceClient(RestClient):
         :return: None
         """
         if headers is None:
-            self.headers = {HEADER_CONTENT_TYPE: HEADER_REPRESENTATION_XML}
+            self.headers = {HEADER_CONTENT_TYPE: HEADER_REPRESENTATION_XML,
+                            HEADER_ACCEPT: HEADER_REPRESENTATION_XML}
         self.headers = headers
         self.tenant_id = tenant_id
         super(EnvironmentResourceClient, self).__init__(protocol, host, port, resource=resource)
@@ -69,7 +70,7 @@ class EnvironmentResourceClient(RestClient):
         logger.info("Creating new environment")
         env_model = {ENVIRONMENT_BODY_ROOT: {ENVIRONMENT_BODY_NAME: name,
                                              ENVIRONMENT_BODY_DESCRIPTION: description}}
-        body = model_to_request_body(env_model, self.headers[HEADER_CONTENT_TYPE])
+        body = model_to_request_body(env_model, self.headers[HEADER_ACCEPT])
 
         return self.post(ENVIRONMENT_RESOURCE_ROOT_URI, body, self.headers, parameters=None,
                              tenant_id=self.tenant_id)
@@ -93,6 +94,6 @@ class EnvironmentResourceClient(RestClient):
         response = self.get(ENVIRONMENT_RESOURCE_DETAIL_URI, headers=self.headers, parameters=None,
                            tenant_id=self.tenant_id, environment_name=name)
 
-        dict_environment = response_body_to_dict(response, self.headers[HEADER_CONTENT_TYPE],
+        dict_environment = response_body_to_dict(response, self.headers[HEADER_ACCEPT],
                                           xml_root_element_name=ENVIRONMENT_BODY_ROOT)
         return dict_environment

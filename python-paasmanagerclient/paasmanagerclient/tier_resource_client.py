@@ -23,7 +23,7 @@
 
 
 from utils.rest_client_utils import RestClient, API_ROOT_URL_ARG_NAME, model_to_request_body,  \
-    response_body_to_dict, delete_element_when_value_none, HEADER_CONTENT_TYPE, HEADER_REPRESENTATION_XML
+    response_body_to_dict, delete_element_when_value_none, HEADER_CONTENT_TYPE, HEADER_ACCEPT, HEADER_REPRESENTATION_XML
 from utils.logger_utils import get_logger
 
 logger = get_logger(__name__)
@@ -67,7 +67,8 @@ class TierResourceClient(RestClient):
         :return: None
         """
         if headers is None:
-            self.headers = {HEADER_CONTENT_TYPE: HEADER_REPRESENTATION_XML}
+            self.headers = {HEADER_CONTENT_TYPE: HEADER_REPRESENTATION_XML,
+                            HEADER_ACCEPT: HEADER_REPRESENTATION_XML}
         self.headers = headers
         self.tenant_id = tenant_id
         super(TierResourceClient, self).__init__(protocol, host, port, resource=resource)
@@ -112,7 +113,7 @@ class TierResourceClient(RestClient):
         #Removing keys whose values are None
         delete_element_when_value_none(tier_model)
 
-        body = model_to_request_body(tier_model, self.headers[HEADER_CONTENT_TYPE])
+        body = model_to_request_body(tier_model, self.headers[HEADER_ACCEPT])
 
         return self.post(TIER_RESOURCE_ROOT_URI, body, self.headers, parameters=None,
                                             tenant_id=self.tenant_id,environment_name=environment_name)
@@ -139,6 +140,6 @@ class TierResourceClient(RestClient):
         response = self.get(TIER_RESOURCE_DETAIL_URI, headers=self.headers, parameters=None,
                            tenant_id=self.tenant_id, environment_name=environment_name, tier_name=name)
 
-        dict_tier = response_body_to_dict(response, self.headers[HEADER_CONTENT_TYPE],
+        dict_tier = response_body_to_dict(response, self.headers[HEADER_ACCEPT],
                                           xml_root_element_name=TIER_BODY_ROOT)
         return dict_tier
