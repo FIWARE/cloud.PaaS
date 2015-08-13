@@ -100,7 +100,7 @@ class EnvironmentInstanceResourceClient(RestClient):
         :param product_version: Product version
         :param network_name: Name of the network
         :param subnetwork_name: Name of the subnetwork
-        :return: The task (asynchronous method) as a dict
+        :return: A duple : The task (asynchronous method) as a dict, the 'Request' response
         """
         logger.info("Creating new environment  instance")
 
@@ -148,7 +148,7 @@ class EnvironmentInstanceResourceClient(RestClient):
         response = self.post(ENVIRONMENT_INSTANCE_RESOURCE_ROOT_URI, body, self.headers,
                         parameters=None, tenant_id=self.tenant_id)
         task_dict = response_body_to_dict(response,self.headers[HEADER_ACCEPT], xml_root_element_name=TASK_BODY_ROOT )
-        return task_dict
+        return task_dict, response
 
     def delete_environment_instance(self, name):
         """
@@ -164,7 +164,7 @@ class EnvironmentInstanceResourceClient(RestClient):
         """
         Get an environment instance(Tenant)
         :param name: Name of the environment instance to get
-        :return: The environment as a dict
+        :return: A duple: The environment as a dict, , the 'Request' response
         """
         logger.info("Get environment instance " + name )
         response = self.get(ENVIRONMENT_INSTANCE_RESOURCE_DETAIL_URI, headers=self.headers, parameters=None,
@@ -172,4 +172,4 @@ class EnvironmentInstanceResourceClient(RestClient):
 
         dict_response = response_body_to_dict(response, self.headers[HEADER_ACCEPT],
                                           xml_root_element_name=ENVIRONMENT_INSTANCE_BODY_ROOT)
-        return dict_response
+        return dict_response, response

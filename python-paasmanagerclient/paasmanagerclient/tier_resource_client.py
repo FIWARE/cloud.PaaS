@@ -134,7 +134,7 @@ class TierResourceClient(RestClient):
         Get a Tier of a Environment  (Tenant)
         :param environment_name: Name of the environment to which tier belongs
         :param name: Name of the tier to be deleted
-        :return: The corresponding Tier as a dict
+        :return: Aduple: the corresponding Tier as a dict, , the 'Request' response
         """
         logger.info("Get tier")
         response = self.get(TIER_RESOURCE_DETAIL_URI, headers=self.headers, parameters=None,
@@ -142,4 +142,4 @@ class TierResourceClient(RestClient):
 
         dict_tier = response_body_to_dict(response, self.headers[HEADER_ACCEPT],
                                           xml_root_element_name=TIER_BODY_ROOT)
-        return dict_tier
+        return dict_tier, response

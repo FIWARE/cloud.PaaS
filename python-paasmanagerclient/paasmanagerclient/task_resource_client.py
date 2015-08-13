@@ -61,12 +61,12 @@ class TaskResourceClient(RestClient):
         """
         Get a PaasManager Task  (Tenant)
         :param task_id: ID of the task to obtain
-        :return:
+        :return: A duple: The corresponding task, , the 'Request' response
         """
         logger.info("Get task")
         response = self.get(TASK_RESOURCE_DETAIL_URI, headers=self.headers, parameters=None,
                            tenant_id=self.tenant_id, task_id=task_id)
 
-        sr_response = response_body_to_dict(response, self.headers[HEADER_ACCEPT],
+        task_dict = response_body_to_dict(response, self.headers[HEADER_ACCEPT],
                                           xml_root_element_name=TASK_BODY_ROOT)
-        return sr_response
+        return task_dict, response

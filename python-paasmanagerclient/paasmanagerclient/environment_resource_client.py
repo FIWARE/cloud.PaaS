@@ -88,7 +88,7 @@ class EnvironmentResourceClient(RestClient):
     def get_environment(self, name):
         """
         Get an environment (Tenant)
-        :return:
+        :return: A duple: The environment as a dict, , the 'Request' response
         """
         logger.info("Get environment")
         response = self.get(ENVIRONMENT_RESOURCE_DETAIL_URI, headers=self.headers, parameters=None,
@@ -96,4 +96,4 @@ class EnvironmentResourceClient(RestClient):
 
         dict_environment = response_body_to_dict(response, self.headers[HEADER_ACCEPT],
                                           xml_root_element_name=ENVIRONMENT_BODY_ROOT)
-        return dict_environment
+        return dict_environment, response
