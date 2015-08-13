@@ -27,7 +27,7 @@ import re
 
 from keystoneclient.v2_0 import Client as KeystoneClient
 
-from utils.rest_client_utils import HEADER_REPRESENTATION_XML, HEADER_CONTENT_TYPE, HEADER_TRANSACTION_ID
+from utils.rest_client_utils import HEADER_REPRESENTATION_XML, HEADER_CONTENT_TYPE, HEADER_ACCEPT, HEADER_TRANSACTION_ID
 from utils.logger_utils import get_logger
 from paasmanagerclient.environment_resource_client import EnvironmentResourceClient
 from paasmanagerclient.tier_resource_client import TierResourceClient
@@ -136,12 +136,13 @@ class PaaSManagerClient():
         return endpoint
 
     def init_headers(self, x_auth_token, tenant_id, content_type=HEADER_REPRESENTATION_XML,
-                     transaction_id=generate_transaction_id()):
+                     accept=HEADER_REPRESENTATION_XML, transaction_id=generate_transaction_id()):
         """
         Init header to values (or default values)
         :param x_auth_token: Token from Keystone for tenant_id (OpenStack)
         :param tenant_id: TenantId (OpenStack)
         :param content_type: Content-Type header value. By default application/xml
+        :param accept: Content-Type header value. By default application/xml
         :param transaction_id: txId header value. By default, generated value by generate_transaction_id()
         :return: None
         """
@@ -152,6 +153,12 @@ class PaaSManagerClient():
                 del(self.headers[HEADER_CONTENT_TYPE])
         else:
             self.headers.update({HEADER_CONTENT_TYPE: content_type})
+
+        if accept is None:
+            if HEADER_ACCEPT in self.headers:
+                del(self.headers[HEADER_ACCEPT])
+        else:
+            self.headers.update({HEADER_ACCEPT: accept})
 
         if transaction_id is None:
             if HEADER_TRANSACTION_ID in self.headers:
