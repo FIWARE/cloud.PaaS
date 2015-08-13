@@ -113,8 +113,9 @@ class TierResourceClient(RestClient):
         delete_element_when_value_none(tier_model)
 
         body = model_to_request_body(tier_model, self.headers[HEADER_CONTENT_TYPE])
-        return self.post(TIER_RESOURCE_ROOT_URI, body, self.headers, parameters=None, tenant_id=self.tenant_id,
-                         environment_name=environment_name)
+
+        return self.post(TIER_RESOURCE_ROOT_URI, body, self.headers, parameters=None,
+                                            tenant_id=self.tenant_id,environment_name=environment_name)
 
     def delete_tier(self, environment_name, name):
         """
@@ -132,12 +133,12 @@ class TierResourceClient(RestClient):
         Get a Tier of a Environment  (Tenant)
         :param environment_name: Name of the environment to which tier belongs
         :param name: Name of the tier to be deleted
-        :return:
+        :return: The corresponding Tier as a dict
         """
         logger.info("Get tier")
         response = self.get(TIER_RESOURCE_DETAIL_URI, headers=self.headers, parameters=None,
                            tenant_id=self.tenant_id, environment_name=environment_name, tier_name=name)
 
-        sr_response = response_body_to_dict(response, self.headers[HEADER_CONTENT_TYPE],
+        dict_tier = response_body_to_dict(response, self.headers[HEADER_CONTENT_TYPE],
                                           xml_root_element_name=TIER_BODY_ROOT)
-        return sr_response
+        return dict_tier

@@ -23,7 +23,7 @@
 
 
 from utils.rest_client_utils import RestClient, API_ROOT_URL_ARG_NAME, model_to_request_body,  \
-    delete_element_when_value_none, response_body_to_dict, HEADER_CONTENT_TYPE, HEADER_REPRESENTATION_XML
+    delete_element_when_value_none, response_body_to_dict, HEADER_CONTENT_TYPE, HEADER_ACCEPT, HEADER_REPRESENTATION_XML
 from utils.logger_utils import get_logger
 
 logger = get_logger(__name__)
@@ -63,6 +63,8 @@ TIER_BODY_NETWORK_NAME = "networkName"
 TIER_BODY_SUBNETWORK = "subNetworkDto"
 TIER_BODY_SUBNETWORK_NAME = "subnetName"
 
+TASK_BODY_ROOT="task"
+
 class EnvironmentInstanceResourceClient(RestClient):
 
     def __init__(self, protocol, host, port, tenant_id, resource=None, headers=None):
@@ -82,20 +84,24 @@ class EnvironmentInstanceResourceClient(RestClient):
         self.tenant_id = tenant_id
         super(EnvironmentInstanceResourceClient, self).__init__(protocol, host, port, resource=resource)
 
-    def create_environment_instance(self, name, environment_name, tier_name, image, region_name,
-                                    description=None, environment_description=None, keypair=None, product_name=None,
+    def create_environment_instance(self, name, description, environment_name, environment_description, tier_name,
+                                    image, region_name, keypair=None, product_name=None,
                                     product_version=None, network_name=None, subnetwork_name=None):
         """
         Create a new environment (Tenant)
-        :param name: Name of the environment
-        :param description: Description of the environment
-        :return: 'Requests' response
+        :param name: Name of the environment instance (blueprint)
+        :param description: Description of the environment instance (blueprint)
+        :param environment_name: Name of the environment
+        :param tier_name: Name of the tier
+        :param image: image to deploy a VM from
+        :param keypair: keypair of the user to enter the deployed VM
+        :param product_name: Name of the product
+        :param product_version: Product version
+        :param network_name: Name of the network
+        :param subnetwork_name: Name of the subnetwork
+        :return: The task (asynchronous method) as a dict
         """
         logger.info("Creating new environment  instance")
-        if description is None:
-            description = "Description of " + name
-        if environment_description is None:
-            environment_description = "Description of " + environment_name
 
         env_model = {ENVIRONMENT_INSTANCE_BODY_ROOT:
                          {
@@ -137,8 +143,11 @@ class EnvironmentInstanceResourceClient(RestClient):
         delete_element_when_value_none(env_model)
         #Converting json to body request
         body = model_to_request_body(env_model, self.headers[HEADER_CONTENT_TYPE])
-        return self.post(ENVIRONMENT_INSTANCE_RESOURCE_ROOT_URI, body, self.headers, parameters=None,
-                         tenant_id=self.tenant_id)
+
+        response = self.post(ENVIRONMENT_INSTANCE_RESOURCE_ROOT_URI, body, self.headers,
+                        parameters=None, tenant_id=self.tenant_id)
+        task_dict = response_body_to_dict(response,self.headers[HEADER_ACCEPT], xml_root_element_name=TASK_BODY_ROOT )
+        return task_dict
 
     def delete_environment_instance(self, name):
         """
@@ -153,12 +162,13 @@ class EnvironmentInstanceResourceClient(RestClient):
     def get_environment_instance(self, name):
         """
         Get an environment instance(Tenant)
-        :return:
+        :param name: Name of the environment instance to get
+        :return: The environment as a dict
         """
         logger.info("Get environment instance " + name )
         response = self.get(ENVIRONMENT_INSTANCE_RESOURCE_DETAIL_URI, headers=self.headers, parameters=None,
                            tenant_id=self.tenant_id, environment_instance_name=name)
 
-        sr_response = response_body_to_dict(response, self.headers[HEADER_CONTENT_TYPE],
+        dict_response = response_body_to_dict(response, self.headers[HEADER_ACCEPT],
                                           xml_root_element_name=ENVIRONMENT_INSTANCE_BODY_ROOT)
-        return sr_response
+        return dict_response

@@ -59,7 +59,7 @@ class EnvironmentResourceClient(RestClient):
         self.tenant_id = tenant_id
         super(EnvironmentResourceClient, self).__init__(protocol, host, port, resource=resource)
 
-    def create_environment(self, name, description=None):
+    def create_environment(self, name, description):
         """
         Create a new environment (Tenant)
         :param name: Name of the environment
@@ -67,13 +67,12 @@ class EnvironmentResourceClient(RestClient):
         :return: 'Requests' response
         """
         logger.info("Creating new environment")
-        if description is None:
-            description = "Description of " + name
-
         env_model = {ENVIRONMENT_BODY_ROOT: {ENVIRONMENT_BODY_NAME: name,
                                              ENVIRONMENT_BODY_DESCRIPTION: description}}
         body = model_to_request_body(env_model, self.headers[HEADER_CONTENT_TYPE])
-        return self.post(ENVIRONMENT_RESOURCE_ROOT_URI, body, self.headers, parameters=None, tenant_id=self.tenant_id)
+
+        return self.post(ENVIRONMENT_RESOURCE_ROOT_URI, body, self.headers, parameters=None,
+                             tenant_id=self.tenant_id)
 
     def delete_environment(self, name):
         """
@@ -94,6 +93,6 @@ class EnvironmentResourceClient(RestClient):
         response = self.get(ENVIRONMENT_RESOURCE_DETAIL_URI, headers=self.headers, parameters=None,
                            tenant_id=self.tenant_id, environment_name=name)
 
-        sr_response = response_body_to_dict(response, self.headers[HEADER_CONTENT_TYPE],
+        dict_environment = response_body_to_dict(response, self.headers[HEADER_CONTENT_TYPE],
                                           xml_root_element_name=ENVIRONMENT_BODY_ROOT)
-        return sr_response
+        return dict_environment
