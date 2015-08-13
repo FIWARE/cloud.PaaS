@@ -35,9 +35,50 @@ from utils.logger_utils import get_logger
 
 logger = get_logger(__name__)
 
+# HEADERS
+X_AUTH_TOKEN = "X-Auth-Token"
+TENANT_ID = "Tenant-Id"
+ACCEPT = "Accept"
+APPLICATION_JSON = "application/json"
+
+#HTTP STATUS CODE
+HTTPS_PROTOCOL ="https"
+HTTP_STATUSCODE_NO_CONTENT = 204
+HTTP_STATUSCODE_OK = 200
+
 # GLANCE SERVICE
 GLANCE_SERVICE_TYPE = "glance"
 GLANCE_ENDPOINT_TYPE = "publicURL"
+GLANCE_REQUEST_IMAGES_SDC_AWARE_URL = '/images/detail?property-sdc_aware=true&&type=fiware:utils'
+
+# TASK BODY ELEMENTS
+TASK_BODY_ROOT = "task"
+TASK_BODY_HREF = "href"
+TASK_BODY_STATUS = "status"
+TASK_BODY_ERROR = "error"
+TASK_BODY_ERROR_MAJORCODE="majorErrorCode"
+TASK_BODY_ERROR_MESSAGE="message"
+TASK_BODY_ERROR_MINORCODE="minorErrorCode"
+
+#TASK STATUS
+TASK_STATUS_ERROR = "ERROR"
+TASK_STATUS_SUCCESS = "SUCCESS"
+TASK_STATUS_RUNNING = "RUNNING"
+
+#PRODUCTANRELEASE BODY ELEMENTS
+PRODUCTANDRELEASE_BODY_ROOT = "productAndReleaseDto";
+PRODUCTANDRELEASE_BODY_PRODUCT = "product";
+PRODUCTANDRELEASE_BODY_PRODUCTNAME = "name";
+PRODUCTANDRELEASE_BODY_PRODUCTVERSION = "version";
+PRODUCTANDRELEASE_BODY_METADATAS = "metadatas";
+PRODUCTANDRELEASE_BODY_METADATA_KEY = "key";
+PRODUCTANDRELEASE_BODY_METADATA_VALUE = "value";
+PRODUCTANDRELEASE_BODY_METADATA_INSTALLATOR = "installator";
+PRODUCTANDRELEASE_BODY_METADATA_INSTALLATOR_CHEF_VALUE = "chef";
+PRODUCTANDRELEASE_BODY_METADATA_IMAGE = "image";
+
+TIME_INTERVAL_TO_DEPLOY = 60
+TIME_INTERVAL_TO_DELETE = 45
 
 def main(argv=None):
     print("Inside main")
@@ -48,13 +89,9 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description='Testing product installation using paasmanager')
     parser.add_argument("-u", "--username", help='valid username', required=True)
     parser.add_argument("-p", "--password", help='valid password', required=True)
-    #parser.add_argument("-u", "--username", dest='username', default='jesus.m.movilla@gmail.com')
-    #parser.add_argument("-p", "--password", dest='password', default='ayjtv732')
     parser.add_argument("-r", "--region_name", dest='region_name', default='Spain2', help='the name of region')
     parser.add_argument("-k", "--auth_url", dest="auth_url", default='http://cloud.lab.fiware.org:4731/v2.0',
         help='url to keystone <host or ip>:<port>')
-    #parser.add_argument("-k", "--auth_url", dest="auth_url", default='http://cloud.dev-havana.fi-ware.org:4731/v2.0',
-    #    help='url to keystone <host or ip>:<port>')
     parser.add_argument("-t", "--tenant", dest="tenantid", help="tenant-id", default="00000000000000000000000000000001",
         required=False)
     parser.add_argument("-e", "--envName", dest='envName', default='EnvName', help='valid environment name')
@@ -168,7 +205,7 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
         print("Create an Environment " + env_name)
 
         environment = environment_client.create_environment(env_name, "For testing purposes")
-        if (environment.status_code != 204) :
+        if (environment.status_code != HTTP_STATUSCODE_NO_CONTENT) :
             print ("Error creating Environment " + env_name + " Description: " + environment._content)
 
         environment = environment_client.get_environment(env_name)
@@ -205,7 +242,7 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
             region_name = region_name
         )
 
-        if environment_instance_task.status_code != "200":
+        if (environment_instance_task.status_code != HTTP_STATUSCODE_OK):
             print ("Error creating Environment Instance " + blueprint_name + " Description: "
                    + environment_instance_task._content)
 
@@ -216,18 +253,18 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
         task = task_client.get_task(task_id)
         task_status = task['status']
 
-        while task_status=='RUNNING':
-            time.sleep(60)
+        while task_status==TASK_STATUS_RUNNING:
+            time.sleep(TIME_INTERVAL_TO_DEPLOY)
             task = task_client.get_task(task_id)
             task_status = task['status']
             print "Polling every 60 seconds - Task status: " + task_status
-            logger.info("Polling every 60 seconds - Task status: " + task_status)
+            logger.info("Polling every " + str(TIME_INTERVAL_TO_DEPLOY) +" seconds - Task status: " + task_status)
 
         final_time = time.strftime("%H:%M:%S")
         final_time_datetime = datetime.datetime.now()
         interval =  final_time_datetime - initial_time_datetime
 
-        if task_status=='SUCCESS':
+        if task_status==TASK_STATUS_SUCCESS:
             print ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
                 " SUCCESS to deploy in " + final_time_datetime.strftime("%H:%M:%S") + " hh::mm:ss \n")
             logger.info ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
@@ -235,11 +272,12 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
             report_file.write ("Image name: " + image_name + ". Product Release: " + product_name + "-"
                                + product_version + " SUCCESS to deploy in : " + final_time_datetime.strftime("%H:%M:%S")
                                + " hh::mm:ss  \n")
-        elif task_status =='ERROR':
-            task_error = task['error']
-            major_error_desc = task_error['majorErrorCode']
-            error_message = task_error['message']
-            minorErrorCode = task_error['minorErrorCode']
+        elif task_status == TASK_STATUS_ERROR:
+            task_error = task[TASK_BODY_ERROR]
+            major_error_desc = task_error[TASK_BODY_ERROR_MAJORCODE]
+            error_message = task_error[TASK_BODY_ERROR_MESSAGE]
+            minorErrorCode = task_error[TASK_BODY_ERROR_MINORCODE]
+            
             print ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
                 " ERROR to deploy in " + final_time_datetime.strftime("%H:%M:%S") + " hh::mm:ss  \n")
             print ("ERROR Major Error Description : " + str(major_error_desc))
@@ -268,18 +306,18 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
         task = task_client.get_task(task_id)
         task_status = task['status']
 
-        while task_status=='RUNNING':
-            time.sleep(20)
+        while task_status==TASK_STATUS_RUNNING:
+            time.sleep(TIME_INTERVAL_TO_DELETE)
             task = task_client.get_task(task_id)
             task_status = task['status']
-            print "Polling every 45 seconds - Task status: " + task_status
+            print "Polling every " + str(TIME_INTERVAL_TO_DELETE) + " seconds - Task status: " + task_status
 
-        if task_status=='SUCCESS':
+        if task_status==TASK_STATUS_SUCCESS:
             print ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
                 " SUCCESS to delete  in " + final_time_datetime.strftime("%H:%M:%S") + " hh::mm:ss \n")
             logger.info ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
                 " SUCCESS to delete in " + final_time_datetime.strftime("%H:%M:%S") + " hh::mm:ss \n")
-        elif task_status =='ERROR':
+        elif task_status ==TASK_STATUS_ERROR:
             print ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
                 " ERROR to delete in " + final_time_datetime.strftime("%H:%M:%S") + " hh::mm:ss \n")
             logger.info ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
@@ -306,35 +344,37 @@ def get_product_releases_images (allproductreleases, images):
     products_releases = []
     images_productReleases = []
 
-    for i in allproductreleases['productAndReleaseDto']:
-        product_name = i['product']['name']
-        product_version = i['version']
+    for i in allproductreleases[PRODUCTANDRELEASE_BODY_ROOT]:
+        product_name = i[PRODUCTANDRELEASE_BODY_PRODUCT][PRODUCTANDRELEASE_BODY_PRODUCTNAME]
+        product_version = i[PRODUCTANDRELEASE_BODY_PRODUCTVERSION]
         product_release = product_name + "_" + product_version
         products_releases.append(product_release)
         #print ("Product Release: " +  product_release)
 
-        if i['product'].get('metadatas'): # Checks if there are metadatas in the product
-            for j in i['product']['metadatas']:
-                product_metadatas = i['product']['metadatas']
+        if i[PRODUCTANDRELEASE_BODY_PRODUCT].get(PRODUCTANDRELEASE_BODY_METADATAS): # Checks if there are metadatas in the product
+            for j in i[PRODUCTANDRELEASE_BODY_PRODUCT][PRODUCTANDRELEASE_BODY_METADATAS]:
+                product_metadatas = i[PRODUCTANDRELEASE_BODY_PRODUCT][PRODUCTANDRELEASE_BODY_METADATAS]
                 #print (str (product_metadatas))
                 try :
-                    metadata_key = j['key']
-                    metadata_value = j['value']
+                    metadata_key = j[PRODUCTANDRELEASE_BODY_METADATA_KEY]
+                    metadata_value = j[PRODUCTANDRELEASE_BODY_METADATA_VALUE]
                 except TypeError:
-                    metadata_key = i['product']['metadatas']['key']
-                    metadata_value = i['product']['metadatas']['value']
+                    metadata_key = i[PRODUCTANDRELEASE_BODY_PRODUCT][PRODUCTANDRELEASE_BODY_METADATAS][PRODUCTANDRELEASE_BODY_METADATA_KEY]
+                    metadata_value = i[PRODUCTANDRELEASE_BODY_PRODUCT][PRODUCTANDRELEASE_BODY_METADATAS][PRODUCTANDRELEASE_BODY_METADATA_VALUE]
                 #index = 0
                 #print "metadata_key:" + str(metadata_key) + " and metadata_value:" + str(metadata_value)
-                if ((metadata_key == "installator") and (metadata_value == "chef")):
+                if ((metadata_key == PRODUCTANDRELEASE_BODY_METADATA_INSTALLATOR) and
+                        (metadata_value == PRODUCTANDRELEASE_BODY_METADATA_INSTALLATOR_CHEF_VALUE)):
                     for k in product_metadatas:
                         try :
-                            metadata_key = k['key']
+                            metadata_key = k[PRODUCTANDRELEASE_BODY_METADATA_KEY]
                             metadata_value = k['value']
                         except TypeError:
-                            metadata_key = i['product']['metadatas']['key']
-                            metadata_value = i['product']['metadatas']['value']
+                            metadata_key = i[PRODUCTANDRELEASE_BODY_PRODUCT][PRODUCTANDRELEASE_BODY_METADATAS][PRODUCTANDRELEASE_BODY_METADATA_KEY]
+                            metadata_value = i[PRODUCTANDRELEASE_BODY_PRODUCT][PRODUCTANDRELEASE_BODY_METADATAS][PRODUCTANDRELEASE_BODY_METADATA_VALUE]
 
-                        if (metadata_key == "image") and ((metadata_value == "") or (metadata_value is None)):
+                        if (metadata_key == PRODUCTANDRELEASE_BODY_METADATA_IMAGE) and \
+                                ((metadata_value == "") or (metadata_value is None)):
                             for z in images:
                                 object = []
                                 object.append(z[0])
@@ -346,7 +386,8 @@ def get_product_releases_images (allproductreleases, images):
                         else:
                             for z in images:
                                 #print ("z[0] " + str (z[0]))
-                                if ((metadata_key == "image") and (metadata_value == z[0])):
+                                if ((metadata_key == PRODUCTANDRELEASE_BODY_METADATA_IMAGE) and
+                                        (metadata_value == z[0])):
                                     object = []
                                     object.append(z[0])
                                     object.append(z[1])
@@ -360,15 +401,15 @@ def find_all_images_sdc_aware(url_base, region, token, tenant_id):
     print( "find all images in " + region + '->' + url_base)
     logger.debug("find all images in " + region + '->' + url_base)
 
-    url = url_base + '/images/detail?property-sdc_aware=true&&type=fiware:utils'
-    headers = {'Accept': 'application/json',
-               'X-Auth-Token': '' + token + '',
-               'Tenant-Id': '' + tenant_id + ''
+    url = url_base + GLANCE_REQUEST_IMAGES_SDC_AWARE_URL
+    headers = {ACCEPT: APPLICATION_JSON,
+               X_AUTH_TOKEN: '' + token + '',
+               TENANT_ID: '' + tenant_id + ''
     }
     return sendGet(headers, url)
 
 def sendGet(headers, url):
-    if url.startswith ('https'):
+    if url.startswith (HTTPS_PROTOCOL):
         response = requests.get(url, headers=headers, verify=False)
     else:
         response = requests.get(url, headers=headers, verify=False)
