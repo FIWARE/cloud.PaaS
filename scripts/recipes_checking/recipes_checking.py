@@ -39,10 +39,6 @@ logger = get_logger(__name__)
 GLANCE_SERVICE_TYPE = "glance"
 GLANCE_ENDPOINT_TYPE = "publicURL"
 
-# python recipes_checking.py -u jesus.m.movilla@gmail.com -p AyJtv732 -t 00000000000000000000000000003237
-# python recipes_checking.py -u  e.cloud10@tid.es -p f1-cl0ud -t test
-# python recipes_checking.py  -u  e.cloud10@tid.es -p f1-cl0ud -t 00000000000000000000000000000129 WORKS!!
-
 def main(argv=None):
     print("Inside main")
     """
