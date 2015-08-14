@@ -24,7 +24,6 @@ __author__ = 'jesus.movilla'
 
 import sys
 import argparse
-import xmltodict
 import time
 import requests
 import datetime
@@ -136,26 +135,21 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
     report_file.writelines("========================================================================================\n")
 
     logger.info("SDC call to get the list of products available in catalog")
-    print("SDC call to get the list of products available in catalog")
 
     #Llamar al SDC para sacar la lista de productos.
     sdc_client = SDCClient(user, password, tenant_id, auth_url, region_name)
     productandrelease_client = sdc_client.getProductAndReleaseResourceClient()
     allproductreleases,_ = productandrelease_client.get_allproductandrelease()
 
-    print str(allproductreleases['productAndReleaseDto'])
     logger.debug(str(allproductreleases['productAndReleaseDto']))
-    print "There are " + str(len(allproductreleases['productAndReleaseDto'])) + " product Releases in SDC"
     logger.info("There are " + str(len(allproductreleases['productAndReleaseDto'])) + " product Releases in SDC")
 
     paasmanager_client = PaaSManagerClient(user, password, tenant_id, auth_url, region_name )
     glance_url = paasmanager_client.get_paasmanager_endpoint_from_keystone(region_name, GLANCE_SERVICE_TYPE,
                                                                            GLANCE_ENDPOINT_TYPE)
     logger.info("Loading image list from glance : " + glance_url + " Region: " + region_name)
-    print("Loading image list from glance : " + glance_url + " Region: " + region_name)
 
     response_images = find_all_images_sdc_aware(glance_url, region_name, paasmanager_client.token, tenant_id)
-    print (response_images)
     logger.debug(response_images)
 
     images = []
@@ -163,27 +157,20 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
         image_name = i[IMAGE_BODY_NAME]
         image_id = i[IMAGE_BODY_ID]
         image_dict = {DICT_IMAGE_NAME: image_name, DICT_IMAGE_ID: image_id}
-        print "Image id: " + image_dict['image_id']+ "| Image name: " +  image_dict['image_name']
         logger.info("Image id: " + image_dict['image_id']+ "| Image name: " +  image_dict['image_name'])
         images.append(image_dict)
 
     logger.info("Building all combinations images - product releases")
-    print("Building all combinations images - product releases")
 
     images_productReleases = get_product_releases_images (allproductreleases, images)
 
-    print "Product Releases to TEST in different images:"
     logger.info("Product Releases to TEST in different images:")
     for i in images_productReleases:
-        print i[DICT_IMAGE_ID] + "|" + i[DICT_IMAGE_NAME] + "|" + i[DICT_IMAGE_PRODUCTRELEASE_PRODUCTRELEASE] \
-              + "|" + i[DICT_IMAGE_PRODUCTRELEASE_PRODUCTNAME] \
-              + "|" + i[DICT_IMAGE_PRODUCTRELEASE_PRODUCTVERSION]
         logger.info("image: " + i[DICT_IMAGE_NAME] + ". Product Release: " + i['product_release'] + "\n")
         report_file.write ("image: " + i[DICT_IMAGE_NAME] + ". Product Release: " + i['product_release'] + "\n")
 
     number_of_productrelease_images = images_productReleases.__len__()
     logger.info("there are " + str(number_of_productrelease_images) + " combinations products - images")
-    print("there are " + str(number_of_productrelease_images) + " combinations products - images")
     report_file.write ("------------------------------------------------------------------------------------------- \n")
     report_file.write ("Product Releases to TEST in different images: ")
     report_file.write (" There are " + str(number_of_productrelease_images) + " combinations products - images \n")
@@ -210,27 +197,20 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
 
         index = index + 1
         logger.info ("--------------------------------------------------------------------------------------")
-        print ("--------------------------------------------------------------------------------------")
         logger.info ("Product: " + product_name + "-" + product_version + " with image name: " + image_name
                      + " and imageid: " + image_id)
-        print ("Product: " + product_name + "-" + product_version + " with image name: " + image_name
-               + " and image id: " + image_id)
         logger.info ("--------------------------------------------------------------------------------------")
-        print ("--------------------------------------------------------------------------------------")
 
         logger.info("Create an Environment " + env_name )
-        print("Create an Environment " + env_name)
 
         environment = environment_client.create_environment(env_name, "For testing purposes")
         if (environment.status_code != HTTP_STATUSCODE_NO_CONTENT) :
-            print ("Error creating Environment " + env_name + " Description: " + environment._content)
+            logger.info ("Error creating Environment " + env_name + " Description: " + environment._content)
 
         environment_dict, _ = environment_client.get_environment(env_name)
         logger.debug(str(environment_dict))
-        print str(environment_dict)
 
         logger.info("Add Tier tierName" + env_name + " to the Environment " + env_name)
-        print("Add Tier tierName" + env_name + " to the Environment " + env_name)
         tier = tier_client.create_tier(environment_name = env_name,
                                    name = "tierName" + env_name,
                                    product_name = product_name,
@@ -239,10 +219,8 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
                                    region_name = region_name)
         tier_dict, _ = tier_client.get_tier(env_name, tier_name)
         logger.debug("Tier created : " + str(tier_dict))
-        print "Tier created : " + str(tier_dict)
 
         logger.info("Creating Environment Instance " + blueprint_name)
-        print ("Creating Environment Instance " + blueprint_name)
 
         initial_time_deploy = time.strftime("%H:%M:%S")
         initial_time_deploy_datetime = datetime.datetime.now()
@@ -263,7 +241,6 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
                    + environment_instance_response._content)
 
         logger.info("Waiting for Environment Instance " + env_name + "Instance to be created")
-        print("Waiting for Environment Instance " + env_name + "Instance to be created")
         task_url = getTaskUrl(environment_instance_task_dict)
         task_id = paasmanager_client.get_taskid(task_url)
         task, _ = task_client.get_task(task_id)
@@ -273,7 +250,6 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
             time.sleep(TIME_INTERVAL_TO_DEPLOY)
             task, _ = task_client.get_task(task_id)
             task_status = task[TASK_BODY_STATUS]
-            print "Polling every " +  str(TIME_INTERVAL_TO_DEPLOY) + " seconds - Task status: " + task_status
             logger.info("Polling every " + str(TIME_INTERVAL_TO_DEPLOY) +" seconds - Task status: " + task_status)
 
         final_time_deploy = time.strftime("%H:%M:%S")
@@ -281,8 +257,6 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
         interval_deploy =  final_time_deploy_datetime - initial_time_deploy_datetime
 
         if task_status==TASK_STATUS_SUCCESS:
-            print ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
-                " SUCCESS to deploy in " + str(interval_deploy.seconds) + " seconds \n")
             logger.info ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
                 " SUCCESS to deploy in : " + str(interval_deploy.seconds) + " seconds  \n")
             report_file.write ("Image name: " + image_name + ". Product Release: " + product_name + "-"
@@ -294,11 +268,6 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
             error_message = task_error[TASK_BODY_ERROR_MESSAGE]
             minorErrorCode = task_error[TASK_BODY_ERROR_MINORCODE]
 
-            print ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
-                " ERROR to deploy in " + str(interval_deploy.seconds) + " seconds  \n")
-            print ("ERROR Major Error Description : " + str(major_error_desc))
-            print ("ERROR Message : " + str(error_message))
-            print ("ERROR Minor Error Code : " + str(minorErrorCode))
             logger.info ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
                 " ERROR to deploy in " + str(interval_deploy.seconds) + " seconds \n")
             logger.info("ERROR Major Error Description : " + str(major_error_desc))
@@ -312,7 +281,6 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
             report_file.write("ERROR Minor Error Code : " + str(minorErrorCode) + "\n")
 
         logger.info("Deleting Environment Instance " + blueprint_name)
-        print ("Deleting Environment Instance " + blueprint_name)
 
         initial_time_delete = time.strftime("%H:%M:%S")
         initial_time_delete_datetime = datetime.datetime.now()
@@ -320,7 +288,6 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
         environment_instance_task_response = environment_instance_client.delete_environment_instance(blueprint_name)
 
         logger.info("Waiting for Environment Instance " + blueprint_name + "Instance to be deleted")
-        print("Waiting for Environment Instance " + blueprint_name + "Instance to be deleted")
         task_url = getTaskUrl(environment_instance_task_dict)
         task_id = paasmanager_client.get_taskid(task_url)
         task, _ = task_client.get_task(task_id)
@@ -337,32 +304,19 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
         interval_delete =  final_time_delete_datetime - initial_time_delete_datetime
 
         if task_status==TASK_STATUS_SUCCESS:
-            print ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
-                " SUCCESS to delete  in " + str(interval_delete.seconds) + " seconds \n")
             logger.info ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
                 " SUCCESS to delete in " + str(interval_delete.seconds) + " seconds \n")
         elif task_status ==TASK_STATUS_ERROR:
-            print ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
-                " ERROR to delete in " + str(interval_delete.seconds) + " seconds \n")
             logger.info ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
                 " ERROR to delete in " + str(interval_delete.seconds) + " seconds \n")
 
-    '''
-    env_name = envName + "2"
-    tier_name = "tierName" + env_name
-    blueprint_name = env_name + "Instance"
+        logger.info("Deleting Tier " + tier_name)
+        tier_client.delete_tier(env_name, tier_name)
 
-    logger.info("Deleting Tier " + tier_name)
-    print ("Deleting Tier " + tier_name)
-    tier_client.delete_tier(env_name, tier_name)
+        logger.info("Deleting Environment " + env_name)
+        environment_client.delete_environment(env_name)
 
-    logger.info("Deleting Environment " + env_name)
-    print ("Deleting Environment " + env_name)
-    environment_client.delete_environment(env_name)
-
-    logger.info("Environment " + env_name + " FINISHED")
-    print ("Environment " + env_name + " FINISHED")
-    '''
+        logger.info("Environment " + env_name + " FINISHED")
 
 def getTaskUrl (environment_instance_task_dict):
     return environment_instance_task_dict[TASK_BODY_HREF]
@@ -423,7 +377,6 @@ def get_product_releases_images (allproductreleases, images):
     return images_productReleases
 
 def find_all_images_sdc_aware(url_base, region, token, tenant_id):
-    print( "find all images in " + region + '->' + url_base)
     logger.debug("find all images in " + region + '->' + url_base)
 
     url = url_base + GLANCE_REQUEST_IMAGES_SDC_AWARE_URL
