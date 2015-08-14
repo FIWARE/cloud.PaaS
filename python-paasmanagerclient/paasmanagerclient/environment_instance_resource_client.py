@@ -154,11 +154,13 @@ class EnvironmentInstanceResourceClient(RestClient):
         """
         Delete an environemnt instance(Tenant)
         :param name: Name of the environment instance to be deleted
-        :return: 'Request' response
+        :return: A duple : The task (asynchronous method) as a dict, the 'Request' response
         """
         logger.info("Deleting environment instance " + name)
-        return self.delete(ENVIRONMENT_INSTANCE_RESOURCE_DETAIL_URI, headers=self.headers, parameters=None,
+        response = self.delete(ENVIRONMENT_INSTANCE_RESOURCE_DETAIL_URI, headers=self.headers, parameters=None,
                            tenant_id=self.tenant_id, environment_instance_name=name)
+        task_dict = response_body_to_dict(response,self.headers[HEADER_ACCEPT], xml_root_element_name=TASK_BODY_ROOT )
+        return task_dict, response
 
     def get_environment_instance(self, name):
         """
