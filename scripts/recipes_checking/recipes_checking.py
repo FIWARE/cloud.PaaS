@@ -100,13 +100,12 @@ def main(argv=None):
     :param argv:
     """
     parser = argparse.ArgumentParser(description='Testing product installation using paasmanager')
-    parser.add_argument("-u", "--username", help='valid username', required=True)
+    parser.add_argument("-u", "--user", help='valid username', required=True)
     parser.add_argument("-p", "--password", help='valid password', required=True)
+    parser.add_argument("-t", "--tenant_id", help="user tenant_id", required=True)
     parser.add_argument("-r", "--region_name", dest='region_name', default='Spain2', help='the name of region')
     parser.add_argument("-k", "--auth_url", dest="auth_url", default='http://cloud.lab.fiware.org:4731/v2.0',
-        help='url to keystone <host or ip>:<port>')
-    parser.add_argument("-t", "--tenant", dest="tenantid", help="tenant-id", default="00000000000000000000000000000001",
-        required=False)
+                        help='url to keystone <host or ip>:<port>/v2.0')
     parser.add_argument("-e", "--envName", dest='envName', default='EnvName', help='valid environment name')
     parser.add_argument("-f", "--reportfile", dest='reportfile', default='/var/log/recipes_checking_report.log',
         help='Name of the Report File')
@@ -122,8 +121,8 @@ def main(argv=None):
 
     check_recipes (report_file, envName= args.envName,
                      auth_url=args.auth_url,
-                     tenant_id=args.tenantid,
-                     user=args.username,
+                     tenant_id=args.tenant_id,
+                     user=args.user,
                      password=args.password,
                      region_name=args.region_name)
 
