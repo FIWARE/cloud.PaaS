@@ -241,7 +241,7 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
                    + environment_instance_response._content)
 
         logger.info("Waiting for Environment Instance " + env_name + "Instance to be created")
-        task_url = getTaskUrl(environment_instance_response)
+        task_url = getTaskUrl(environment_instance_task_dict)
         task_id = paasmanager_client.get_taskid(task_url)
         task, _ = task_client.get_task(task_id)
         task_status = task[TASK_BODY_STATUS]
@@ -285,10 +285,11 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
         initial_time_delete = time.strftime("%H:%M:%S")
         initial_time_delete_datetime = datetime.datetime.now()
 
-        environment_instance_task_response = environment_instance_client.delete_environment_instance(blueprint_name)
+        environment_instance_task_dict, environment_instance_response = \
+            environment_instance_client.delete_environment_instance(blueprint_name)
 
         logger.info("Waiting for Environment Instance " + blueprint_name + "Instance to be deleted")
-        task_url = getTaskUrl(environment_instance_task_response)
+        task_url = getTaskUrl(environment_instance_task_dict)
         task_id = paasmanager_client.get_taskid(task_url)
         task, _ = task_client.get_task(task_id)
         task_status = task[TASK_BODY_STATUS]
@@ -318,9 +319,8 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
 
         logger.info("Environment " + env_name + " FINISHED")
 
-def getTaskUrl (environment_instance_response):
-    environment_instance_task_dict = xmltodict.parse(environment_instance_response._content, attr_prefix='')
-    return environment_instance_task_dict[TASK_BODY_ROOT][TASK_BODY_HREF]
+def getTaskUrl (environment_instance_task_dict):
+    return environment_instance_task_dict[TASK_BODY_HREF]
 
 def get_product_releases_images (allproductreleases, images):
     images_productReleases = []
