@@ -114,7 +114,6 @@ def main(argv=None):
 
     args = parser.parse_args()
     logger.info(args)
-    print args
 
     # This is the file where to find the report about the tests of BlueprintInstance installation with
     # all the recipes available in the Chef-Server
@@ -237,7 +236,7 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
                                                                      region_name = region_name)
 
         if (environment_instance_response.status_code != HTTP_STATUSCODE_OK):
-            print ("Error creating Environment Instance " + blueprint_name + " Description: "
+            logger.info ("Error creating Environment Instance " + blueprint_name + " Description: "
                    + environment_instance_response._content)
 
         logger.info("Waiting for Environment Instance " + env_name + "Instance to be created")
@@ -298,7 +297,7 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
             time.sleep(TIME_INTERVAL_TO_DELETE)
             task = task_client.get_task(task_id)
             task_status = task['status']
-            print "Polling every " + str(TIME_INTERVAL_TO_DELETE) + " seconds - Task status: " + task_status
+            logger.info("Polling every " + str(TIME_INTERVAL_TO_DELETE) + " seconds - Task status: " + task_status)
 
         final_time_delete = time.strftime("%H:%M:%S")
         final_time_delete_datetime = datetime.datetime.now()
