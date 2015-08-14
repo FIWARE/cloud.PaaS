@@ -22,11 +22,11 @@
 # contact with opensource@tid.es
 
 
-from qa_utils.rest_client_utils import RestClient, API_ROOT_URL_ARG_NAME, model_to_request_body, HEADER_CONTENT_TYPE, \
-    HEADER_REPRESENTATION_XML
-from qa_utils.logger_utils import get_logger
+from utils.rest_client_utils import RestClient, API_ROOT_URL_ARG_NAME, model_to_request_body,  \
+    response_body_to_dict, HEADER_CONTENT_TYPE, HEADER_ACCEPT, HEADER_REPRESENTATION_XML
+from utils.logger_utils import get_logger
 
-logger = get_logger("paasmanagerClient")
+logger = get_logger(__name__)
 
 
 #URI ELEMENT
@@ -34,11 +34,11 @@ PAASMANAGER_BASE_URI = "{" + API_ROOT_URL_ARG_NAME + "}"
 ENVIRONMENT_RESOURCE_ROOT_URI = PAASMANAGER_BASE_URI + "/catalog/org/FIWARE/vdc/{tenant_id}/environment"
 ENVIRONMENT_RESOURCE_DETAIL_URI = ENVIRONMENT_RESOURCE_ROOT_URI + "/{environment_name}"
 
+
 # BODY ELEMENTS
 ENVIRONMENT_BODY_ROOT = "environmentDto"
 ENVIRONMENT_BODY_NAME = "name"
 ENVIRONMENT_BODY_DESCRIPTION = "description"
-
 
 class EnvironmentResourceClient(RestClient):
 
@@ -54,12 +54,13 @@ class EnvironmentResourceClient(RestClient):
         :return: None
         """
         if headers is None:
-            self.headers = {HEADER_CONTENT_TYPE: HEADER_REPRESENTATION_XML}
+            self.headers = {HEADER_CONTENT_TYPE: HEADER_REPRESENTATION_XML,
+                            HEADER_ACCEPT: HEADER_REPRESENTATION_XML}
         self.headers = headers
         self.tenant_id = tenant_id
         super(EnvironmentResourceClient, self).__init__(protocol, host, port, resource=resource)
 
-    def create_environment(self, name, description=None):
+    def create_environment(self, name, description):
         """
         Create a new environment (Tenant)
         :param name: Name of the environment
@@ -69,8 +70,10 @@ class EnvironmentResourceClient(RestClient):
         logger.info("Creating new environment")
         env_model = {ENVIRONMENT_BODY_ROOT: {ENVIRONMENT_BODY_NAME: name,
                                              ENVIRONMENT_BODY_DESCRIPTION: description}}
-        body = model_to_request_body(env_model, self.headers[HEADER_CONTENT_TYPE])
-        return self.post(ENVIRONMENT_RESOURCE_ROOT_URI, body, self.headers, parameters=None, tenant_id=self.tenant_id)
+        body = model_to_request_body(env_model, self.headers[HEADER_ACCEPT])
+
+        return self.post(ENVIRONMENT_RESOURCE_ROOT_URI, body, self.headers, parameters=None,
+                             tenant_id=self.tenant_id)
 
     def delete_environment(self, name):
         """
@@ -81,3 +84,16 @@ class EnvironmentResourceClient(RestClient):
         logger.info("Deleting environment")
         return self.delete(ENVIRONMENT_RESOURCE_DETAIL_URI, headers=self.headers, parameters=None,
                            tenant_id=self.tenant_id, environment_name=name)
+
+    def get_environment(self, name):
+        """
+        Get an environment (Tenant)
+        :return: A duple: The environment as a dict, , the 'Request' response
+        """
+        logger.info("Get environment")
+        response = self.get(ENVIRONMENT_RESOURCE_DETAIL_URI, headers=self.headers, parameters=None,
+                           tenant_id=self.tenant_id, environment_name=name)
+
+        dict_environment = response_body_to_dict(response, self.headers[HEADER_ACCEPT],
+                                          xml_root_element_name=ENVIRONMENT_BODY_ROOT)
+        return dict_environment, response

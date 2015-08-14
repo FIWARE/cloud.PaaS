@@ -27,11 +27,14 @@ import re
 
 from keystoneclient.v2_0 import Client as KeystoneClient
 
-from qa_utils.rest_client_utils import HEADER_REPRESENTATION_XML, HEADER_CONTENT_TYPE, HEADER_TRANSACTION_ID
-from qa_utils.logger_utils import get_logger
-from paasmanager_client.environment_resource_client import EnvironmentResourceClient
+from utils.rest_client_utils import HEADER_REPRESENTATION_XML, HEADER_CONTENT_TYPE, HEADER_ACCEPT, HEADER_TRANSACTION_ID
+from utils.logger_utils import get_logger
+from paasmanagerclient.environment_resource_client import EnvironmentResourceClient
+from paasmanagerclient.tier_resource_client import TierResourceClient
+from paasmanagerclient.environment_instance_resource_client import EnvironmentInstanceResourceClient
+from task_resource_client import TaskResourceClient
 
-logger = get_logger("paasmanagerClient")
+logger = get_logger(__name__)
 
 # HEADERS
 X_AUTH_TOKEN = "X-Auth-Token"
@@ -133,12 +136,13 @@ class PaaSManagerClient():
         return endpoint
 
     def init_headers(self, x_auth_token, tenant_id, content_type=HEADER_REPRESENTATION_XML,
-                     transaction_id=generate_transaction_id()):
+                     accept=HEADER_REPRESENTATION_XML, transaction_id=generate_transaction_id()):
         """
         Init header to values (or default values)
         :param x_auth_token: Token from Keystone for tenant_id (OpenStack)
         :param tenant_id: TenantId (OpenStack)
         :param content_type: Content-Type header value. By default application/xml
+        :param accept: Content-Type header value. By default application/xml
         :param transaction_id: txId header value. By default, generated value by generate_transaction_id()
         :return: None
         """
@@ -149,6 +153,12 @@ class PaaSManagerClient():
                 del(self.headers[HEADER_CONTENT_TYPE])
         else:
             self.headers.update({HEADER_CONTENT_TYPE: content_type})
+
+        if accept is None:
+            if HEADER_ACCEPT in self.headers:
+                del(self.headers[HEADER_ACCEPT])
+        else:
+            self.headers.update({HEADER_ACCEPT: accept})
 
         if transaction_id is None:
             if HEADER_TRANSACTION_ID in self.headers:
@@ -171,6 +181,12 @@ class PaaSManagerClient():
 
         logger.debug("Setting headers: " + str(headers))
         self.headers = headers
+    @staticmethod
+    def get_taskid (task_url):
+        split_regex = "(.*)://(.*):(\d*)/(.*)/(.*)/(.*)/(.*)/(.*)/(.*)"
+        regex_matches = re.search(split_regex, task_url)
+
+        return regex_matches.group(9)
 
     def getEnvironmentResourceClient(self):
         """
@@ -182,5 +198,44 @@ class PaaSManagerClient():
 
         logger.info("Creating EnvironmentResourceClient")
         return EnvironmentResourceClient(protocol=regex_matches.group(1), host=regex_matches.group(2),
+                                         port=regex_matches.group(3), tenant_id=self.tenant_id,
+                                         resource=regex_matches.group(4), headers=self.headers)
+
+    def getTierResourceClient(self):
+        """
+        Create an API resource REST client
+        :return: Rest client for 'Tier' API resource
+        """
+        split_regex = "(.*)://(.*):(\d*)/(.*)"
+        regex_matches = re.search(split_regex, self.endpoint_url)
+
+        logger.info("Creating TierResourceClient")
+        return TierResourceClient(protocol=regex_matches.group(1), host=regex_matches.group(2),
+                                         port=regex_matches.group(3), tenant_id=self.tenant_id,
+                                         resource=regex_matches.group(4), headers=self.headers)
+
+    def getEnvironmentInstanceResourceClient(self):
+        """
+        Create an API resource REST client
+        :return: Rest client for 'EnvironmentInstance' API resource
+        """
+        split_regex = "(.*)://(.*):(\d*)/(.*)"
+        regex_matches = re.search(split_regex, self.endpoint_url)
+
+        logger.info("Creating EnvironmentInstanceResourceClient")
+        return EnvironmentInstanceResourceClient(protocol=regex_matches.group(1), host=regex_matches.group(2),
+                                         port=regex_matches.group(3), tenant_id=self.tenant_id,
+                                         resource=regex_matches.group(4), headers=self.headers)
+
+    def getTaskResourceClient(self):
+        """
+        Create an API resource REST client
+        :return: Rest client for 'Task' API resource
+        """
+        split_regex = "(.*)://(.*):(\d*)/(.*)"
+        regex_matches = re.search(split_regex, self.endpoint_url)
+
+        logger.info("Creating TaskResourceClient")
+        return TaskResourceClient(protocol=regex_matches.group(1), host=regex_matches.group(2),
                                          port=regex_matches.group(3), tenant_id=self.tenant_id,
                                          resource=regex_matches.group(4), headers=self.headers)

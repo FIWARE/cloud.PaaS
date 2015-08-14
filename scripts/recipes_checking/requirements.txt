@@ -1,0 +1,2 @@
+-e git+https://github.com/telefonicaid/fiware-paas.git@master#egg=python-paasmanagerclient&subdirectory=python-paasmanagerclient
+-e git+https://github.com/telefonicaid/fiware-sdc.git@master#egg=python-sdcclient&subdirectory=python-sdcclient
