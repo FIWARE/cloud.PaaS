@@ -51,6 +51,11 @@ GLANCE_SERVICE_TYPE = "glance"
 GLANCE_ENDPOINT_TYPE = "publicURL"
 GLANCE_REQUEST_IMAGES_SDC_AWARE_URL = '/images/detail?property-sdc_aware=true&&type=fiware:utils'
 
+# IMAGE BODY ELEMENTS
+IMAGE_BODY_NAME ="name"
+IMAGE_BODY_ID ="id"
+IMAGE_BODY_IMAGES ="images"
+
 # TASK BODY ELEMENTS
 TASK_BODY_ROOT = "task"
 TASK_BODY_HREF = "href"
@@ -77,11 +82,20 @@ PRODUCTANDRELEASE_BODY_METADATA_INSTALLATOR = "installator";
 PRODUCTANDRELEASE_BODY_METADATA_INSTALLATOR_CHEF_VALUE = "chef";
 PRODUCTANDRELEASE_BODY_METADATA_IMAGE = "image";
 
+
+#IMAGE DICTIONARY KEYS
+DICT_IMAGE_NAME ="image_name"
+DICT_IMAGE_ID = "image_id"
+
+#IMAGE_PRODUCTRELEASE DICTIONARY KEYS
+DICT_IMAGE_PRODUCTRELEASE_PRODUCTRELEASE = "product_release"
+DICT_IMAGE_PRODUCTRELEASE_PRODUCTNAME = "product_name"
+DICT_IMAGE_PRODUCTRELEASE_PRODUCTVERSION = "product_version"
+
 TIME_INTERVAL_TO_DEPLOY = 60
 TIME_INTERVAL_TO_DELETE = 45
 
 def main(argv=None):
-    print("Inside main")
     """
     Getting parameters
     :param argv:
@@ -127,7 +141,7 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
     #Llamar al SDC para sacar la lista de productos.
     sdc_client = SDCClient(user, password, tenant_id, auth_url, region_name)
     productandrelease_client = sdc_client.getProductAndReleaseResourceClient()
-    allproductreleases = productandrelease_client.get_productandrelease()
+    allproductreleases,_ = productandrelease_client.get_allproductandrelease()
 
     print str(allproductreleases['productAndReleaseDto'])
     logger.debug(str(allproductreleases['productAndReleaseDto']))
@@ -145,13 +159,13 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
     logger.debug(response_images)
 
     images = []
-    for i in response_images['images']:
-        object = []
-        object.append(i['id'])
-        object.append(i['name'])
-        print "Image id: " + i['id']+ "| Image name: " + i['name']
-        logger.info("Image id: " + i['id'] + "| Image name: " + i['name'])
-        images.append(object)
+    for i in response_images[IMAGE_BODY_IMAGES]:
+        image_name = i[IMAGE_BODY_NAME]
+        image_id = i[IMAGE_BODY_ID]
+        image_dict = {DICT_IMAGE_NAME: image_name, DICT_IMAGE_ID: image_id}
+        print "Image id: " + image_dict['image_id']+ "| Image name: " +  image_dict['image_name']
+        logger.info("Image id: " + image_dict['image_id']+ "| Image name: " +  image_dict['image_name'])
+        images.append(image_dict)
 
     logger.info("Building all combinations images - product releases")
     print("Building all combinations images - product releases")
@@ -161,9 +175,11 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
     print "Product Releases to TEST in different images:"
     logger.info("Product Releases to TEST in different images:")
     for i in images_productReleases:
-        print i[0] + "|" + i[1] + "|" + i[2] + "|" + i[3] + "|" + i[4]
-        logger.info("image: " + i[1] + ". Product Release: " + i[3] + "-" + i[4] + "\n")
-        report_file.write ("image: " + i[1] + ". Product Release: " + i[3] + "-" + i[4] + "\n")
+        print i[DICT_IMAGE_ID] + "|" + i[DICT_IMAGE_NAME] + "|" + i[DICT_IMAGE_PRODUCTRELEASE_PRODUCTRELEASE] \
+              + "|" + i[DICT_IMAGE_PRODUCTRELEASE_PRODUCTNAME] \
+              + "|" + i[DICT_IMAGE_PRODUCTRELEASE_PRODUCTVERSION]
+        logger.info("image: " + i[DICT_IMAGE_NAME] + ". Product Release: " + i['product_release'] + "\n")
+        report_file.write ("image: " + i[DICT_IMAGE_NAME] + ". Product Release: " + i['product_release'] + "\n")
 
     number_of_productrelease_images = images_productReleases.__len__()
     logger.info("there are " + str(number_of_productrelease_images) + " combinations products - images")
@@ -180,12 +196,13 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
 
     report_file.write ("Product Releases Execution (recipes) Report: \n")
     report_file.write ("------------------------------------------- \n")
+
     index=0
     for image_productrelease in images_productReleases:
-        product_name = image_productrelease[3]
-        product_version = image_productrelease[4]
-        image_id = image_productrelease[0]
-        image_name = image_productrelease[1]
+        product_name = image_productrelease[DICT_IMAGE_PRODUCTRELEASE_PRODUCTNAME]
+        product_version = image_productrelease[DICT_IMAGE_PRODUCTRELEASE_PRODUCTVERSION]
+        image_id = image_productrelease[DICT_IMAGE_ID]
+        image_name = image_productrelease[DICT_IMAGE_NAME]
 
         env_name = envName + str(index)
         tier_name = "tierName" + env_name
@@ -208,9 +225,9 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
         if (environment.status_code != HTTP_STATUSCODE_NO_CONTENT) :
             print ("Error creating Environment " + env_name + " Description: " + environment._content)
 
-        environment = environment_client.get_environment(env_name)
-        logger.debug(str(environment))
-        print str(environment)
+        environment_dict, _ = environment_client.get_environment(env_name)
+        logger.debug(str(environment_dict))
+        print str(environment_dict)
 
         logger.info("Add Tier tierName" + env_name + " to the Environment " + env_name)
         print("Add Tier tierName" + env_name + " to the Environment " + env_name)
@@ -220,9 +237,9 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
                                    product_version = product_version,
                                    image = image_id,
                                    region_name = region_name)
-        tier = tier_client.get_tier(env_name, tier_name)
-        logger.debug("Tier created : " + str(tier))
-        print "Tier created : " + str(tier)
+        tier_dict, _ = tier_client.get_tier(env_name, tier_name)
+        logger.debug("Tier created : " + str(tier_dict))
+        print "Tier created : " + str(tier_dict)
 
         logger.info("Creating Environment Instance " + blueprint_name)
         print ("Creating Environment Instance " + blueprint_name)
@@ -230,34 +247,33 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
         initial_time_deploy = time.strftime("%H:%M:%S")
         initial_time_deploy_datetime = datetime.datetime.now()
 
-        environment_instance_task = environment_instance_client.create_environment_instance\
-        (
-            name=blueprint_name,
-            description="For Testing purposes",
-            environment_name=env_name,
-            tier_name = tier_name,
-            product_name = product_name,
-            product_version = product_version,
-            image = image_id,
-            region_name = region_name
-        )
+        environment_instance_task_dict, environment_instance_response = \
+            environment_instance_client.create_environment_instance (name=blueprint_name,
+                                                                     description="For Testing purposes",
+                                                                     environment_name=env_name,
+                                                                     environment_description = "For Testing purposes env",
+                                                                     tier_name = tier_name,
+                                                                     product_name = product_name,
+                                                                     product_version = product_version,
+                                                                     image = image_id,
+                                                                     region_name = region_name)
 
-        if (environment_instance_task.status_code != HTTP_STATUSCODE_OK):
+        if (environment_instance_response.status_code != HTTP_STATUSCODE_OK):
             print ("Error creating Environment Instance " + blueprint_name + " Description: "
-                   + environment_instance_task._content)
+                   + environment_instance_response._content)
 
         logger.info("Waiting for Environment Instance " + env_name + "Instance to be created")
         print("Waiting for Environment Instance " + env_name + "Instance to be created")
-        task_url = getTaskUrl(environment_instance_task)
+        task_url = getTaskUrl(environment_instance_task_dict)
         task_id = paasmanager_client.get_taskid(task_url)
-        task = task_client.get_task(task_id)
-        task_status = task['status']
+        task, _ = task_client.get_task(task_id)
+        task_status = task[TASK_BODY_STATUS]
 
         while task_status==TASK_STATUS_RUNNING:
             time.sleep(TIME_INTERVAL_TO_DEPLOY)
-            task = task_client.get_task(task_id)
-            task_status = task['status']
-            print "Polling every 60 seconds - Task status: " + task_status
+            task, _ = task_client.get_task(task_id)
+            task_status = task[TASK_BODY_STATUS]
+            print "Polling every " +  str(TIME_INTERVAL_TO_DEPLOY) + " seconds - Task status: " + task_status
             logger.info("Polling every " + str(TIME_INTERVAL_TO_DEPLOY) +" seconds - Task status: " + task_status)
 
         final_time_deploy = time.strftime("%H:%M:%S")
@@ -266,11 +282,11 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
 
         if task_status==TASK_STATUS_SUCCESS:
             print ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
-                " SUCCESS to deploy in " + interval_deploy + " hh::mm:ss \n")
+                " SUCCESS to deploy in " + str(interval_deploy.seconds) + " seconds \n")
             logger.info ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
-                " SUCCESS to deploy in : " + interval_deploy + " hh::mm:ss  \n")
+                " SUCCESS to deploy in : " + str(interval_deploy.seconds) + " seconds  \n")
             report_file.write ("Image name: " + image_name + ". Product Release: " + product_name + "-"
-                               + product_version + " SUCCESS to deploy in : " + interval_deploy
+                               + product_version + " SUCCESS to deploy in : " + str(interval_deploy.seconds)
                                + " hh::mm:ss  \n")
         elif task_status == TASK_STATUS_ERROR:
             task_error = task[TASK_BODY_ERROR]
@@ -279,17 +295,17 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
             minorErrorCode = task_error[TASK_BODY_ERROR_MINORCODE]
 
             print ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
-                " ERROR to deploy in " + interval_deploy + " hh::mm:ss  \n")
+                " ERROR to deploy in " + str(interval_deploy.seconds) + " seconds  \n")
             print ("ERROR Major Error Description : " + str(major_error_desc))
             print ("ERROR Message : " + str(error_message))
             print ("ERROR Minor Error Code : " + str(minorErrorCode))
             logger.info ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
-                " ERROR to deploy in " + interval_deploy + " hh::mm:ss \n")
+                " ERROR to deploy in " + str(interval_deploy.seconds) + " seconds \n")
             logger.info("ERROR Major Error Description : " + str(major_error_desc))
             logger.info("ERROR Message : " + str(error_message))
             logger.info("ERROR Minor Error Code : " + str(minorErrorCode))
             report_file.write ("Image name: " + image_name + ". Product Release: " + product_name + "-"
-                               + product_version + " ERROR to deploy in " + interval_deploy
+                               + product_version + " ERROR to deploy in " + str(interval_deploy.seconds)
                                + " hh::mm:ss  \n")
             report_file.write("ERROR Major Error Description : " + str(major_error_desc) + "\n")
             report_file.write("ERROR Message : " + str(error_message) + "\n")
@@ -299,16 +315,16 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
         print ("Deleting Environment Instance " + blueprint_name)
 
         initial_time_delete = time.strftime("%H:%M:%S")
-        initial_time_delete_datetime = datetime.now()
+        initial_time_delete_datetime = datetime.datetime.now()
 
-        environment_instance_task = environment_instance_client.delete_environment_instance(blueprint_name)
+        environment_instance_task_response = environment_instance_client.delete_environment_instance(blueprint_name)
 
         logger.info("Waiting for Environment Instance " + blueprint_name + "Instance to be deleted")
         print("Waiting for Environment Instance " + blueprint_name + "Instance to be deleted")
-        task_url = getTaskUrl(environment_instance_task)
+        task_url = getTaskUrl(environment_instance_task_dict)
         task_id = paasmanager_client.get_taskid(task_url)
-        task = task_client.get_task(task_id)
-        task_status = task['status']
+        task, _ = task_client.get_task(task_id)
+        task_status = task[TASK_BODY_STATUS]
 
         while task_status==TASK_STATUS_RUNNING:
             time.sleep(TIME_INTERVAL_TO_DELETE)
@@ -322,17 +338,17 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
 
         if task_status==TASK_STATUS_SUCCESS:
             print ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
-                " SUCCESS to delete  in " + interval_delete + " hh::mm:ss \n")
+                " SUCCESS to delete  in " + str(interval_delete.seconds) + " seconds \n")
             logger.info ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
-                " SUCCESS to delete in " + interval_delete + " hh::mm:ss \n")
+                " SUCCESS to delete in " + str(interval_delete.seconds) + " seconds \n")
         elif task_status ==TASK_STATUS_ERROR:
             print ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
-                " ERROR to delete in " + interval_delete + " hh::mm:ss \n")
+                " ERROR to delete in " + str(interval_delete.seconds) + " seconds \n")
             logger.info ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
-                " ERROR to delete in " + interval_delete + " hh::mm:ss \n")
+                " ERROR to delete in " + str(interval_delete.seconds) + " seconds \n")
 
     '''
-    env_name = envName + "8"
+    env_name = envName + "2"
     tier_name = "tierName" + env_name
     blueprint_name = env_name + "Instance"
 
@@ -348,41 +364,33 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
     print ("Environment " + env_name + " FINISHED")
     '''
 
-def getTaskUrl (environment_instance_response):
-    task_dict = xmltodict.parse(environment_instance_response._content, attr_prefix='')
-    task_url = task_dict['task']['href']
-
-    return task_url
+def getTaskUrl (environment_instance_task_dict):
+    return environment_instance_task_dict[TASK_BODY_HREF]
 
 def get_product_releases_images (allproductreleases, images):
-    products_releases = []
     images_productReleases = []
 
     for i in allproductreleases[PRODUCTANDRELEASE_BODY_ROOT]:
         product_name = i[PRODUCTANDRELEASE_BODY_PRODUCT][PRODUCTANDRELEASE_BODY_PRODUCTNAME]
         product_version = i[PRODUCTANDRELEASE_BODY_PRODUCTVERSION]
         product_release = product_name + "_" + product_version
-        products_releases.append(product_release)
-        #print ("Product Release: " +  product_release)
 
         if i[PRODUCTANDRELEASE_BODY_PRODUCT].get(PRODUCTANDRELEASE_BODY_METADATAS): # Checks if there are metadatas in the product
             for j in i[PRODUCTANDRELEASE_BODY_PRODUCT][PRODUCTANDRELEASE_BODY_METADATAS]:
                 product_metadatas = i[PRODUCTANDRELEASE_BODY_PRODUCT][PRODUCTANDRELEASE_BODY_METADATAS]
-                #print (str (product_metadatas))
                 try :
                     metadata_key = j[PRODUCTANDRELEASE_BODY_METADATA_KEY]
                     metadata_value = j[PRODUCTANDRELEASE_BODY_METADATA_VALUE]
                 except TypeError:
                     metadata_key = i[PRODUCTANDRELEASE_BODY_PRODUCT][PRODUCTANDRELEASE_BODY_METADATAS][PRODUCTANDRELEASE_BODY_METADATA_KEY]
                     metadata_value = i[PRODUCTANDRELEASE_BODY_PRODUCT][PRODUCTANDRELEASE_BODY_METADATAS][PRODUCTANDRELEASE_BODY_METADATA_VALUE]
-                #index = 0
-                #print "metadata_key:" + str(metadata_key) + " and metadata_value:" + str(metadata_value)
+
                 if ((metadata_key == PRODUCTANDRELEASE_BODY_METADATA_INSTALLATOR) and
                         (metadata_value == PRODUCTANDRELEASE_BODY_METADATA_INSTALLATOR_CHEF_VALUE)):
                     for k in product_metadatas:
                         try :
                             metadata_key = k[PRODUCTANDRELEASE_BODY_METADATA_KEY]
-                            metadata_value = k['value']
+                            metadata_value = k[PRODUCTANDRELEASE_BODY_METADATA_VALUE]
                         except TypeError:
                             metadata_key = i[PRODUCTANDRELEASE_BODY_PRODUCT][PRODUCTANDRELEASE_BODY_METADATAS][PRODUCTANDRELEASE_BODY_METADATA_KEY]
                             metadata_value = i[PRODUCTANDRELEASE_BODY_PRODUCT][PRODUCTANDRELEASE_BODY_METADATAS][PRODUCTANDRELEASE_BODY_METADATA_VALUE]
@@ -390,25 +398,28 @@ def get_product_releases_images (allproductreleases, images):
                         if (metadata_key == PRODUCTANDRELEASE_BODY_METADATA_IMAGE) and \
                                 ((metadata_value == "") or (metadata_value is None)):
                             for z in images:
-                                object = []
-                                object.append(z[0])
-                                object.append(z[1])
-                                object.append(product_release)
-                                object.append(product_name)
-                                object.append(product_version)
-                                images_productReleases.append(object)
+                                image_id = z[DICT_IMAGE_ID]
+                                image_name = z[DICT_IMAGE_NAME]
+                                image_productRelease = { DICT_IMAGE_ID : image_id,
+                                                         DICT_IMAGE_NAME : image_name,
+                                                         DICT_IMAGE_PRODUCTRELEASE_PRODUCTRELEASE : product_release,
+                                                         DICT_IMAGE_PRODUCTRELEASE_PRODUCTNAME: product_name,
+                                                         DICT_IMAGE_PRODUCTRELEASE_PRODUCTVERSION: product_version
+                                                        }
+                                images_productReleases.append(image_productRelease)
                         else:
                             for z in images:
-                                #print ("z[0] " + str (z[0]))
                                 if ((metadata_key == PRODUCTANDRELEASE_BODY_METADATA_IMAGE) and
-                                        (metadata_value == z[0])):
-                                    object = []
-                                    object.append(z[0])
-                                    object.append(z[1])
-                                    object.append(product_release)
-                                    object.append(product_name)
-                                    object.append(product_version)
-                                    images_productReleases.append(object)
+                                        (metadata_value == z['image_id'])):
+                                    image_id = z[DICT_IMAGE_ID]
+                                    image_name = z[DICT_IMAGE_NAME]
+                                    image_productRelease = {    DICT_IMAGE_ID : image_id,
+                                                                DICT_IMAGE_NAME : image_name,
+                                                                DICT_IMAGE_PRODUCTRELEASE_PRODUCTRELEASE : product_release,
+                                                                DICT_IMAGE_PRODUCTRELEASE_PRODUCTNAME: product_name,
+                                                                DICT_IMAGE_PRODUCTRELEASE_PRODUCTVERSION: product_version
+                                                            }
+                                    images_productReleases.append(image_productRelease)
     return images_productReleases
 
 def find_all_images_sdc_aware(url_base, region, token, tenant_id):
