@@ -410,7 +410,7 @@ def get_product_releases_images (allproductreleases, images):
                         else:
                             for z in images:
                                 if ((metadata_key == PRODUCTANDRELEASE_BODY_METADATA_IMAGE) and
-                                        (metadata_value == z['image_id'])):
+                                        (metadata_value == z[DICT_IMAGE_ID])):
                                     image_id = z[DICT_IMAGE_ID]
                                     image_name = z[DICT_IMAGE_NAME]
                                     image_productRelease = {    DICT_IMAGE_ID : image_id,
