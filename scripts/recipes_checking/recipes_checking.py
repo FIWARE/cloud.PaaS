@@ -295,8 +295,8 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
 
         while task_status==TASK_STATUS_RUNNING:
             time.sleep(TIME_INTERVAL_TO_DELETE)
-            task = task_client.get_task(task_id)
-            task_status = task['status']
+            task, _ = task_client.get_task(task_id)
+            task_status = task[TASK_BODY_STATUS]
             logger.info("Polling every " + str(TIME_INTERVAL_TO_DELETE) + " seconds - Task status: " + task_status)
 
         final_time_delete = time.strftime("%H:%M:%S")
