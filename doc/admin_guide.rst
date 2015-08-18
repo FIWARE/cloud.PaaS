@@ -536,3 +536,48 @@ For obtaining the tables in the database, just use
     public  | applicationrelease_artifact           | tabla | postgres
     ...
 
+Diagnosis Procedures
+====================
+
+The Diagnosis Procedures are the first steps that a System Administrator will take to locate the source of an error in a GE.
+Once the nature of the error is identified with these tests, the system admin will very often have to resort to more
+concrete and specific testing to pinpoint the exact point of error and a possible solution. Such specific testing is out of the scope of this section.
+
+
+Resource availability
+---------------------
+
+The resource availability should be at least 1Gb of RAM and 6GB of Hard disk in order to prevent enabler's bad performance.
+This means that bellow these thresholds the enabler is likely to experience problems or bad performance.
+
+Resource consumption
+--------------------
+
+State the amount of resources that are abnormally high or low. This applies to RAM,
+CPU and I/O. For this purpose we have differentiated between:
+
+- Low usage, in which we check the resources that the Tomcat requires in order to load the PaaS Manager.
+- High usage, in which we send 100 concurrent accesses to the PaaS Manager.
+
+
+The results were obtained with a top command execution over the following machine configuration:
+
+     |       Name          | Type                |
+     ----------------------+----------------------
+     |   Type Machine      |   Virtual Machine   |
+     |   CPU 	           |   1 core @ 2,4Ghz   |
+     |   RAM 	           |   1,4GB             |
+     |   HDD 	           |   9,25GB            |
+     |   Operating System  |   CentOS 6.3        |
+
+
+
+The results of requirements both RAM, CPU and I/O to HDD is shown in the following table:
+
+     | Resource Consumption   | Low UsageType     | High Usage       |
+     -------------------------+---------------------------------------
+     |   RAM                  | 1GB ~ 63%         | 3GB ~ 78%        |
+     |   CPU 	              | 0,8% of a 2400MHz | 90% of a 2400MHZ |
+     |   I/O HDD 	          |   6GB            | 6GB
+
+
