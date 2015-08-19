@@ -1,0 +1,1156 @@
+FORMAT: 1A
+HOST: https://pegasus.lab.fiware.org:8443/paasmanager
+
+# fiware-paas
+The PaaS Manager GE provides a new layer over the IaaS layer (Openstack) in the aim of easing the task of deploying applications on a Cloud infrastructure.
+Therefore, it orchestrates the provisioning of the required virtual resources at IaaS level, and then, the installation and configuration of the whole software stack of the application by the SDC GE, taking into account the underlying virtual infrastructure.
+It provides a flexible mechanism to perform the deployment, enabling multiple deployment architectures: everything in a single VM or server, several VMs or servers, or elastic architectures based on load balancers and different software tiers.
+# API authentication
+All the operations in the PaaS Manager API needs to have a valid token to access it.
+To obtain the token, you need to have an account in FIWARE Lab (account.lab.fi-ware.org).
+With the credentials (username, password and tenantName) you can obtain a valid token.
+
+
+## Abstract Environment [/rest/catalog/org/FIWARE/environment]
+### Get the Abstract Environment list from the catalogue [GET]
+
++ Request
+
+    + Headers
+    
+            X-Auth-Token: token-id
+            Tenant-Id: your-tenant-id
+            
++ Response 200 (application/json)
+
+        [
+          {
+            "tierDtos": [
+              {
+                "name": "tiernameqac",
+                "flavour": "2",
+                "image": "6e2519b8-1b36-4669-b6fe-ed2e77815b9f",
+                "maximumNumberInstances": 1,
+                "minimumNumberInstances": 1,
+                "initialNumberInstances": 1,
+                "icono": "",
+                "securityGroup": "",
+                "keypair": "default",
+                "floatingip": "false",
+                "affinity": "None",
+                "region": "Trento"
+              },
+              {
+                "name": "tier1",
+                "flavour": "2",
+                "image": "775761ba-67e5-4481-81f0-72eb04d0d13c",
+                "maximumNumberInstances": 1,
+                "minimumNumberInstances": 1,
+                "initialNumberInstances": 1,
+                "productReleaseDtos": {
+                  "productName": "apache2",
+                  "version": "1.10.5",
+                  "attributes": {
+                    "key": "listen_port",
+                    "value": "80",
+                    "type": "Plain"
+                  },
+                  "metatadas": [
+                    {
+                      "key": "image",
+                      "value": ""
+                    },
+                    {
+                      "key": "tenant_id",
+                      "value": "00000000000000000000000000000129"
+                    },
+                    {
+                      "key": "open_ports",
+                      "value": "22 80"
+                    },
+                    {
+                      "key": "cookbook_url",
+                      "value": ""
+                    },
+                    {
+                      "key": "cloud",
+                      "value": "yes"
+                    },
+                    {
+                      "key": "installator",
+                      "value": "chef"
+                    }
+                  ]
+                },
+                "icono": "",
+                "securityGroup": "",
+                "keypair": "",
+                "floatingip": "false",
+                "affinity": "None",
+                "region": "Spain"
+              }
+            ],
+            "name": "envTest11",
+            "description": "envTest desc"
+          },
+          {
+            "tierDtos": [
+              {
+                "name": "tiernameqac",
+                "flavour": "2",
+                "image": "6e2519b8-1b36-4669-b6fe-ed2e77815b9f",
+                "maximumNumberInstances": 1,
+                "minimumNumberInstances": 1,
+                "initialNumberInstances": 1,
+                "icono": "",
+                "securityGroup": "",
+                "keypair": "default",
+                "floatingip": "false",
+                "affinity": "None",
+                "region": "Trento"
+              },
+              {
+                "name": "testjesuspg",
+                "flavour": "2",
+                "image": "422128fe-02a2-44ca-b9a7-67ec69809e5e",
+                "maximumNumberInstances": 1,
+                "minimumNumberInstances": 1,
+                "initialNumberInstances": 1,
+                "productReleaseDtos": {
+                  "productName": "mysql",
+                  "version": "1.2.4",
+                  "attributes": {
+                    "key": "ssl_port",
+                    "value": "8443",
+                    "description": "The ssl listen port",
+                    "type": "Plain"
+                  },
+                  "metatadas": [
+                    {
+                      "key": "nid",
+                      "value": "855",
+                      "description": "mysql nid"
+                    },
+                    {
+                      "key": "installator",
+                      "value": "chef",
+                      "description": "ChefServer Recipe required"
+                    }
+                  ]
+                },
+                "icono": "",
+                "securityGroup": "",
+                "keypair": "",
+                "floatingip": "false",
+                "affinity": "None",
+                "region": "Spain"
+              }
+            ],
+            "name": "envjesuspg",
+            "description": "desc"
+          },
+          {
+            "tierDtos": {
+              "name": "tier1",
+              "flavour": "2",
+              "image": "775761ba-67e5-4481-81f0-72eb04d0d13c",
+              "maximumNumberInstances": 1,
+              "minimumNumberInstances": 1,
+              "initialNumberInstances": 1,
+              "productReleaseDtos": {
+                "productName": "nodejs",
+                "version": "0.6.15",
+                "metatadas": {
+                  "key": "installator",
+                  "value": "chef",
+                  "description": "ChefServer Recipe required"
+                }
+              },
+              "icono": "",
+              "securityGroup": "",
+              "keypair": "",
+              "floatingip": "false",
+              "affinity": "None",
+              "region": "Spain"
+            },
+            "name": "envTest",
+            "description": "envTest desc"
+          },
+          {
+            "tierDtos": {
+              "name": "tier1",
+              "flavour": "2",
+              "image": "775761ba-67e5-4481-81f0-72eb04d0d13c",
+              "maximumNumberInstances": 1,
+              "minimumNumberInstances": 1,
+              "initialNumberInstances": 1,
+              "productReleaseDtos": {
+                "productName": "apache2",
+                "version": "1.10.5",
+                "attributes": {
+                  "key": "listen_port",
+                  "value": "80",
+                  "type": "Plain"
+                },
+                "metatadas": [
+                  {
+                    "key": "image",
+                    "value": ""
+                  },
+                  {
+                    "key": "tenant_id",
+                    "value": "00000000000000000000000000000129"
+                  },
+                  {
+                    "key": "open_ports",
+                    "value": "22 80"
+                  },
+                  {
+                    "key": "cookbook_url",
+                    "value": ""
+                  },
+                  {
+                    "key": "cloud",
+                    "value": "yes"
+                  },
+                  {
+                    "key": "installator",
+                    "value": "chef"
+                  }
+                ]
+              },
+              "icono": "",
+              "securityGroup": "",
+              "keypair": "",
+              "floatingip": "false",
+              "affinity": "None",
+              "region": "Spain"
+            },
+            "name": "envTest1",
+            "description": "envTest desc"
+          }
+        ]
+        
++ Response 401 (application/json)
+
+        { "errors":
+            [
+                {
+                    "message": "Unauthorized",
+                    "code": 401
+                }
+            ]
+        }
+
+
+### Add an Abstract Environment to the catalogue [POST]
+
++ Request (application/json) 
+
+        {
+            "name": "environment name",
+            "description": "environment description"
+        }
+
++ Response 204
+
++ Request (application/xml)
+
+        <environmentDto>
+            <name>environment name</name>
+            <description>environment description</description>
+        </environmentDto>
+
++ Response 204
+
+
+
+## Particular Abstract Environment [/rest/catalog/org/FIWARE/environment/{name}]
+
++ Parameters
+    + name (required, string, `env1`) ... abstract environment name.
+
+### Retrieve an environment [GET]
++ Request (application/json)
+
+    + Headers
+    
+            X-Auth-Token: token-id
+            Tenant-Id: your-tenant-id
+
++ Response 201 (application/json)
+
+        {
+          "tierDtos": {
+            "name": "tier1",
+            "flavour": "2",
+            "image": "775761ba-67e5-4481-81f0-72eb04d0d13c",
+            "maximumNumberInstances": 1,
+            "minimumNumberInstances": 1,
+            "initialNumberInstances": 1,
+            "productReleaseDtos": {
+              "productName": "apache2",
+              "version": "1.10.5",
+              "attributes": {
+                "key": "listen_port",
+                "value": "80",
+                "type": "Plain"
+              },
+              "metatadas": [
+                {
+                  "key": "image",
+                  "value": ""
+                },
+                {
+                  "key": "tenant_id",
+                  "value": "00000000000000000000000000000129"
+                },
+                {
+                  "key": "open_ports",
+                  "value": "22 80"
+                },
+                {
+                  "key": "cookbook_url",
+                  "value": ""
+                },
+                {
+                  "key": "cloud",
+                  "value": "yes"
+                },
+                {
+                  "key": "installator",
+                  "value": "chef"
+                }
+              ]
+            },
+            "icono": "",
+            "securityGroup": "",
+            "keypair": "",
+            "floatingip": "false",
+            "affinity": "None",
+            "region": "Spain"
+          },
+          "name": "envTest1",
+          "description": "envTest desc"
+        }
+
++ Response 404 (application/json)
+
+        {
+          "message": "Entity not found#h294ygnmo8g7ldec6on9noko",
+          "code": 30
+        }
+
+### Delete an abstract template [DELETE]
++ Request (application/json)
+
+    + Headers
+    
+            X-Auth-Token: token-id
+            Tenant-Id: your-tenant-id
+
++ Response 204 (application/json)
+
++ Response 404 (application/json)
+
+        {
+          "message": "Entity not found#h294ygnmo8g7ldec6on9noko",
+          "code": 30
+        }
+
+## Abstract Tier API [/rest/catalog/org/FIWARE/environment/{environment}/tier]
+
++ Parameters
+    + environment (required, string, `env1`) ... abstract environment name.
+
+### Get all tiers asociated to abstract environment [GET]
++ Request (application/json)
+    + Headers
+    
+            X-Auth-Token: token-id
+            Tenant-Id: your-tenant-id
+
++ Response 200 (application/json)
+
+        [
+            {
+                "name": "tier1",
+                "flavour": "2",
+                "image": "0dbf8aff-5dc5-4d6c-9f9c-1e6801e0b629",
+                "maximumNumberInstances": 1,
+                "minimumNumberInstances": 1,
+                "initialNumberInstances": 1,
+                "icono": "",
+                "securityGroup": "",
+                "keypair": "keypairname",
+                "floatingip": "false",
+                "affinity": "None",
+                "region": "Region1"
+            },
+            {
+                "name": "tier2",
+                "flavour": "2",
+                "image": "0dbf8aff-5dc5-4d6c-9f9c-1e6801e0b629",
+                "maximumNumberInstances": 1,
+                "minimumNumberInstances": 1,
+                "initialNumberInstances": 1,
+                "icono": "",
+                "securityGroup": "",
+                "keypair": "keypairname",
+                "floatingip": "false",
+                "affinity": "None",
+                "region": "Region2"
+            }
+        ]
+
+### Add an Tier to an existing Abstract Environment [POST]
++ Request (application/json)
+
+    + Headers
+    
+            X-Auth-Token: token-id
+            Tenant-Id: your-tenant-id
+    + Body
+    
+            {
+                "minimumNumberInstances":1,
+                "initialNumberInstances":1,
+                "maximumNumberInstances":1,
+                "name":"tierName",
+                "image":"0dbf8aff-5dc5-4d6c-9f9c-1e6801e0b629",
+                "flavour":2,
+                "keypair":"keypairname",
+                "floatingip":false,
+                "region":"Region1"
+            }
+            
++ Request (application/xml)
+
+    + Headers
+    
+            X-Auth-Token: token-id
+            Tenant-Id: your-tenant-id
+    + Body
+    
+            <tierDto>
+                <minimumNumberInstances>1</minimumNumberInstances>
+                <initialNumberInstances>1</initialNumberInstances>
+                <maximumNumberInstances>1</maximumNumberInstances>
+                <name>tierName</name>
+                <image>0dbf8aff-5dc5-4d6c-9f9c-1e6801e0b629</image>
+                <flavour>2</flavour>
+                <keypair>keypairname</keypair>
+                <floatingip>false</floatingip>
+                <region>Region1</region>
+            </tierDto>
+        
++ Response 204
+
+
+## Tier API [/rest/catalog/org/FIWARE/environment/{environment}/tier/{tier}]
+
++ Parameters
+    + environment (required, string, `env1`) ... abstract environment name.
+    + tier (required, string, `tier1`) ... tier name.
+
+### Get a tier associated to abstract environment [GET ]
++ Request (application/json)
+    + Headers
+    
+            X-Auth-Token: token-id
+            Tenant-Id: your-tenant-id
+
++ Response 200 (application/json)
+
+        {
+              "name": "tier1",
+              "flavour": "2",
+              "image": "0dbf8aff-5dc5-4d6c-9f9c-1e6801e0b629",
+              "maximumNumberInstances": 1,
+              "minimumNumberInstances": 1,
+              "initialNumberInstances": 1,
+              "icono": "",
+              "securityGroup": "",
+              "keypair": "keypairname",
+              "floatingip": "false",
+              "affinity": "None",
+              "region": "Trento"
+        }
+
+### Update a Tier of an existing Abstract Environment [PUT]
+
++ Request (application/json)
+    + Headers
+    
+            X-Auth-Token: token-id
+            Tenant-Id: your-tenant-id
+
+    + Body
+    
+            {
+                "name": "tier1",
+                "minimumNumberInstances":1,
+                "initialNumberInstances":1,
+                "maximumNumberInstances":1,
+                "name":"tierName",
+                "image":"0dbf8aff-5dc5-4d6c-9f9c-1e6801e0b629",
+                "flavour":2,
+                "keypair":"keypairname",
+                "floatingip":false,
+                "region":"Region1"
+            }
+
++ Response 204
+
+
+### Delete a particular Tier associated to a Abstract Environment [DELETE]
+
++ Request (application/json)
+    + Headers
+    
+            X-Auth-Token: token-id
+            Tenant-Id: your-tenant-id
+
++ Response 204
+
+## Blueprint Template/Environment API [/rest/catalog/org/FIWARE/vdc/{tenant}/environment]
+
++ Parameters
+    + tenant (required, string) ... your tenant id
+
+### Get the blueprint template list from the catalogue [GET]
+
++ Request (application/json)
+    + Headers
+    
+            X-Auth-Token: token-id
+            Tenant-Id: your-tenant-id
+
++ Response 200 (application/json)
+
+        {
+              "tierDtos": {
+                "name": "tier1",
+                "flavour": "2",
+                "image": "312ab1e9-5627-4f8d-b347-c0d52c59e459",
+                "maximumNumberInstances": 4,
+                "minimumNumberInstances": 0,
+                "initialNumberInstances": 1,
+                "productReleaseDtos": {
+                  "productName": "apache2",
+                  "version": "1.10.5",
+                  "attributes": {
+                    "key": "listen_port",
+                    "value": "80",
+                    "type": "Plain"
+                  },
+                  "metatadas": [
+                    {
+                      "key": "image",
+                      "value": ""
+                    },
+                    {
+                      "key": "tenant_id",
+                      "value": "00000000000000000000000000000129"
+                    },
+                    {
+                      "key": "open_ports",
+                      "value": "22 80"
+                    },
+                    {
+                      "key": "cookbook_url",
+                      "value": ""
+                    },
+                    {
+                      "key": "cloud",
+                      "value": "yes"
+                    },
+                    {
+                      "key": "installator",
+                      "value": "chef"
+                    }
+                  ]
+                },
+                "icono": "",
+                "securityGroup": "",
+                "keypair": "",
+                "floatingip": "false",
+                "affinity": "None",
+                "region": "Region1"
+              },
+              "name": "template1",
+              "description": "template1"
+            }
+
+
++ Response 200  (application/xml)
+
+            <environmentDtoes>
+                <environmentDto>
+                    <tierDtos>
+                        <name>tier1</name>
+                        <flavour>2</flavour>
+                        <image>312ab1e9-5627-4f8d-b347-c0d52c59e459</image>
+                        <maximumNumberInstances>4</maximumNumberInstances>
+                        <minimumNumberInstances>0</minimumNumberInstances>
+                        <initialNumberInstances>1</initialNumberInstances>
+                        <productReleaseDtos>
+                            <productName>apache2</productName>
+                            <version>1.10.5</version>
+                            <attributes>
+                                <key>listen_port</key>
+                                <value>80</value>
+                                <type>Plain</type>
+                            </attributes>
+                            <metatadas>
+                                <key>image</key>
+                                <value></value>
+                            </metatadas>
+                            <metatadas>
+                                <key>tenant_id</key>
+                                <value>00000000000000000000000000000129</value>
+                            </metatadas>
+                            <metatadas>
+                                <key>open_ports</key>
+                                <value>22 80</value>
+                            </metatadas>
+                            <metatadas>
+                                <key>cookbook_url</key>
+                                <value></value>
+                            </metatadas>
+                            <metatadas>
+                                <key>cloud</key>
+                                <value>yes</value>
+                            </metatadas>
+                            <metatadas>
+                                <key>installator</key>
+                                <value>chef</value>
+                            </metatadas>
+                        </productReleaseDtos>
+                        <icono></icono>
+                        <securityGroup></securityGroup>
+                        <keypair></keypair>
+                        <floatingip>false</floatingip>
+                        <affinity>None</affinity>
+                        <region>Region1</region>
+                    </tierDtos>
+                    <name>template1</name>
+                    <description>template1</description>
+                </environmentDto>
+            </environmentDtoes>
+            
+### Add a blueprint template to the catalogue [POST]
+
++ Request (application/xml)
+    + Headers
+    
+            X-Auth-Token: token-id
+            Tenant-Id: your-tenant-id
+
+    + Body
+        
+            <environment>
+                <name>{environment-name}</name>
+                <tiers>
+                    <tier>
+                        <initial_number_instances>1</initial_number_instances>
+                        <maximum_number_instances>1</maximum_number_instances>
+                        <minimum_number_instances>1</minimum_number_instances>
+                        <name>{tier-id}</name>
+                        <networkDto>
+                                <networkName>Internet</networkName>
+                                <subNetworkDto>
+                                        <subnetName>sub-net-Internet</subnetName>
+                                </subNetworkDto>
+                        </networkDto>
+                        <productReleases>
+                            <product>postgresql</product>
+                            <version>0.0.3</version>
+                            <withArtifact>true</withArtifact>
+                            <productType>
+                                <id>5</id>
+                                <name>Database</name>
+                            </productType>
+                        </productReleases>
+                    </tier>
+                </tiers>
+            </environment>
+
++ Response 200 (application/json)
+
+## Environment API [/rest/catalog/org/FIWARE/vdc/{tenant}/environment/{environment}]
+
++ Parameters
+    + environment (required, string, `env1`) ... abstract environment name.
+
+### Delete a blueprint template from the catalogue [DELETE]
+
++ Request (application/xml)
+    + Headers
+    
+            X-Auth-Token: token-id
+            Tenant-Id: your-tenant-id
+
++ Response 204
+
+## Tier API [/rest/catalog/org/FIWARE/vdc/{tenant}/environment/{environment}/tier]
+
++ Parameters
+    + environment (required, string, `env1`) ... abstract environment name.
+
+
+### Get All Tiers associated to an Environment [GET]
+
++ Request (application/xml)
+    + Headers
+    
+            X-Auth-Token: token-id
+            Tenant-Id: your-tenant-id
+
++ Response 200 (application/xml)
+
+        <tierDtoes>
+                <tierDto>
+                        <name>tier1</name>
+                        <flavour>2</flavour>
+                        <image>dbefb2d6-2221-46e2-a11c-b466e2503da5</image>
+                        <maximumNumberInstances>3</maximumNumberInstances>
+                        <minimumNumberInstances>1</minimumNumberInstances>
+                        <initialNumberInstances>1</initialNumberInstances>
+                        <networkDto>
+                                <networkName>Internet</networkName>
+                                <subNetworkDto>
+                                        <subnetName>sub-net-Internet</subnetName>
+                                </subNetworkDto>
+                        </networkDto>
+                        <productReleaseDtos>
+                                <productName>mongodbshard</productName>
+                                <productDescription>mongodb shard 2.2.3</productDescription>
+                                <version>2.2.3</version>
+                        </productReleaseDtos>
+                        <icono>http://blog.theinit.com/wp-content/uploads/2012/03/bc358_MongoDB.png</icono>
+                        <securityGroup />
+                        <keypair />
+                        <floatingip>false</floatingip>
+                        <affinity>None</affinity>
+                        <region>Region1</region>
+                </tierDto>
+                <tierDto>
+                        <name>tier2</name>
+                        <flavour>2</flavour>
+                        <image>dbefb2d6-2221-46e2-a11c-b466e2503da5</image>
+                        <maximumNumberInstances>3</maximumNumberInstances>
+                        <minimumNumberInstances>1</minimumNumberInstances>
+                        <initialNumberInstances>1</initialNumberInstances>
+                        <networkDto>
+                                <networkName>Internet</networkName>
+                                <subNetworkDto>
+                                        <subnetName>sub-net-Internet</subnetName>
+                                </subNetworkDto>
+                        </networkDto>
+                        <icono></icono>
+                        <securityGroup />
+                        <keypair />
+                        <floatingip>false</floatingip>
+                        <affinity>None</affinity>
+                        <region>Region2</region>
+                </tierDto>
+        </tierDtoes>
+
++ Response 200 (application/json)
+
+        {
+              "name": "tier1",
+              "flavour": "2",
+              "image": "312ab1e9-5627-4f8d-b347-c0d52c59e459",
+              "maximumNumberInstances": 4,
+              "minimumNumberInstances": 0,
+              "initialNumberInstances": 1,
+              "productReleaseDtos": {
+                "productName": "apache2",
+                "version": "1.10.5",
+                "attributes": {
+                  "key": "listen_port",
+                  "value": "80",
+                  "type": "Plain"
+                },
+                "metatadas": [
+                  {
+                    "key": "image",
+                    "value": ""
+                  },
+                  {
+                    "key": "tenant_id",
+                    "value": "00000000000000000000000000000129"
+                  },
+                  {
+                    "key": "open_ports",
+                    "value": "22 80"
+                  },
+                  {
+                    "key": "cookbook_url",
+                    "value": ""
+                  },
+                  {
+                    "key": "cloud",
+                    "value": "yes"
+                  },
+                  {
+                    "key": "installator",
+                    "value": "chef"
+                  }
+                ]
+              },
+              "icono": "",
+              "securityGroup": "",
+              "keypair": "",
+              "floatingip": "false",
+              "affinity": "None",
+              "region": "Region1"
+            }
+    
+
+### Add a Tier to an existing Environment [POST]
+
++ Request (application/xml)
+    + Headers
+    
+            X-Auth-Token: token-id
+            Tenant-Id: your-tenant-id
+    + Body
+    
+            <tierDto>
+                <minimumNumberInstances>1</minimumNumberInstances>
+                <initialNumberInstances>1</initialNumberInstances>
+                <maximumNumberInstances>1</maximumNumberInstances>
+                <networkDto>
+                        <networkName>Internet</networkName>
+                        <subNetworkDto>
+                                <subnetName>sub-net-Internet</subnetName>
+                        </subNetworkDto>
+                </networkDto>
+                <name>{tier-name}</name>
+                <image>0dbf8aff-5dc5-4d6c-9f9c-1e6801e0b629</image>
+                <flavour>2</flavour>
+                <keypair>jesusmmovilla57</keypair>
+                <floatingip>false</floatingip>
+                <region>Trento</region>
+            </tierDto>
+
++ Response 204
+
+### Update a Tier of an existing Environment [PUT]
+
++ Request
+
+    + Headers
+    
+            X-Auth-Token: token-id
+            Tenant-Id: your-tenant-id
+
+    + Body
+    
+            <tierDto>
+                <minimumNumberInstances>1</minimumNumberInstances>
+                <initialNumberInstances>1</initialNumberInstances>
+                <maximumNumberInstances>1</maximumNumberInstances>
+                <name>tier1</name>
+                <networkDto>
+                        <networkName>Internet</networkName>
+                        <subNetworkDto>
+                                <subnetName>sub-net-Internet</subnetName>
+                        </subNetworkDto>
+                </networkDto>
+                <image>0dbf8aff-5dc5-4d6c-9f9c-1e6801e0b629</image>
+                <flavour>2</flavour>
+                <keypair>mykeypair</keypair>
+                <floatingip>false</floatingip>
+                <region>Region1</region>
+            </tierDto>
+        
++ Response 204
+
+## Particular Tier API [/rest/catalog/org/FIWARE/vdc/{tenant}/environment/{environment}/tier/{tier}]
+
++ Parameters
+    + environment (required, string, `env1`) ... abstract environment name.
+    + tier (required, string, `tier1`) ... tier name.
+
+### Get a particular Tier associated to an Environment [GET]
+
++ Request
+
+    + Headers
+    
+            X-Auth-Token: token-id
+            Tenant-Id: your-tenant-id
+
++ Response 200 (application/xml)
+
+            <tierDto>
+                    <name>tier1</name>
+                    <flavour>2</flavour>
+                    <image>dbefb2d6-2221-46e2-a11c-b466e2503da5</image>
+                    <maximumNumberInstances>3</maximumNumberInstances>
+                    <minimumNumberInstances>1</minimumNumberInstances>
+                    <initialNumberInstances>1</initialNumberInstances>
+                    <networkDto>
+                            <networkName>Internet</networkName>
+                            <subNetworkDto>
+                                    <subnetName>sub-net-Internet</subnetName>
+                            </subNetworkDto>
+                    </networkDto>
+                    <productReleaseDtos>
+                            <productName>mongodbshard</productName>
+                            <productDescription>mongodb shard 2.2.3</productDescription>
+                            <version>2.2.3</version>
+                    </productReleaseDtos>
+                    <icono>http://blog.theinit.com/wp-content/uploads/2012/03/bc358_MongoDB.png</icono>
+                    <securityGroup />
+                    <keypair />
+                    <floatingip>false</floatingip>
+                    <affinity>None</affinity>
+                    <region>Region1</region>
+            </tierDto>
+
+### Delete a particular Tier associated to an Environment [DELETE]
+
++ Request
+
+    + Headers
+    
+            X-Auth-Token: token-id
+            Tenant-Id: your-tenant-id
+
++ Response 204
+
+## BluePrint/Environment Instance Provisioning API [/rest/org/FIWARE/vdc/{tenant}/environmentInstance]
+
++ Parameters
+    + tenant (required, string) ... your tenant id
+
+### Get information about Blueprint Instances deployed [GET]
+
++ Request
+
+    + Headers
+    
+            X-Auth-Token: token-id
+            Tenant-Id: your-tenant-id
+            
++ Response 200 (application/xml)
+
+            <environmentInstanceDtoes>
+                <environmentInstance>
+                     <environmentInstanceName>environmentInstance-id</environmentInstanceName>
+                     <vdc>your-tenant-id</vdc>
+                     <environment>
+                         <name>template1</name>
+                         <tiers>
+                             <tier>
+                             <initial_number_instances>1</initial_number_instances>
+                             <maximum_number_instances>1</maximum_number_instances>
+                             <minimum_number_instances>1</minimum_number_instances>
+                             <name>{tier-id}</name>
+                             <productReleases>
+                                 <product>postgresql</product>
+                                 <version>0.0.3</version>
+                                 <withArtifact>true</withArtifact>
+                                 <productType>
+                                     <id>5</id>
+                                     <name>Database</name>
+                                 </productType>
+                             </productReleases>
+                             </tier>
+                         </tiers>
+                     </environment>
+                     <tierInstances>
+                         <id>35</id>
+                         <date>2012-10-31T09:24:45.298Z</date>
+                         <name>tomcat-</name>
+                         <status>INSTALLED</status>
+                         <vdc>your-tenant-id</vdc>
+                         <tier>
+                             <name>tier1</name>
+                         </tier>
+                         <productInstances>
+                             <id>33</id>
+                             <date>2012-10-31T09:14:33.192Z</date>
+                             <name>postgresql</name>
+                             <status>INSTALLED</status>
+                             <vdc>your-tenant-id</vdc>
+                             <productRelease>
+                                 <product>postgresql</product>
+                                 <version>0.0.3</version>
+                             </productRelase>
+                             <vm>
+                                 <fqn>vmfqn</fqn>
+                                 <hostname>rehos456544</hostname>
+                                 <ip>192.168.1.1</ip>
+                            </vm>
+                    </tierInstances>
+                </environmentInstance>
+            </environmentInstanceDtoes>
+
+### Deploy a Blueprint Instance [POST]
+
++ Request
+
+    + Headers
+    
+            X-Auth-Token: token-id
+            Tenant-Id: your-tenant-id
+            
+    + Body
+    
+            <environment>
+                <name>template1</name>
+                <tiers>
+                    <tier>
+                        <initial_number_instances>1</initial_number_instances>
+                        <maximum_number_instances>1</maximum_number_instances>
+                        <minimum_number_instances>1</minimum_number_instances>
+                        <name>tier1</name>
+                        <productReleases>
+                            <product>postgresql</product>
+                            <version>0.0.3</version>
+                            <withArtifact>true</withArtifact>
+                            <productType>
+                               <id>5</id>
+                                <name>Database</name>
+                            </productType>
+                        </productReleases>
+                    </tier>
+                </tiers>
+            </environment>
+
++ Response 200
+
+        <task href="https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/vdc/your-tenant-id/task/{task-id}" startTime="2012-11-08T09:13:18.311+01:00" status="RUNNING">
+            <description>Deploy environment {emvironment-name}</description>
+            <vdc>your-tenant-id</vdc>
+        </task>
+
+## A BluePrint/Environment Instance API [/rest/org/FIWARE/vdc/{tenant}/environmentInstance/{name}]
+
++ Parameters
+    + tenant (required, string) ... your tenant id
+    + name (required, string) ... blueprint/environment instance id
+    
+
+### Get details of a certain Blueprint Instance [GET]
+
++ Request
+
+    + Headers
+    
+            X-Auth-Token: token-id
+            Tenant-Id: your-tenant-id
+            
++ Response 200 (application/xml)
+
+            <environmentInstance>
+                <environmentInstanceName>{environmentInstance-id</environmentInstanceName>
+                <vdc>your-tenant-id</vdc>
+                <environment>
+                    <name>{emvironment-name}</name>
+                    <tiers>
+                        <tier>
+                            <initial_number_instances>1</initial_number_instances>
+                            <maximum_number_instances>1</maximum_number_instances>
+                            <minimum_number_instances>1</minimum_number_instances>
+                            <name>{tier-id}</name>
+                            <productReleases>
+                                <product>postgresql</product>
+                                <version>0.0.3</version>
+                                <withArtifact>true</withArtifact>
+                                <productType>
+                                    <id>5</id>
+                                    <name>Database</name>
+                                </productType>
+                            </productReleases>
+                        </tier>
+                    </tiers>
+                </environment>
+                <tierInstances>
+                    <id>35</id>
+                    <date>2012-10-31T09:24:45.298Z</date>
+                    <name>tomcat-</name>
+                    <status>INSTALLED</status>
+                    <vdc>your-tenant-id</vdc>
+                    <tier>
+                        <name>{tier-id}</name>
+                    </tier>
+                    <productInstances>
+                        <id>33</id>
+                        <date>2012-10-31T09:14:33.192Z</date>
+                        <name>postgresql</name>
+                        <status>INSTALLED</status>
+                        <vdc>your-tenant-id</vdc>
+                        <productRelease>
+                            <product>postgresql</product>
+                            <version>0.0.3</version>
+                        </productRelase>
+                        <vm>
+                            <fqn>vmfqn</fqn>
+                            <hostname>rehos456544</hostname>
+                            <ip>192.168.1.1</ip>
+                        </vm>
+                    </productInstance>
+                </tierInstances>
+            </environmentInstance>
+
+### Undeploy a Blueprint Instance [DELETE]
+
++ Request
+
+    + Headers
+    
+            X-Auth-Token: token-id
+            Tenant-Id: your-tenant-id
+
++ Response 200 (application/xml)
+
+            <task href="https://PAAS_MANAGER_IP:8443/paasmanager/rest/vdc/{your-tenant-id}/task/{task-id}" startTime="2012-11-08T09:45:44.020+01:00" status="RUNNING">
+                <description>Uninstall environment</description>
+                <vdc>your-tenant-id</vdc>
+            </task>
+            
+## Task Management [/rest/vdc/{tenant}/task/{id}]
+
+
+The value of the status attribute could be one of the following:
+
+<table>
+    <tr>
+        <td>QUEUED</td><td>The task is queued for execution.</td>
+    </tr>
+    <tr><td>PENDING</td><td>The task is pending for approval</td></tr>
+    <tr><td>RUNNING</td><td>The task is currently running</td></tr>
+    <tr><td>SUCCESS</td><td>The task is completed successfully</td></tr>
+    <tr><td>ERROR</td><td>The task is finished but it failed</td></tr>
+   <tr><td>CANCELLED</td><td>The task has been cancelled by user</td></tr>    
+</table>
+
+
+
++ Parameters
+    + tenant (required, string) ... your tenant id
+    + id (required, string) ... task id
+
+### Get a specific task [GET]
+
++ Request
+
+    + Headers
+    
+            X-Auth-Token: token-id
+            Tenant-Id: your-tenant-id
+
++ Response 200 (application/xml)
+
+            <task href="http:/130.206.80.112:8080/sdc/rest/vdc/{tenant}/task/{task-id}" startTime="2012-11-08T09:13:18.311+01:00" status="SUCCESS">
+                <description>Install product tomcat in  VM rhel-5200ee66c6</description>
+                <vdc>your-tenant-id</vdc>
+            </task>
+
