@@ -1,18 +1,78 @@
 FORMAT: 1A
 HOST: https://pegasus.lab.fiware.org:8443/paasmanager
+TITLE: FIWARE-Paas v1 Specification
 
-# fiware-paas
+# Fiware-paas
+
+<!--
+Copyright 2015 Telefónica I+D
+All Rights Reserved.
+Licensed under the Apache License, Version 2.0 (the "License"); you may
+not use this file except in compliance with the License. You may obtain
+a copy of the License at
+        http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+License for the specific language governing permissions and limitations
+under the License.
+-->
+
 The PaaS Manager GE provides a new layer over the IaaS layer (Openstack) in the aim of easing the task of deploying applications on a Cloud infrastructure.
 Therefore, it orchestrates the provisioning of the required virtual resources at IaaS level, and then, the installation and configuration of the whole software stack of the application by the SDC GE, taking into account the underlying virtual infrastructure.
 It provides a flexible mechanism to perform the deployment, enabling multiple deployment architectures: everything in a single VM or server, several VMs or servers, or elastic architectures based on load balancers and different software tiers.
-# API authentication
+
+## Versions 
+
+  + This Version: v1.0 
+
+
+## Editors
+
+  + Henar Muñoz Frutos, Telefónica I+D
+  + Fernando López Aguilar, Telefónica I+D
+  
+This specification is licensed under the
+[FIWARE Open Specification License]
+(http://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/FI-WARE_Open_Specification_Legal_Notice_%28essential_patents_license%29).
+
+
+# Group paasmanager v1
+
+## API authentication
 All the operations in the PaaS Manager API needs to have a valid token to access it.
 To obtain the token, you need to have an account in FIWARE Lab (account.lab.fi-ware.org).
 With the credentials (username, password and tenantName) you can obtain a valid token.
 
 
+## Faults
+
+The error code is returned in the body of the response for convenience.
+The message section returns a human-readable message that is appropriate for display to the end user.
+The details section is optional and may contain information—for example, a stack trace—to assist in tracking down an error.
+The detail section may or may not be appropriate for display to an end user.
+
+<table>
+    <tr><td>Fault Element</td><td>HTTP code</td><td>Description</td></tr>
+    <tr><td>Fault</td><td>500, 400, other codes possible</td><td>Error in the operation</td></tr>
+    <tr><td>serviceUnavailable</td><td>503</td><td>The service is not available</td></tr>
+    <tr><td>unauthorized</td><td>401</td><td>You are not authorized to access to that operation. The token is not correct.</td></tr>
+    <tr><td>forbidden</td><td>403</td><td>It is forbidden</td></tr>
+    <tr><td>badRequest</td><td>400</td><td>The request has not been done correctly</td></tr>
+    <tr><td>badMediaType</td><td>415</td><td>The payload media is not correct</td></tr>
+    <tr><td>itemNotFound</td><td>404</td><td>It is not exist</td></tr>
+    <tr><td>badMethod</td><td>405</td><td>Method not allowed</td></tr>
+    <tr><td>overLimit</td><td>413</td><td>Request entity too large</td></tr>
+</table>
+
+
+
 ## Abstract Environment [/rest/catalog/org/FIWARE/environment]
+
 ### Get the Abstract Environment list from the catalogue [GET]
+
+This operation lists the environments stored in the catalogue.
+It is possible to see it contains a list of tiers including products to be installed.
 
 + Request
 
@@ -245,6 +305,11 @@ With the credentials (username, password and tenantName) you can obtain a valid 
 
 ### Add an Abstract Environment to the catalogue [POST]
 
+You may create an abstract environment using this action.
+
+* `name`(string) - name of the new abstract environment.
+* `description` (string) - description of the new abstract environment.
+
 + Request (application/json) 
 
         {
@@ -271,6 +336,9 @@ With the credentials (username, password and tenantName) you can obtain a valid 
     + name (required, string, `env1`) ... abstract environment name.
 
 ### Retrieve an environment [GET]
+
+Lists details of the specified environment.
+
 + Request (application/json)
 
     + Headers
@@ -342,6 +410,9 @@ With the credentials (username, password and tenantName) you can obtain a valid 
         }
 
 ### Delete an abstract template [DELETE]
+
+Deletes the template with the id (environment) in the catalogue
+
 + Request (application/json)
 
     + Headers
@@ -364,6 +435,9 @@ With the credentials (username, password and tenantName) you can obtain a valid 
     + environment (required, string, `env1`) ... abstract environment name.
 
 ### Get all tiers asociated to abstract environment [GET]
+
+Retrieve the list of tiers
+
 + Request (application/json)
     + Headers
     
@@ -403,7 +477,22 @@ With the credentials (username, password and tenantName) you can obtain a valid 
             }
         ]
 
-### Add an Tier to an existing Abstract Environment [POST]
+### Add a Tier to an existing Abstract Environment [POST]
+
+Add new tier to an abstract environment.
+Arguments:
+
+* `name`: name of tier
+* `image`: uuid of image
+* `flavour`: id of flavour, that determine CPU,memory, disk feature
+* `keypair`: name of keypair to ssh access
+* `floatingip`: true/false for public ip
+* `region`: what region should be assign to vm
+* `minimumNumberInstances`: minimum number of instances will be instanciated
+* `maximumNumberInstances`: maximum number of instances can be instanciated
+* `initialNumberInstances`: initial number of instances will be instanciated when launch instance
+
+
 + Request (application/json)
 
     + Headers
@@ -454,6 +543,9 @@ With the credentials (username, password and tenantName) you can obtain a valid 
     + tier (required, string, `tier1`) ... tier name.
 
 ### Get a tier associated to abstract environment [GET ]
+
+Retrieve information about a tier in abstract environment
+
 + Request (application/json)
     + Headers
     
@@ -478,6 +570,20 @@ With the credentials (username, password and tenantName) you can obtain a valid 
         }
 
 ### Update a Tier of an existing Abstract Environment [PUT]
+
+Update data of a tier.
+Arguments:
+
+* `name`: name of tier
+* `image`: uuid of image
+* `flavour`: id of flavour, that determine CPU,memory, disk feature
+* `keypair`: name of keypair to ssh access
+* `floatingip`: true/false for public ip
+* `region`: what region should be assign to vm
+* `minimumNumberInstances`: minimum number of instances will be instanciated
+* `maximumNumberInstances`: maximum number of instances can be instanciated
+* `initialNumberInstances`: initial number of instances will be instanciated when launch instance
+
 
 + Request (application/json)
     + Headers
@@ -505,6 +611,8 @@ With the credentials (username, password and tenantName) you can obtain a valid 
 
 ### Delete a particular Tier associated to a Abstract Environment [DELETE]
 
+Delete the tier.
+
 + Request (application/json)
     + Headers
     
@@ -520,67 +628,13 @@ With the credentials (username, password and tenantName) you can obtain a valid 
 
 ### Get the blueprint template list from the catalogue [GET]
 
-+ Request (application/json)
+Lists all environments by tenant.
+
++ Request (application/xml)
     + Headers
     
             X-Auth-Token: token-id
             Tenant-Id: your-tenant-id
-
-+ Response 200 (application/json)
-
-        {
-              "tierDtos": {
-                "name": "tier1",
-                "flavour": "2",
-                "image": "312ab1e9-5627-4f8d-b347-c0d52c59e459",
-                "maximumNumberInstances": 4,
-                "minimumNumberInstances": 0,
-                "initialNumberInstances": 1,
-                "productReleaseDtos": {
-                  "productName": "apache2",
-                  "version": "1.10.5",
-                  "attributes": {
-                    "key": "listen_port",
-                    "value": "80",
-                    "type": "Plain"
-                  },
-                  "metatadas": [
-                    {
-                      "key": "image",
-                      "value": ""
-                    },
-                    {
-                      "key": "tenant_id",
-                      "value": "00000000000000000000000000000129"
-                    },
-                    {
-                      "key": "open_ports",
-                      "value": "22 80"
-                    },
-                    {
-                      "key": "cookbook_url",
-                      "value": ""
-                    },
-                    {
-                      "key": "cloud",
-                      "value": "yes"
-                    },
-                    {
-                      "key": "installator",
-                      "value": "chef"
-                    }
-                  ]
-                },
-                "icono": "",
-                "securityGroup": "",
-                "keypair": "",
-                "floatingip": "false",
-                "affinity": "None",
-                "region": "Region1"
-              },
-              "name": "template1",
-              "description": "template1"
-            }
 
 
 + Response 200  (application/xml)
@@ -641,6 +695,13 @@ With the credentials (username, password and tenantName) you can obtain a valid 
             
 ### Add a blueprint template to the catalogue [POST]
 
+Add new environment to tenant.
+Arguments:
+
+* `environment-name`: the name of environment
+* `list of tiers`: Zero or many tiers with data for each tier.
+* `list of products`: Zero or many products with version.
+
 + Request (application/xml)
     + Headers
     
@@ -685,6 +746,8 @@ With the credentials (username, password and tenantName) you can obtain a valid 
 
 ### Delete a blueprint template from the catalogue [DELETE]
 
+Delete an environment.
+
 + Request (application/xml)
     + Headers
     
@@ -700,6 +763,8 @@ With the credentials (username, password and tenantName) you can obtain a valid 
 
 
 ### Get All Tiers associated to an Environment [GET]
+
+Get all tiers associated to an environment in tenant
 
 + Request (application/xml)
     + Headers
@@ -812,6 +877,20 @@ With the credentials (username, password and tenantName) you can obtain a valid 
 
 ### Add a Tier to an existing Environment [POST]
 
+Create new tier.
+Arguments:
+
+* `name`: name of tier
+* `image`: uuid of image
+* `flavour`: id of flavour, that determine CPU,memory, disk feature
+* `keypair`: name of keypair to ssh access
+* `floatingip`: true/false for public ip
+* `region`: what region should be assign to vm
+* `minimumNumberInstances`: minimum number of instances will be instanciated
+* `maximumNumberInstances`: maximum number of instances can be instanciated
+* `initialNumberInstances`: initial number of instances will be instanciated when launch instance
+* `network data`: with network name, and subnetwork name
+
 + Request (application/xml)
     + Headers
     
@@ -840,6 +919,19 @@ With the credentials (username, password and tenantName) you can obtain a valid 
 + Response 204
 
 ### Update a Tier of an existing Environment [PUT]
+
+Update data of tier:
+Arguments:
+* `name`: name of tier
+* `image`: uuid of image
+* `flavour`: id of flavour, that determine CPU,memory, disk feature
+* `keypair`: name of keypair to ssh access
+* `floatingip`: true/false for public ip
+* `region`: what region should be assign to vm
+* `minimumNumberInstances`: minimum number of instances will be instanciated
+* `maximumNumberInstances`: maximum number of instances can be instanciated
+* `initialNumberInstances`: initial number of instances will be instanciated when launch instance
+* `network data`: with network name, and subnetwork name
 
 + Request
 
@@ -878,6 +970,8 @@ With the credentials (username, password and tenantName) you can obtain a valid 
 
 ### Get a particular Tier associated to an Environment [GET]
 
+Retrieve detail of tier getting by name.
+
 + Request
 
     + Headers
@@ -915,6 +1009,8 @@ With the credentials (username, password and tenantName) you can obtain a valid 
 
 ### Delete a particular Tier associated to an Environment [DELETE]
 
+Delete the tier in url path.
+
 + Request
 
     + Headers
@@ -930,6 +1026,8 @@ With the credentials (username, password and tenantName) you can obtain a valid 
     + tenant (required, string) ... your tenant id
 
 ### Get information about Blueprint Instances deployed [GET]
+
+Retrieve detail about environament instance deployed
 
 + Request
 
@@ -994,6 +1092,8 @@ With the credentials (username, password and tenantName) you can obtain a valid 
 
 ### Deploy a Blueprint Instance [POST]
 
+Deploy and creates all instances (One or many vm) with flavour and product releases.
+
 + Request
 
     + Headers
@@ -1039,6 +1139,8 @@ With the credentials (username, password and tenantName) you can obtain a valid 
     
 
 ### Get details of a certain Blueprint Instance [GET]
+
+Retrieve data of an instance deployed.
 
 + Request
 
@@ -1102,6 +1204,8 @@ With the credentials (username, password and tenantName) you can obtain a valid 
 
 ### Undeploy a Blueprint Instance [DELETE]
 
+Terminate the instance.
+
 + Request
 
     + Headers
@@ -1139,6 +1243,8 @@ The value of the status attribute could be one of the following:
     + id (required, string) ... task id
 
 ### Get a specific task [GET]
+
+This operation recovers the status of a task created previously.
 
 + Request
 
