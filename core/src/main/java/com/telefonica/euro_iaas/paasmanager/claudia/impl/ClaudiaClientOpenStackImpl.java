@@ -86,7 +86,7 @@ public class ClaudiaClientOpenStackImpl implements ClaudiaClient {
 
     /**
      * Check if exists the vm.
-     * 
+     *
      * @param claudiaData
      * @param tier
      * @param vm
@@ -110,7 +110,7 @@ public class ClaudiaClientOpenStackImpl implements ClaudiaClient {
 
     /**
      * Build the payload to deploy a VM (createServer).
-     * 
+     *
      * @see com.telefonica.euro_iaas.paasmanager.claudia.ClaudiaClient#undeployVMReplica (java.lang.String,
      *      java.lang.String)
      */
@@ -250,7 +250,7 @@ public class ClaudiaClientOpenStackImpl implements ClaudiaClient {
 
     /**
      * It obtains the puppet master hostname, required for user data.
-     * 
+     *
      * @param puppetMasterUrl
      * @return
      */
@@ -421,9 +421,10 @@ public class ClaudiaClientOpenStackImpl implements ClaudiaClient {
         return networkInstance;
     }
 
-    /**ƒ
+
+    /**
      * Checks if a certain Server has been finally deleted from OpenStack.
-     * 
+     *
      * @param tierInstance
      * @param claudiaData
      */
@@ -501,7 +502,7 @@ public class ClaudiaClientOpenStackImpl implements ClaudiaClient {
         } catch (OpenStackException e) {
             String errorMessage = "Error interacting with OpenStack " + e.getMessage();
             log.error(errorMessage);
-            throw new InfrastructureException(e.getMessage());
+            throw new InfrastructureException(errorMessage);
 
         }
 
@@ -659,7 +660,7 @@ public class ClaudiaClientOpenStackImpl implements ClaudiaClient {
 
     /**
      * It undeploys a VM
-     * 
+     *
      * @param claudiaData
      * @param tierInstance
      * @throws InfrastructureException
