@@ -680,13 +680,14 @@ public class ClaudiaClientOpenStackImpl implements ClaudiaClient {
             checkDeleteServerTaskStatus(tierInstance, claudiaData);
             log.debug("Undeployed VM replica " + tierInstance.getName() + " for region " + region + " and user "
                     + tierInstance.getTier().getVdc());
-
+            
             if (tierInstance.getTier().getFloatingip().equals("true")) {
                 log.debug("Delete floating ip ");
-                openStackUtil.disAllocateFloatingIP(region, tokenAdminId, tenantAdminId, tierInstance.getVM()
+                openStackUtil.disAllocateFloatingIP(region, claudiaData.getUser().getToken(), 
+                		claudiaData.getUser().getTenantId(), tierInstance.getVM()
                         .getFloatingIp());
             }
-
+            
         } catch (OpenStackException oes) {
             String errorMessage = "Error deleting serverId: " + tierInstance.getVM().getVmid();
             log.error(errorMessage);
