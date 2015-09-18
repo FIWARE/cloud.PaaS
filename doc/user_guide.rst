@@ -584,30 +584,35 @@ BluePrint/Environment Instance Provisioning API
 where "your-tenant-id" is the tenant-id in this guide. The payload of this request can be as follows:
 
 .. code::
-	
-    <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-    <environment>
-        <name>{emvironment-name}</name>
-        <tiers>
-            <tier>
-                <initial_number_instances>1</initial_number_instances>
-                <maximum_number_instances>1</maximum_number_instances>
-                <minimum_number_instances>1</minimum_number_instances>
-                <name>{tier-id}</name>               
-                <productReleases>                  
-                    <product>postgresql</product>
-                    <version>0.0.3</version>
-                    <withArtifact>true</withArtifact> 
-                    <productType> 
-                       <id>5</id>
-                        <name>Database</name>  
-                    </productType> 
-                </productReleases>
-                ...
-            </tier>   
-        </tiers>
-    </environment>
 
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+    <environmentInstanceDto>
+		<blueprintName>{environmentinstance-name}</blueprintName>
+		<description>{description of environmentinstance}</description>
+		<environmentDto>
+			<name>{environment-name}</name>
+			<description>{description of environmet}</description>
+			<id>{id}</id>
+			<tierDtos>
+				<name>{tier-name}</name>
+				<flavour>{flavour of the VM}</flavour>
+				<image>{image-id of the image to create the VM}</image>
+				<maximumNumberInstances>1</maximumNumberInstances>
+				<minimumNumberInstances>1</minimumNumberInstances>
+				<initialNumberInstances>1</initialNumberInstances>
+				<networkDto>
+					<networkName>{network-name}</networkName>
+				</networkDto>
+				<icono></icono>
+				<securityGroup>{security-group-name}</securityGroup>
+				<keypair>{keypair-name}</keypair>
+				<floatingip>{true/false}</floatingip>
+				<affinity>None</affinity>
+				<region>{region-name where to deploy}</region>
+			</tierDtos>
+		</environmentDto>
+	</environmentInstanceDto>
+    
 The response obatined should be:
 
 .. code::
