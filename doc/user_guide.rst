@@ -721,7 +721,8 @@ This operation does not require any payload in the request and provides a Bluepr
 
 .. code::
 
-	<environmentInstancePDto>
+    <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+    <environmentInstancePDto>
 		<environmentInstanceName>{environmentinstance-name}</environmentInstanceName>
 		<vdc>{tenant-id}</vdc>
 		<description>{description of environmentinstance}</description>
@@ -747,14 +748,14 @@ This operation does not require any payload in the request and provides a Bluepr
  			<tierInstancePDto>
 				<tierInstanceName>{tierinstance-name}</tierInstanceName>
 				<status>{status of the tierinstallation}</status>
-				<taskId>{tasñ id of tier installation execution}</taskId>
+				<taskId>{task id of tier installation execution}</taskId>
  				<productInstanceDtos>
  					<productReleaseDto>
 						<productName>{product-name}</productName>
 						<version>{product-version}</version>
  					</productReleaseDto>
 					<name>{productInstance-name}</name>
-					<taskId>{tasñ ik of product installation}</taskId>
+					<taskId>{task id of product installation}</taskId>
  				</productInstanceDtos>
  				<vm>
 					<domain>{domain of vm}</domain>
