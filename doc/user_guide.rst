@@ -366,47 +366,56 @@ with the following payload
 .. code::
 
     <?xml version="1.0" encoding="UTF-8"?>
-    <environment>
-        <name>{environment-name}</name>
-        <tiers>
-            <tier>
-                <initial_number_instances>1</initial_number_instances>
-                <maximum_number_instances>1</maximum_number_instances>
-                <minimum_number_instances>1</minimum_number_instances>
-                <name>{tier-id}</name>
-                <networkDto>
-                	<networkName>Internet</networkName>
+    <environmentDto>
+    	<name>{environment-name}</name>
+    	<description>{description of environment}</description>
+    	<tierDtos>
+    		<minimumNumberInstances>1</minimumNumberInstances>
+    		<initialNumberInstances>1</initialNumberInstances>
+    		<maximumNumberInstances>1</maximumNumberInstances>
+    		<name>{tier-name}</name>
+    		<networkDto>
+            	<networkName>{network-name}</networkName>
                 	<subNetworkDto>
-                		<subnetName>sub-net-Internet</subnetName>
+                		<subnetName>{subnetwork-name}</subnetName>
                 	</subNetworkDto>
-                </networkDto>               
-                <productReleases>                  
-                    <product>postgresql</product>
-                    <version>0.0.3</version>
-                    <withArtifact>true</withArtifact> 
-                    <productType> 
-                        <id>5</id>
-                        <name>Database</name>  
-                    </productType> 
-                </productReleases>
-                     ...
-            </tier>   
-        </tiers>
-    </environment>
+          	</networkDto> 
+    		<image>{image-id}</image>
+    		<flavour>{flavour of VM in number}</flavour>
+    		<keypair>{keypair-name}</keypair>
+    		<floatingip>{false/true}</floatingip>
+    		<region>{region-name}</region>
+    		<productReleaseDtos>
+    			<productName>{product-name}</productName>
+    			<version>{product-version}</version>
+    		</productReleaseDtos>
+    	</tierDtos>
+    </environmentDto>
 
-The network and region information are including also in the payload of the enviornment. The following lines show a example. 
+The network and region information are including also in the payload of the environment. The following lines show a example. 
 
 .. code::
 
-    <tier>
-        <name>{tier-id}</name> 
-        <region>Spain</region>
-        <network>Internet</network>
-        <network>private_network</network>     
-        <productReleases>                  
-           ...
-        </productReleases>              
-    </tier>  
+    <tierDtos>
+    	...
+        <name>{tier-name}</name>
+    		<networkDto>
+            	<networkName>{network-name}</networkName>
+                	<subNetworkDto>
+                		<subnetName>{subnetwork-name}</subnetName>
+                	</subNetworkDto>
+          	</networkDto> 
+    		<image>{image-id}</image>
+    		<flavour>{flavour of VM in number}</flavour>
+    		<keypair>{keypair-name}</keypair>
+    		<floatingip>{false/true}</floatingip>
+    		<region>{region-name}</region>
+    		<productReleaseDtos>
+    			<productName>{product-name}</productName>
+    			<version>{product-version}</version>
+    		</productReleaseDtos> 
+    		...           
+    </tierDtos>  
 
 **Delete a blueprint template from the catalogue**
 
@@ -585,7 +594,7 @@ where "your-tenant-id" is the tenant-id in this guide. The payload of this reque
 
 .. code::
 
-	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+    <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <environmentInstanceDto>
 		<blueprintName>{environmentinstance-name}</blueprintName>
 		<description>{description of environmentinstance}</description>
