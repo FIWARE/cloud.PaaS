@@ -588,7 +588,7 @@ BluePrint/Environment Instance Provisioning API
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
-	-X POST "https://PAAS_MANAGER_IP:8443/paasmanager/rest/envInst/org/FIWARE/vdc/{your-tenant-id}/environmentInstance"
+    -X POST "https://PAAS_MANAGER_IP:8443/paasmanager/rest/envInst/org/FIWARE/vdc/{your-tenant-id}/environmentInstance"
 
 where "your-tenant-id" is the tenant-id in this guide. The payload of this request can be as follows:
 
