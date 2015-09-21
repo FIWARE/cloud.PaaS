@@ -367,29 +367,29 @@ with the following payload
 
     <?xml version="1.0" encoding="UTF-8"?>
     <environmentDto>
-    	<name>{environment-name}</name>
-    	<description>{description of environment}</description>
-    	<tierDtos>
-    		<minimumNumberInstances>1</minimumNumberInstances>
-    		<initialNumberInstances>1</initialNumberInstances>
-    		<maximumNumberInstances>1</maximumNumberInstances>
-    		<name>{tier-name}</name>
-    		<networkDto>
-            	<networkName>{network-name}</networkName>
-                	<subNetworkDto>
-                		<subnetName>{subnetwork-name}</subnetName>
-                	</subNetworkDto>
-          	</networkDto> 
-    		<image>{image-id}</image>
-    		<flavour>{flavour of VM in number}</flavour>
-    		<keypair>{keypair-name}</keypair>
-    		<floatingip>{false/true}</floatingip>
-    		<region>{region-name}</region>
-    		<productReleaseDtos>
-    			<productName>{product-name}</productName>
-    			<version>{product-version}</version>
-    		</productReleaseDtos>
-    	</tierDtos>
+        <name>{environment-name}</name>
+        <description>{description of environment}</description>
+        <tierDtos>
+    	    <minimumNumberInstances>1</minimumNumberInstances>
+    	    <initialNumberInstances>1</initialNumberInstances>
+    	    <maximumNumberInstances>1</maximumNumberInstances>
+    	    <name>{tier-name}</name>
+    	    <networkDto>
+                <networkName>{network-name}</networkName>
+                    <subNetworkDto>
+                	    <subnetName>{subnetwork-name}</subnetName>
+                    </subNetworkDto>
+            </networkDto> 
+            <image>{image-id}</image>
+            <flavour>{flavour of VM in number}</flavour>
+            <keypair>{keypair-name}</keypair>
+            <floatingip>{false/true}</floatingip>
+            <region>{region-name}</region>
+            <productReleaseDtos>
+    		    <productName>{product-name}</productName>
+    		    <version>{product-version}</version>
+            </productReleaseDtos>
+        </tierDtos>
     </environmentDto>
 
 The network and region information are including also in the payload of the environment. The following lines show a example. 
@@ -397,24 +397,24 @@ The network and region information are including also in the payload of the envi
 .. code::
 
     <tierDtos>
-    	...
+        ...
         <name>{tier-name}</name>
-    		<networkDto>
-            	<networkName>{network-name}</networkName>
-                	<subNetworkDto>
-                		<subnetName>{subnetwork-name}</subnetName>
-                	</subNetworkDto>
-          	</networkDto> 
-    		<image>{image-id}</image>
-    		<flavour>{flavour of VM in number}</flavour>
-    		<keypair>{keypair-name}</keypair>
-    		<floatingip>{false/true}</floatingip>
-    		<region>{region-name}</region>
-    		<productReleaseDtos>
-    			<productName>{product-name}</productName>
-    			<version>{product-version}</version>
-    		</productReleaseDtos> 
-    		...           
+    	    <networkDto>
+                <networkName>{network-name}</networkName>
+                    <subNetworkDto>
+                	    <subnetName>{subnetwork-name}</subnetName>
+                    </subNetworkDto>
+            </networkDto> 
+    	    <image>{image-id}</image>
+    	    <flavour>{flavour of VM in number}</flavour>
+    	    <keypair>{keypair-name}</keypair>
+    	    <floatingip>{false/true}</floatingip>
+    	    <region>{region-name}</region>
+    	    <productReleaseDtos>
+    		    <productName>{product-name}</productName>
+    		    <version>{product-version}</version>
+            </productReleaseDtos> 
+            ...           
     </tierDtos>  
 
 **Delete a blueprint template from the catalogue**
@@ -588,7 +588,7 @@ BluePrint/Environment Instance Provisioning API
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
-	-X POST "https://PAAS_MANAGER_IP:8443/paasmanager/rest/org/FIWARE/vdc/{your-tenant-id}/environmentInstance"
+	-X POST "https://PAAS_MANAGER_IP:8443/paasmanager/rest/envInst/org/FIWARE/vdc/{your-tenant-id}/environmentInstance"
 
 where "your-tenant-id" is the tenant-id in this guide. The payload of this request can be as follows:
 
@@ -596,31 +596,30 @@ where "your-tenant-id" is the tenant-id in this guide. The payload of this reque
 
     <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <environmentInstanceDto>
-		<blueprintName>{environmentinstance-name}</blueprintName>
-		<description>{description of environmentinstance}</description>
-		<environmentDto>
-			<name>{environment-name}</name>
-			<description>{description of environmet}</description>
-			<id>{id}</id>
-			<tierDtos>
-				<name>{tier-name}</name>
-				<flavour>{flavour of the VM}</flavour>
-				<image>{image-id of the image to create the VM}</image>
-				<maximumNumberInstances>1</maximumNumberInstances>
-				<minimumNumberInstances>1</minimumNumberInstances>
-				<initialNumberInstances>1</initialNumberInstances>
-				<networkDto>
-					<networkName>{network-name}</networkName>
-				</networkDto>
-				<icono></icono>
-				<securityGroup>{security-group-name}</securityGroup>
-				<keypair>{keypair-name}</keypair>
-				<floatingip>{true/false}</floatingip>
-				<affinity>None</affinity>
-				<region>{region-name where to deploy}</region>
-			</tierDtos>
-		</environmentDto>
-	</environmentInstanceDto>
+	    <blueprintName>{environmentinstance-name}</blueprintName>
+	    <description>{description of environmentinstance}</description>
+	    <environmentDto>
+		    <name>{environment-name}</name>
+		    <description>{description of environmet}</description>
+		    <tierDtos>
+			    <name>{tier-name}</name>
+			    <flavour>{flavour of the VM}</flavour>
+			    <image>{image-id of the image to create the VM}</image>
+			    <maximumNumberInstances>1</maximumNumberInstances>
+			    <minimumNumberInstances>1</minimumNumberInstances>
+			    <initialNumberInstances>1</initialNumberInstances>
+			    <networkDto>
+				    <networkName>{network-name}</networkName>
+			    </networkDto>
+			    <icono></icono>
+			    <securityGroup>{security-group-name}</securityGroup>
+			    <keypair>{keypair-name}</keypair>
+			    <floatingip>{true/false}</floatingip>
+			    <affinity>None</affinity>
+			    <region>{region-name where to deploy}</region>
+		    </tierDtos>
+	    </environmentDto>
+    </environmentInstanceDto>
     
 The response obatined should be:
 
@@ -650,7 +649,7 @@ the task status should be SUCCESS.
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
-	-X GET "https://PAAS_MANAGER_IP:8443/paasmanager/rest/org/FIWARE/vdc/your-tenant-id/environmentInstance"
+	-X GET "https://PAAS_MANAGER_IP:8443/paasmanager/rest/envInst/org/FIWARE/vdc/your-tenant-id/environmentInstance"
 
 The Response obtained includes all the blueprint instances deployed
 
@@ -715,7 +714,7 @@ The Response obtained includes all the blueprint instances deployed
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
-	-X GET "https://PAAS_MANAGER_IP:8443/paasmanager/rest/org/FIWARE/vdc/your-tenant-id/environmentInstance/{BlueprintInstance-id}"
+	-X GET "https://PAAS_MANAGER_IP:8443/paasmanager/rest/envInst/org/FIWARE/vdc/your-tenant-id/environmentInstance/{BlueprintInstance-id}"
 	
 This operation does not require any payload in the request and provides a BlueprintInstance XML response. 
 
@@ -774,7 +773,7 @@ This operation does not require any payload in the request and provides a Bluepr
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
-	-X DELETE "https://PAAS_MANAGER_IP:8443/paasmanager/rest/org/FIWARE/vdc/{your-tenant-id}/environmentInstance/{BlueprintInstance-id}"
+	-X DELETE "https://PAAS_MANAGER_IP:8443/paasmanager/rest/envInst/org/FIWARE/vdc/{your-tenant-id}/environmentInstance/{BlueprintInstance-id}"
 
 This operation does not require a request body and returns the details of a generated task. 
 
