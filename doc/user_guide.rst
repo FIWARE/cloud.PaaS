@@ -649,7 +649,7 @@ the task status should be SUCCESS.
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
-	-X GET "https://PAAS_MANAGER_IP:8443/paasmanager/rest/envInst/org/FIWARE/vdc/your-tenant-id/environmentInstance"
+    -X GET "https://PAAS_MANAGER_IP:8443/paasmanager/rest/envInst/org/FIWARE/vdc/your-tenant-id/environmentInstance"
 
 The Response obtained includes all the blueprint instances deployed
 
@@ -714,7 +714,7 @@ The Response obtained includes all the blueprint instances deployed
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
-	-X GET "https://PAAS_MANAGER_IP:8443/paasmanager/rest/envInst/org/FIWARE/vdc/your-tenant-id/environmentInstance/{BlueprintInstance-id}"
+    -X GET "https://PAAS_MANAGER_IP:8443/paasmanager/rest/envInst/org/FIWARE/vdc/your-tenant-id/environmentInstance/{BlueprintInstance-id}"
 	
 This operation does not require any payload in the request and provides a BlueprintInstance XML response. 
 
