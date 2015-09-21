@@ -773,7 +773,7 @@ This operation does not require any payload in the request and provides a Bluepr
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
-	-X DELETE "https://PAAS_MANAGER_IP:8443/paasmanager/rest/envInst/org/FIWARE/vdc/{your-tenant-id}/environmentInstance/{BlueprintInstance-id}"
+    -X DELETE "https://PAAS_MANAGER_IP:8443/paasmanager/rest/envInst/org/FIWARE/vdc/{your-tenant-id}/environmentInstance/{BlueprintInstance-id}"
 
 This operation does not require a request body and returns the details of a generated task. 
 
