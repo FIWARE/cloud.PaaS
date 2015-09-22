@@ -18,3 +18,7 @@ Documentation
 
 -   `User and Programmers Guide <user_guide.rst>`_
 -   `Installation and Administration Guide <admin_guide.rst>`_
+
+.. REFERENCES
+
+.. _FIWARE SDC: https://github.com/telefonicaid/fiware-sdc
