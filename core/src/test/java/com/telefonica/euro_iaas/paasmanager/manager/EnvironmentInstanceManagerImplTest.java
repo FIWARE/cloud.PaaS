@@ -36,7 +36,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.telefonica.euro_iaas.paasmanager.exception.*;
+import com.telefonica.euro_iaas.paasmanager.exception.InfrastructureException;
+import com.telefonica.euro_iaas.paasmanager.exception.InvalidProductInstanceRequestException;
+import com.telefonica.euro_iaas.paasmanager.exception.ProductInstallatorException;
 import org.junit.Test;
 
 import com.telefonica.fiware.commons.dao.AlreadyExistsEntityException;
@@ -135,14 +137,12 @@ public class EnvironmentInstanceManagerImplTest {
      * @throws EntityNotFoundException
      * @throws InvalidEntityException
      * @throws ProductInstallatorException
-     * @throws InvalidOVFException
-     * @throws InvalidVappException
      * @throws AlreadyExistsEntityException
      */
     @Test
     public void testCreateEnvironmentInstance() throws InfrastructureException, EntityNotFoundException,
-            InvalidEntityException, ProductInstallatorException, InvalidOVFException, InvalidVappException,
-            AlreadyExistsEntityException, InvalidProductInstanceRequestException {
+            InvalidEntityException,
+            AlreadyExistsEntityException, InvalidProductInstanceRequestException, ProductInstallatorException {
 
         //Given
 
