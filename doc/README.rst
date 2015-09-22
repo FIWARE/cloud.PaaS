@@ -1,11 +1,11 @@
-FIWARE Paas Manager - Overview
+FIWARE PaaS Manager - Overview
 ______________________________
 
 
 What you get
 ============
 
-The Paas manager is a generic enabler built on a proprietary solution using standard 
+The PaaS Manager is a generic enabler built on a proprietary solution using standard 
 interface to communicate with and so where possible this guide points to 
 the appropriate online content that has been created for this specific API. 
 
