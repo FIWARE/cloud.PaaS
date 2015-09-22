@@ -137,16 +137,11 @@ public class EnvironmentInstanceTest extends TestCase {
         tier.setFloatingip("true");
         tier.setImage("image");
 
-        Tier tier2 = new Tier("tierName2", new Integer(1), new Integer(1), new Integer(1), productReleases, "2",
-                "image", "icone");
-
         Set<Tier> tiers = new HashSet<Tier>();
         tiers.add(tier);
-        tiers.add(tier2);
 
         Environment environment = new Environment();
-        environment = new Environment();
-        environment.setName("environemntName");
+        environment.setName("environmentName");
         environment.setTiers(tiers);
 
         EnvironmentInstance environmentInstance = new EnvironmentInstance("blue", "description");
@@ -166,14 +161,14 @@ public class EnvironmentInstanceTest extends TestCase {
 
         environmentInstance.setTierInstances(tieInstances);
 
-        EnvironmentInstancePDto enviromentIsntanceDto = environmentInstance.toPDto();
+        EnvironmentInstancePDto environmentInstancePDto = environmentInstance.toPDto();
 
-        assertEquals(enviromentIsntanceDto.getTiers().size(), environment.getTiers().size());
-        assertEquals(enviromentIsntanceDto.getTiers().get(0).getProductReleaseDtos().size(), 1);
-        assertEquals(enviromentIsntanceDto.getTiers().get(0).getTierInstances().size(), 1);
-        assertEquals(enviromentIsntanceDto.getTiers().get(0).getTierInstances().get(0).getTierInstanceName(),
+        assertEquals(environmentInstancePDto.getTiers().size(), environment.getTiers().size());
+        assertEquals(environmentInstancePDto.getTiers().get(0).getProductReleaseDtos().size(), 1);
+        assertEquals(environmentInstancePDto.getTiers().get(0).getTierInstances().size(), 1);
+        assertEquals(environmentInstancePDto.getTiers().get(0).getTierInstances().get(0).getTierInstanceName(),
                 "tierInstance");
-        assertEquals(enviromentIsntanceDto.getTiers().get(0).getTierInstances().get(0).getVM().getFqn(), "fqn");
+        assertEquals(environmentInstancePDto.getTiers().get(0).getTierInstances().get(0).getVM().getFqn(), "fqn");
 
     }
 
