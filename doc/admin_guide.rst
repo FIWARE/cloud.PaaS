@@ -1,4 +1,4 @@
-PaaS Maanger - Installation and Administration Guide
+PaaS Manager - Installation and Administration Guide
 ____________________________________________________
 
 
@@ -7,7 +7,7 @@ Introduction
 
 This guide defines the procedure to install the different components that build
 up the PaaS Manager GE, including its requirements and possible troubleshooting. The guide includes two different
-ways of installing Paas Manager: Installation from rpm or installation from source (building previously the rpm)
+ways of installing PaaS Manager: Installation from rpm or installation from source (building previously the rpm).
 
 Requirements
 ============
@@ -16,7 +16,7 @@ In order to execute the PaaS Manager, it is needed to have previously installed 
 You can find a small guide to install PostgresSQL in the next section. If you find some problems installing PostgreSQL,
 please refer to the postgres official site.
 
-Paas Manager should be installed in a host with 2Gb RAM.
+PaaS Manager should be installed in a host with 2Gb RAM.
 
 Installation from script
 ========================
@@ -57,7 +57,7 @@ The script will ask you the following data:
 
 Once the script is finished, you will have fiware-paas installed under /opt/fiware-paas/ . Please go to the Sanity Check
 section in order to test the installation. This script does not insert the fiware-paas data into the keystone, so this
-action has to be done manually. In order to complete the installation please refer to Configuring the PaasManager
+action has to be done manually. In order to complete the installation please refer to Configuring the PaaS Manager
 in the kesytone section.
 
 Manual Installation
@@ -95,7 +95,7 @@ in /etc/yum.repos.d/fiware.repo, with the following content.
 	gpgcheck=0
 	enabled=1
     
-After that, you can install the paas manager just doing:
+After that, you can install the PaaS Manager just doing:
 
 .. code::
 
@@ -163,11 +163,11 @@ and type
 
 if the system shows the current maven version installed in your host, you are ready to continue with this guide.
 
-Now we are ready to build the Paas Manager rpm and finally install it
+Now we are ready to build the PaaS Manager rpm and finally install it
 
 The PaaS Manager is a maven application so, we should follow following instructions:
 
-- Download Paas Manager code from github
+- Download PaaS Manager code from github
 
 .. code::
 
@@ -293,7 +293,7 @@ The updates of the columns are done in the following way
     postgres=# UPDATE configuration_properties SET value='<the value>' where key='openstack-tcloud.keystone.tenant';
     
    
-Configure Paas-manager application
+Configure PaaS Manager application
 ----------------------------------  
 
 Once the prerequisites are satisfied, you shall modify the context file at  /opt/fiware-paas/webapps/paasmanager.xml 
@@ -319,7 +319,7 @@ See the snipet bellow to know how it works:
 
 Configuring the PaaS Manager as service 
 ---------------------------------------
-Once we have installed and configured the paas manager, the next step is to configure it as a service. To do that just create a file in /etc/init.d/fiware-paas
+Once we have installed and configured the PaaS Manager, the next step is to configure it as a service. To do that just create a file in /etc/init.d/fiware-paas
 with the following content
 
 .. code::
@@ -437,7 +437,7 @@ The request to test it in the testbed should be
 	 -H 'Tenant-Id: 60b4125450fc4a109f50357894ba2e28' 
 	 -X GET 'https://{PaaSManagerIP}:8443/paasmanager/rest/catalog/org/FIWARE/environment'
 
-the option -k should be included in the case you have not changed the security configuration of Paas Manager.
+the option -k should be included in the case you have not changed the security configuration of PaaS Manager.
 
 Whose result is the PaaS Manager API documentation.
 
