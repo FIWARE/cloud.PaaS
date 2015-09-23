@@ -303,7 +303,7 @@ public class EnvironmentInstanceManagerImplTest {
         environmentInstance.setEnvironment(environment);
         environmentInstance.setBlueprintName("blueprint name");
         environmentInstance.setTierInstances(new ArrayList<TierInstance>());
-        EnvironmentInstanceDao environmentInstanceDao= mock(EnvironmentInstanceDao.class);
+        EnvironmentInstanceDao environmentInstanceDao = mock(EnvironmentInstanceDao.class);
         environmentInstanceManager.setEnvironmentInstanceDao(environmentInstanceDao);
         when(environmentInstanceDao.update(environmentInstance)).thenReturn(environmentInstance);
 
