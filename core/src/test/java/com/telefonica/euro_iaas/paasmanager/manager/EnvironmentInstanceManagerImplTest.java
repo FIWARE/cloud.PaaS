@@ -32,14 +32,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Before;
+import com.telefonica.euro_iaas.paasmanager.exception.InfrastructureException;
+import com.telefonica.euro_iaas.paasmanager.exception.InvalidProductInstanceRequestException;
+import com.telefonica.euro_iaas.paasmanager.exception.ProductInstallatorException;
 import org.junit.Test;
-import org.springframework.security.core.GrantedAuthority;
 
 import com.telefonica.fiware.commons.dao.AlreadyExistsEntityException;
 import com.telefonica.fiware.commons.dao.EntityNotFoundException;
@@ -49,10 +49,6 @@ import com.telefonica.euro_iaas.paasmanager.dao.EnvironmentInstanceDao;
 import com.telefonica.euro_iaas.paasmanager.dao.ProductReleaseDao;
 import com.telefonica.euro_iaas.paasmanager.dao.TierDao;
 import com.telefonica.euro_iaas.paasmanager.dao.TierInstanceDao;
-import com.telefonica.euro_iaas.paasmanager.exception.InfrastructureException;
-import com.telefonica.euro_iaas.paasmanager.exception.InvalidOVFException;
-import com.telefonica.euro_iaas.paasmanager.exception.InvalidVappException;
-import com.telefonica.euro_iaas.paasmanager.exception.ProductInstallatorException;
 import com.telefonica.euro_iaas.paasmanager.installator.ProductInstallator;
 import com.telefonica.euro_iaas.paasmanager.manager.impl.EnvironmentInstanceManagerImpl;
 import com.telefonica.euro_iaas.paasmanager.model.ClaudiaData;
@@ -74,45 +70,88 @@ import com.telefonica.euro_iaas.paasmanager.util.SystemPropertiesProvider;
  */
 public class EnvironmentInstanceManagerImplTest {
 
-    private EnvironmentInstanceDao environmentInstanceDao;
-    private EnvironmentInstanceManagerImpl environmentInstanceManager;
-    private EnvironmentDao environmentDao;
-    private TierDao tierDao;
-    private ProductReleaseDao productReleaseDao;
-    private ProductInstanceManager productInstanceManager;
 
-    private ProductInstance productInstance;
-    private TierInstance tierInstance;
-    private EnvironmentInstance environmentInstance;
-    private NetworkManager networkManager;
 
-    private EnvironmentManager environmentManager;
-    private InfrastructureManager infrastructureManager;
 
-    private ProductRelease productRelease;
-    private Tier tier;
-    private Environment environment;
+    /**
+     * It tests updating federated networks.
+     * 
+     * @throws InfrastructureException
+     * @throws EntityNotFoundException
+     * @throws InvalidEntityException
+     */
+    @Test
+    public void testUpdateFederatedNetworks() throws InfrastructureException, EntityNotFoundException,
+            InvalidEntityException {
 
-    private List<VM> vms;
+        //Given
+        EnvironmentInstanceManagerImpl environmentInstanceManager = new EnvironmentInstanceManagerImpl();
+        ClaudiaData claudiaData = new ClaudiaData("org", "vdc", "service");
+        Environment environment = new Environment();
+        environment.setName("environmentName");
+        Tier tier = new Tier();
+        tier.setInitialNumberInstances(new Integer(1));
+        tier.setMaximumNumberInstances(new Integer(5));
+        tier.setMinimumNumberInstances(new Integer(1));
+        tier.setName("tierName");
+        tier.setRegion("region1");
+        tier.addNetwork(new Network("uno", "VDC", "region1"));
 
-    private PaasManagerUser user;
-    private ClaudiaData claudiaData;
-    private TierManager tierManager;
-    private ProductReleaseManager productReleaseManager;
+        Tier tier2 = new Tier();
+        tier2.setInitialNumberInstances(new Integer(1));
+        tier2.setMaximumNumberInstances(new Integer(5));
+        tier2.setMinimumNumberInstances(new Integer(1));
+        tier2.setName("tierName2");
+        tier2.setRegion("region2");
+        tier2.addNetwork(new Network("uno", "VDC", "region2"));
 
-    Collection<? extends GrantedAuthority> authorities;
+        Set<Tier> tiers = new HashSet<Tier>();
+        tiers.add(tier);
+        tiers.add(tier2);
+        environment.setTiers(tiers);
 
-    @Before
-    public void setUp() throws Exception {
-        // OVF
 
-        claudiaData = new ClaudiaData("org", "vdc", "service");
-        // Collection<GrantedAuthority> authorities = null;
-        user = new PaasManagerUser("user", "password");
+        InfrastructureManager infrastructureManager = mock(InfrastructureManager.class);
+        environmentInstanceManager.setInfrastructureManager(infrastructureManager);
+
+        NetworkManager networkManager = mock(NetworkManager.class);
+        environmentInstanceManager.setNetworkManager(networkManager);
+
+
+        //when
+        when(infrastructureManager.getFederatedRange(any(ClaudiaData.class), any(String.class))).thenReturn("12");
+        Network net2 = new Network("uno", "VDC", "region2");
+        when(networkManager.load(any(String.class), any(String.class), any(String.class))).thenReturn(net2);
+
+
+        environmentInstanceManager.updateFederatedNetworks(claudiaData, environment);
+        //then
+        verify(networkManager, times(2)).update(any(Network.class));
+
+    }
+
+    /**
+     * It tests the creationg of the env instance.
+     * 
+     * @throws InfrastructureException
+     * @throws EntityNotFoundException
+     * @throws InvalidEntityException
+     * @throws ProductInstallatorException
+     * @throws AlreadyExistsEntityException
+     */
+    @Test
+    public void testCreateEnvironmentInstance() throws InfrastructureException, EntityNotFoundException,
+            InvalidEntityException,
+            AlreadyExistsEntityException, InvalidProductInstanceRequestException, ProductInstallatorException {
+
+        //Given
+
+        ClaudiaData claudiaData = new ClaudiaData("org", "vdc", "service");
+        PaasManagerUser user = new PaasManagerUser("user", "password");
         claudiaData.setUser(user);
 
         // Environment
-        productRelease = new ProductRelease("product", "2.0");
+        ProductRelease productRelease = new ProductRelease("product", "2.0");
         OS os = new OS("94", "ip", "hostname", "domain");
         List<OS> oss = new ArrayList<OS>();
         oss.add(os);
@@ -121,7 +160,7 @@ public class EnvironmentInstanceManagerImplTest {
         List<ProductRelease> productReleases = new ArrayList<ProductRelease>();
         productReleases.add(productRelease);
 
-        tier = new Tier();
+        Tier tier = new Tier();
         tier.setInitialNumberInstances(new Integer(1));
         tier.setMaximumNumberInstances(new Integer(5));
         tier.setMinimumNumberInstances(new Integer(1));
@@ -139,40 +178,48 @@ public class EnvironmentInstanceManagerImplTest {
         tier2.setRegion("region2");
         tier2.addNetwork(new Network("uno", "VDC", "region2"));
 
+        Tier tier3 = new Tier();
+        tier3.setInitialNumberInstances(new Integer(1));
+        tier3.setMaximumNumberInstances(new Integer(5));
+        tier3.setMinimumNumberInstances(new Integer(1));
+        tier3.setName("tierName3");
+        tier3.setRegion("region2");
+        tier3.addNetwork(new Network("uno", "VDC", "region2"));
+
+
         Set<Tier> tiers = new HashSet<Tier>();
         tiers.add(tier);
         tiers.add(tier2);
 
-        productReleaseDao = mock(ProductReleaseDao.class);
+        ProductReleaseDao productReleaseDao = mock(ProductReleaseDao.class);
         when(productReleaseDao.load(any(String.class))).thenReturn(productRelease);
 
-        tierDao = mock(TierDao.class);
+        TierDao tierDao = mock(TierDao.class);
         when(tierDao.load(any(String.class))).thenReturn(tier);
 
-        environment = new Environment();
+        Environment environment = new Environment();
         environment.setName("environemntName");
 
         environment.setTiers(tiers);
 
-        environmentDao = mock(EnvironmentDao.class);
+        EnvironmentDao environmentDao = mock(EnvironmentDao.class);
         when(environmentDao.create(any(Environment.class))).thenReturn(environment);
 
-        environmentManager = mock(EnvironmentManager.class);
+        EnvironmentManager environmentManager = mock(EnvironmentManager.class);
         when(environmentManager.load(any(String.class), any(String.class))).thenReturn(environment);
 
         // Instance
-        vms = new ArrayList<VM>();
+        ArrayList<VM> vms = new ArrayList<VM>();
         vms.add(new VM("fqn1", "ip1", "hostname1", "domain"));
         vms.add(new VM("fqn2", "ip2", "hostname2", "domain2"));
 
-        productInstance = new ProductInstance();
+        ProductInstance productInstance = new ProductInstance();
         productInstance.setProductRelease(productRelease);
-        // productInstance.setVm(vms.get(0));
         productInstance.setStatus(Status.INSTALLED);
         productInstance.setName("name");
         productInstance.setVdc("vdc");
 
-        productInstanceManager = mock(ProductInstanceManager.class);
+        ProductInstanceManager productInstanceManager = mock(ProductInstanceManager.class);
         when(
                 productInstanceManager.install(any(TierInstance.class), any(ClaudiaData.class),
                         any(EnvironmentInstance.class), any(ProductRelease.class))).thenReturn(productInstance);
@@ -180,7 +227,7 @@ public class EnvironmentInstanceManagerImplTest {
         List<ProductInstance> productInstances = new ArrayList<ProductInstance>();
         productInstances.add(productInstance);
 
-        tierInstance = new TierInstance();
+        TierInstance tierInstance = new TierInstance();
         tierInstance.setName("nametierInstance");
         tierInstance.setTier(tier);
         tierInstance.setVdc("vdc");
@@ -191,33 +238,33 @@ public class EnvironmentInstanceManagerImplTest {
         List<TierInstance> tierInstances = new ArrayList<TierInstance>();
         tierInstances.add(tierInstance);
 
-        environmentInstance = new EnvironmentInstance();
+        EnvironmentInstance environmentInstance = new EnvironmentInstance();
         environmentInstance.setName("name");
         environmentInstance.setTierInstances(tierInstances);
         environmentInstance.setVdc("vdc");
         environmentInstance.setStatus(Status.INSTALLED);
         environmentInstance.setEnvironment(environment);
 
-        environmentInstanceDao = mock(EnvironmentInstanceDao.class);
+        EnvironmentInstanceDao environmentInstanceDao = mock(EnvironmentInstanceDao.class);
         when(environmentInstanceDao.load(any(String.class))).thenReturn(environmentInstance);
         SystemPropertiesProvider systemPropertiesProvider = mock(SystemPropertiesProvider.class);
-        environmentInstanceManager = new EnvironmentInstanceManagerImpl();
-        infrastructureManager = mock(InfrastructureManager.class);
-        networkManager = mock(NetworkManager.class);
+        EnvironmentInstanceManagerImpl environmentInstanceManager = new EnvironmentInstanceManagerImpl();
+        InfrastructureManager infrastructureManager = mock(InfrastructureManager.class);
+        NetworkManager networkManager = mock(NetworkManager.class);
         environmentManager = mock(EnvironmentManager.class);
         environmentInstanceManager.setInfrastructureManager(infrastructureManager);
         environmentInstanceManager.setNetworkManager(networkManager);
         environmentInstanceManager.setEnvironmentManager(environmentManager);
-        tierManager = mock(TierManager.class);
-        productReleaseManager = mock(ProductReleaseManager.class);
+        TierManager tierManager = mock(TierManager.class);
+        ProductReleaseManager productReleaseManager = mock(ProductReleaseManager.class);
         environmentInstanceManager.setTierManager(tierManager);
         environmentInstanceManager.setProductReleaseManager(productReleaseManager);
         environmentInstanceManager.setSystemPropertiesProvider(systemPropertiesProvider);
         TierInstanceDao tierInstanceDao = mock(TierInstanceDao.class);
         environmentInstanceManager.setTierInstanceDao(tierInstanceDao);
         environmentInstanceManager.setEnvironmentInstanceDao(environmentInstanceDao);
-        ProductInstallator productInstallor = mock(ProductInstallator.class);
-        environmentInstanceManager.setProductInstallator(productInstallor);
+        ProductInstallator productInstallator = mock(ProductInstallator.class);
+        environmentInstanceManager.setProductInstallator(productInstallator);
         TierInstanceManager tierInstanceManager = mock(TierInstanceManager.class);
         environmentInstanceManager.setTierInstanceManager(tierInstanceManager);
         when(systemPropertiesProvider.getProperty(any(String.class))).thenReturn("FIWARE");
@@ -229,48 +276,14 @@ public class EnvironmentInstanceManagerImplTest {
         when(tierManager.update(any(Tier.class))).thenReturn(tier);
         when(productReleaseManager.load(any(String.class), any(ClaudiaData.class))).thenReturn(productRelease);
         when(environmentInstanceDao.create(any(EnvironmentInstance.class))).thenReturn(environmentInstance);
-        when(tierManager.loadTierWithProductReleaseAndMetadata(any(String.class), any(String.class), any(String.class)))
-                .thenReturn(tier);
+
         when(environmentInstanceDao.update(any(EnvironmentInstance.class))).thenReturn(environmentInstance);
 
-    }
-
-    /**
-     * It tests updating federated networks.
-     * 
-     * @throws InfrastructureException
-     * @throws EntityNotFoundException
-     * @throws InvalidEntityException
-     */
-    @Test
-    public void testUpdateFederatedNetworks() throws InfrastructureException, EntityNotFoundException,
-            InvalidEntityException {
-        when(infrastructureManager.getFederatedRange(any(ClaudiaData.class), any(String.class))).thenReturn("12");
-        Network net2 = new Network("uno", "VDC", "region2");
-        when(networkManager.load(any(String.class), any(String.class), any(String.class))).thenReturn(net2);
-
-        environmentInstanceManager.updateFederatedNetworks(claudiaData, environment);
-        verify(networkManager, times(2)).update(any(Network.class));
-
-    }
-
-    /**
-     * It tests the creationg of the env instance.
-     * 
-     * @throws InfrastructureException
-     * @throws EntityNotFoundException
-     * @throws InvalidEntityException
-     * @throws ProductInstallatorException
-     * @throws InvalidOVFException
-     * @throws InvalidVappException
-     * @throws AlreadyExistsEntityException
-     */
-    @Test
-    public void testCreateEnvironmentInstance() throws InfrastructureException, EntityNotFoundException,
-            InvalidEntityException, ProductInstallatorException, InvalidOVFException, InvalidVappException,
-            AlreadyExistsEntityException {
-
         when(environmentManager.load(any(String.class), any(String.class))).thenReturn(environment);
+        when(tierManager.loadTierWithProductReleaseAndMetadata(any(String.class), any(String.class), any(String.class)))
+                .thenReturn(tier3);
+        //When
+
         environmentInstanceManager.create(claudiaData, environmentInstance);
 
     }
@@ -280,8 +293,27 @@ public class EnvironmentInstanceManagerImplTest {
      */
     @Test
     public void testDestroyEnvironmentInstance() throws Exception {
+        //given
+        EnvironmentInstanceManagerImpl environmentInstanceManager = new EnvironmentInstanceManagerImpl();
+        ClaudiaData claudiaData = new ClaudiaData("org", "vdc", "service");
+        EnvironmentInstance environmentInstance = new EnvironmentInstance();
+        environmentInstance.setName("name");
+        Environment environment = new Environment();
+        environment.setName("environmentName");
+        environmentInstance.setEnvironment(environment);
+        environmentInstance.setBlueprintName("blueprint name");
+        environmentInstance.setTierInstances(new ArrayList<TierInstance>());
+        EnvironmentInstanceDao environmentInstanceDao = mock(EnvironmentInstanceDao.class);
+        environmentInstanceManager.setEnvironmentInstanceDao(environmentInstanceDao);
+        when(environmentInstanceDao.update(environmentInstance)).thenReturn(environmentInstance);
+
+        //When
+
 
         environmentInstanceManager.destroy(claudiaData, environmentInstance);
+        //then
+
+        verify(environmentInstanceDao).remove(any(EnvironmentInstance.class));
 
     }
 
