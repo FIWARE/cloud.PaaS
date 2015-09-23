@@ -9,4 +9,4 @@ architectures: everything in a single server, several servers, or elastic archit
 and different software tiers. Pegasus is a easy way to deploy your applications in the FIWARE Cloud. 
 
 `Github's <README.rst>`_ provides a good documentation summary.
-`The User & Programmers Guide] <doc/user_guide.rst>`_  and `the Installation & Administration Guide <doc/admin_guide.rst>`_ cover more advanced topics.
+`The User & Programmers Guide <doc/user_guide.rst>`_  and `the Installation & Administration Guide <doc/admin_guide.rst>`_ cover more advanced topics.
