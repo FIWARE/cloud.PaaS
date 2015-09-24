@@ -17,7 +17,7 @@ The PaaS Manager source code can be found `here`_
 
 .. _here: https://github.com/telefonicaid/fiware-paas.git
 
-This documentation offers deeper information on Paas Manager.
+This documentation offers deeper information on PaaS Manager.
 
 **Documentation**
 
