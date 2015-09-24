@@ -1,4 +1,9 @@
-**# Welcome to Pegasus - PaaS Manager.**
+=================================
+Welcome to Pegasus - PaaS Manager
+=================================
+
+Introduction
+============
 
 Pegasus is a Java implementation of the PaaS Manager GE developed as a part of the FIWARE platform.
 
@@ -8,5 +13,17 @@ infrastructure. It provides a flexible mechanism to perform the deployment, enab
 architectures: everything in a single server, several servers, or elastic architectures based on load balancers 
 and different software tiers. Pegasus is a easy way to deploy your applications in the FIWARE Cloud. 
 
-`Github's <README.rst>`_ provides a good documentation summary.
-`The User & Programmers Guide <doc/user_guide.rst>`_  and `the Installation & Administration Guide <doc/admin_guide.rst>`_ cover more advanced topics.
+The PaaS Manager source code can be found `here`_ 
+
+.. _here: https://github.com/telefonicaid/fiware-paas.git
+
+This documentation offers deeper information on Paas Manager.
+
+**Documentation**
+
+.. toctree::
+   :maxdepth: 1
+
+   README
+   doc/user_guide
+   doc/admin_guide
