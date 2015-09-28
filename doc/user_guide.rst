@@ -366,47 +366,56 @@ with the following payload
 .. code::
 
     <?xml version="1.0" encoding="UTF-8"?>
-    <environment>
+    <environmentDto>
         <name>{environment-name}</name>
-        <tiers>
-            <tier>
-                <initial_number_instances>1</initial_number_instances>
-                <maximum_number_instances>1</maximum_number_instances>
-                <minimum_number_instances>1</minimum_number_instances>
-                <name>{tier-id}</name>
-                <networkDto>
-                	<networkName>Internet</networkName>
-                	<subNetworkDto>
-                		<subnetName>sub-net-Internet</subnetName>
-                	</subNetworkDto>
-                </networkDto>               
-                <productReleases>                  
-                    <product>postgresql</product>
-                    <version>0.0.3</version>
-                    <withArtifact>true</withArtifact> 
-                    <productType> 
-                        <id>5</id>
-                        <name>Database</name>  
-                    </productType> 
-                </productReleases>
-                     ...
-            </tier>   
-        </tiers>
-    </environment>
+        <description>{description of environment}</description>
+        <tierDtos>
+    	    <minimumNumberInstances>1</minimumNumberInstances>
+    	    <initialNumberInstances>1</initialNumberInstances>
+    	    <maximumNumberInstances>1</maximumNumberInstances>
+    	    <name>{tier-name}</name>
+    	    <networkDto>
+                <networkName>{network-name}</networkName>
+                    <subNetworkDto>
+                	    <subnetName>{subnetwork-name}</subnetName>
+                    </subNetworkDto>
+            </networkDto> 
+            <image>{image-id}</image>
+            <flavour>{flavour of VM in number}</flavour>
+            <keypair>{keypair-name}</keypair>
+            <floatingip>{false/true}</floatingip>
+            <region>{region-name}</region>
+            <productReleaseDtos>
+    		    <productName>{product-name}</productName>
+    		    <version>{product-version}</version>
+            </productReleaseDtos>
+        </tierDtos>
+    </environmentDto>
 
-The network and region information are including also in the payload of the enviornment. The following lines show a example. 
+The network and region information are including also in the payload of the environment. The following lines show a example. 
 
 .. code::
 
-    <tier>
-        <name>{tier-id}</name> 
-        <region>Spain</region>
-        <network>Internet</network>
-        <network>private_network</network>     
-        <productReleases>                  
-           ...
-        </productReleases>              
-    </tier>  
+    <tierDtos>
+        ...
+        <name>{tier-name}</name>
+    	    <networkDto>
+                <networkName>{network-name}</networkName>
+                    <subNetworkDto>
+                	    <subnetName>{subnetwork-name}</subnetName>
+                    </subNetworkDto>
+            </networkDto> 
+    	    <image>{image-id}</image>
+    	    <flavour>{flavour of VM in number}</flavour>
+    	    <keypair>{keypair-name}</keypair>
+    	    <floatingip>{false/true}</floatingip>
+    	    <region>{region-name}</region>
+    	    <productReleaseDtos>
+    		    <productName>{product-name}</productName>
+    		    <version>{product-version}</version>
+            </productReleaseDtos> 
+            ...           
+    </tierDtos>  
 
 **Delete a blueprint template from the catalogue**
 
@@ -579,35 +588,39 @@ BluePrint/Environment Instance Provisioning API
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
-	-X POST "https://PAAS_MANAGER_IP:8443/paasmanager/rest/org/FIWARE/vdc/{your-tenant-id}/environmentInstance"
+    -X POST "https://PAAS_MANAGER_IP:8443/paasmanager/rest/envInst/org/FIWARE/vdc/{your-tenant-id}/environmentInstance"
 
 where "your-tenant-id" is the tenant-id in this guide. The payload of this request can be as follows:
 
 .. code::
-	
-    <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-    <environment>
-        <name>{emvironment-name}</name>
-        <tiers>
-            <tier>
-                <initial_number_instances>1</initial_number_instances>
-                <maximum_number_instances>1</maximum_number_instances>
-                <minimum_number_instances>1</minimum_number_instances>
-                <name>{tier-id}</name>               
-                <productReleases>                  
-                    <product>postgresql</product>
-                    <version>0.0.3</version>
-                    <withArtifact>true</withArtifact> 
-                    <productType> 
-                       <id>5</id>
-                        <name>Database</name>  
-                    </productType> 
-                </productReleases>
-                ...
-            </tier>   
-        </tiers>
-    </environment>
 
+    <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+    <environmentInstanceDto>
+	    <blueprintName>{environmentinstance-name}</blueprintName>
+	    <description>{description of environmentinstance}</description>
+	    <environmentDto>
+		    <name>{environment-name}</name>
+		    <description>{description of environmet}</description>
+		    <tierDtos>
+			    <name>{tier-name}</name>
+			    <flavour>{flavour of the VM}</flavour>
+			    <image>{image-id of the image to create the VM}</image>
+			    <maximumNumberInstances>1</maximumNumberInstances>
+			    <minimumNumberInstances>1</minimumNumberInstances>
+			    <initialNumberInstances>1</initialNumberInstances>
+			    <networkDto>
+				    <networkName>{network-name}</networkName>
+			    </networkDto>
+			    <icono></icono>
+			    <securityGroup>{security-group-name}</securityGroup>
+			    <keypair>{keypair-name}</keypair>
+			    <floatingip>{true/false}</floatingip>
+			    <affinity>None</affinity>
+			    <region>{region-name where to deploy}</region>
+		    </tierDtos>
+	    </environmentDto>
+    </environmentInstanceDto>
+    
 The response obatined should be:
 
 .. code::
@@ -636,7 +649,7 @@ the task status should be SUCCESS.
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
-	-X GET "https://PAAS_MANAGER_IP:8443/paasmanager/rest/org/FIWARE/vdc/your-tenant-id/environmentInstance"
+    -X GET "https://PAAS_MANAGER_IP:8443/paasmanager/rest/envInst/org/FIWARE/vdc/your-tenant-id/environmentInstance"
 
 The Response obtained includes all the blueprint instances deployed
 
@@ -701,72 +714,66 @@ The Response obtained includes all the blueprint instances deployed
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
-	-X GET "https://PAAS_MANAGER_IP:8443/paasmanager/rest/org/FIWARE/vdc/your-tenant-id/environmentInstance/{BlueprintInstance-id}"
+    -X GET "https://PAAS_MANAGER_IP:8443/paasmanager/rest/envInst/org/FIWARE/vdc/your-tenant-id/environmentInstance/{BlueprintInstance-id}"
 	
 This operation does not require any payload in the request and provides a BlueprintInstance XML response. 
 
 .. code::
 
-    <environmentInstance>
-        <environmentInstanceName>{environmentInstance-id</environmentInstanceName>
-        <vdc>your-tenant-id</vdc>
-        <environment>
-            <name>{emvironment-name}</name>
-            <tiers>
-                <tier>
-                    <initial_number_instances>1</initial_number_instances>
-                    <maximum_number_instances>1</maximum_number_instances>
-                    <minimum_number_instances>1</minimum_number_instances>
-                    <name>{tier-id}</name>               
-                    <productReleases>                  
-                        <product>postgresql</product>
-                        <version>0.0.3</version>
-                        <withArtifact>true</withArtifact> 
-                        <productType> 
-                            <id>5</id>
-                            <name>Database</name>  
-                        </productType> 
-                    </productReleases>                    
-                    ...
-                </tier>   
-            </tiers>
-        </environment>        
-        <tierInstances>
-            <id>35</id>
-            <date>2012-10-31T09:24:45.298Z</date>  
-            <name>tomcat-</name>       
-            <status>INSTALLED</status>       
-            <vdc>your-tenant-id</vdc>       
-            <tier>
-                <name>{tier-id}</name>               
-            </tier>   
-            <productInstances>
-                <id>33</id>   
-                <date>2012-10-31T09:14:33.192Z</date>  
-                <name>postgresql</name>         
-                <status>INSTALLED</status>    
-                <vdc>your-tenant-id</vdc>  
-                <productRelease>  
-                    <product>postgresql</product>  
-                    <version>0.0.3</version> 
-                </productRelase>
-                <vm>
-                    <fqn>vmfqn</fqn> 
-                    <hostname>rehos456544</hostname> 
-                    <ip>109.231.70.77</ip> 
-                </vm>
-            </productInstance>
-        </tierInstances>
-    </environmentInstance>
-
-
+    <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+    <environmentInstancePDto>
+		<environmentInstanceName>{environmentinstance-name}</environmentInstanceName>
+		<vdc>{tenant-id}</vdc>
+		<description>{description of environmentinstance}</description>
+		<status>{status of the environment installation}</status>
+		<blueprintName>{blueprint-name}</blueprintName>
+		<taskId>{task-id of the execution}</taskId>
+ 		<tierDto>
+			<name>{tier-name}</name>
+			<flavour>{flavour of the vm}</flavour>
+			<image>{image-id}</image>
+			<maximumNumberInstances>1</maximumNumberInstances>
+			<minimumNumberInstances>1</minimumNumberInstances>
+			<initialNumberInstances>1</initialNumberInstances>
+ 			<productReleaseDtos>
+				<productName>{product-name}</productName>
+				<version>{product-version}</version>
+ 			</productReleaseDtos>
+			<icono />
+			<securityGroup>{securityGroup-name}</securityGroup>
+			<keypair>{keypair-name}</keypair>
+			<floatingip>{true/false}</floatingip>
+			<region>{region-name}</region>
+ 			<tierInstancePDto>
+				<tierInstanceName>{tierinstance-name}</tierInstanceName>
+				<status>{status of the tierinstallation}</status>
+				<taskId>{task id of tier installation execution}</taskId>
+ 				<productInstanceDtos>
+ 					<productReleaseDto>
+						<productName>{product-name}</productName>
+						<version>{product-version}</version>
+ 					</productReleaseDto>
+					<name>{productInstance-name}</name>
+					<taskId>{task id of product installation}</taskId>
+ 				</productInstanceDtos>
+ 				<vm>
+					<domain>{domain of vm}</domain>
+					<fqn>{fqn of vm}</fqn>
+					<hostname>{hostname}</hostname>
+					<ip>{ip}</ip>
+					<id>{nova-host-id}</id>
+ 				</vm>
+			</tierInstancePDto>
+ 		</tierDto>
+ 	</environmentInstancePDto>
+ 
 **Undeploy a Blueprint Instance**	
 
 .. code::
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
-	-X DELETE "https://PAAS_MANAGER_IP:8443/paasmanager/rest/org/FIWARE/vdc/{your-tenant-id}/environmentInstance/{BlueprintInstance-id}"
+    -X DELETE "https://PAAS_MANAGER_IP:8443/paasmanager/rest/envInst/org/FIWARE/vdc/{your-tenant-id}/environmentInstance/{BlueprintInstance-id}"
 
 This operation does not require a request body and returns the details of a generated task. 
 
