@@ -38,7 +38,7 @@ import org.junit.Test;
 
 /**
  * Test for environmetn instances.
- * 
+ *
  * @author henar
  */
 public class EnvironmentInstanceTest extends TestCase {
@@ -117,7 +117,7 @@ public class EnvironmentInstanceTest extends TestCase {
 
     /**
      * Test for create environment dto.
-     * 
+     *
      * @throws Exception
      */
     @Test
@@ -174,7 +174,7 @@ public class EnvironmentInstanceTest extends TestCase {
 
     /**
      * Create an environment without vm.
-     * 
+     *
      * @throws Exception
      */
     @Test
@@ -190,7 +190,7 @@ public class EnvironmentInstanceTest extends TestCase {
         //        "tierInstance");
 
     }
-    
-    
+
+
 
 }
