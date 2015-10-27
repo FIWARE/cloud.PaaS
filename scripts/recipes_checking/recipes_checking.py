@@ -259,7 +259,7 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
             logger.info ("Image name: " + image_name + ". Product Release: " + product_name + "-" + product_version +
                 " SUCCESS to deploy in  " + str(interval_deploy.seconds) + " seconds  \n")
             report_file.write ("Image name: " + image_name + ". Product Release: " + product_name + "-"
-                               + product_version + " SUCCESS to deploy in : " + str(interval_deploy.seconds)
+                               + product_version + " SUCCESS to deploy in " + str(interval_deploy.seconds)
                                + " seconds  \n")
         elif task_status == TASK_STATUS_ERROR:
             task_error = task[TASK_BODY_ERROR]
