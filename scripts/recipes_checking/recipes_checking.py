@@ -260,7 +260,7 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
                 " SUCCESS to deploy in : " + str(interval_deploy.seconds) + " seconds  \n")
             report_file.write ("Image name: " + image_name + ". Product Release: " + product_name + "-"
                                + product_version + " SUCCESS to deploy in : " + str(interval_deploy.seconds)
-                               + " hh::mm:ss  \n")
+                               + " seconds  \n")
         elif task_status == TASK_STATUS_ERROR:
             task_error = task[TASK_BODY_ERROR]
             major_error_desc = task_error[TASK_BODY_ERROR_MAJORCODE]
@@ -274,7 +274,7 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
             logger.info("ERROR Minor Error Code : " + str(minorErrorCode))
             report_file.write ("Image name: " + image_name + ". Product Release: " + product_name + "-"
                                + product_version + " ERROR to deploy in " + str(interval_deploy.seconds)
-                               + " hh::mm:ss  \n")
+                               + " seconds  \n")
             report_file.write("ERROR Major Error Description : " + str(major_error_desc) + "\n")
             report_file.write("ERROR Message : " + str(error_message) + "\n")
             report_file.write("ERROR Minor Error Code : " + str(minorErrorCode) + "\n")
