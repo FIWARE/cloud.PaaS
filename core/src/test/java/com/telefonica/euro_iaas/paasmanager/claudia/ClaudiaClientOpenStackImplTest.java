@@ -435,4 +435,41 @@ public class ClaudiaClientOpenStackImplTest {
         assertNotNull(fileUtil.readFile("src/test/resources/userdata", "."));
     }
 
+    @Test
+    public void testGetIps() throws Exception {
+        String response = "{\n" +
+            "    \"server\": {\n" +
+            "        \"status\": \"ACTIVE\",\n" +
+            "        \"updated\": \"2015-10-29T11:31:01Z\",\n" +
+            "        \"hostId\": \"a811787538cb3e6dd9\",\n" +
+            "        \"addresses\": {\n" +
+            "            \"node-int-net-01\": [\n" +
+            "                {\n" +
+            "                    \"OS-EXT-IPS-MAC:mac_addr\": \"fa:16:3e:79:9b:f1\",\n" +
+            "                    \"version\": 4,\n" +
+            "                    \"addr\": \"192.168.217.180\",\n" +
+            "                    \"OS-EXT-IPS:type\": \"fixed\"\n" +
+            "                }\n" +
+            "            ],\n" +
+            "            \" net\": [\n" +
+            "                {\n" +
+            "                    \"OS-EXT-IPS-MAC:mac_addr\": \"fa:16:3e:3b:42:00\",\n" +
+            "                    \"version\": 4,\n" +
+            "                    \"addr\": \"10.2.95.4\",\n" +
+            "                    \"OS-EXT-IPS:type\": \"fixed\"\n" +
+            "                }\n" +
+            "            ]\n" +
+            "        },\n" +
+            "    }\n" +
+            "}";
+
+        VM vm = new VM();
+        vm.setVmid("ID");
+        when(openStackUtil.getServer(anyString(), anyString(), anyString(),
+            anyString())).thenReturn(response);
+        List<String> ips = claudiaClientOpenStack.getIP(claudiaData, "name", 1, vm, "Spain2");
+        assertEquals(ips.size(), 2);
+    }
+
+
 }

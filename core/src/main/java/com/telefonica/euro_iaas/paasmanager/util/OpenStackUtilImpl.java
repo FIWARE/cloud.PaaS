@@ -211,7 +211,7 @@ public class OpenStackUtilImpl implements OpenStackUtil {
 
         try {
             HttpUriRequest request = openOperationUtil.createNovaPostRequest("/" + RESOURCE_FLOATINGIP, payload,
-                    APPLICATION_XML, APPLICATION_JSON, region, token, vdc);
+                    APPLICATION_JSON, APPLICATION_JSON, region, token, vdc);
 
             response = openOperationUtil.executeNovaRequest(request);
             // deletion.setMessage(response);
@@ -302,7 +302,7 @@ public class OpenStackUtilImpl implements OpenStackUtil {
         String payload = buildPayloadFloatingIP(floatingIP);
         try {
             HttpUriRequest request = openOperationUtil.createNovaPostRequest(RESOURCE_SERVERS + "/" + serverId + "/"
-                    + RESOURCE_ACTION, payload, APPLICATION_XML, APPLICATION_JSON, region, token, vdc);
+                    + RESOURCE_ACTION, payload, APPLICATION_JSON, APPLICATION_JSON, region, token, vdc);
 
             response = openOperationUtil.executeNovaRequest(request);
             // deletion.setMessage(response);
@@ -723,7 +723,7 @@ public class OpenStackUtilImpl implements OpenStackUtil {
         String response = null;
 
         try {
-            HttpUriRequest request = openOperationUtil.createNovaGetRequest("/" + RESOURCE_FLOATINGIP, APPLICATION_XML,
+            HttpUriRequest request = openOperationUtil.createNovaGetRequest("/" + RESOURCE_FLOATINGIP, APPLICATION_JSON,
                     region, token, vdc);
 
             response = openOperationUtil.executeNovaRequest(request);
@@ -815,7 +815,7 @@ public class OpenStackUtilImpl implements OpenStackUtil {
         // curl -v -H 'X-Auth-Token: a92287ea7c2243d78a7180ef3f7a5757'
         // -H "Content-Type: application/xml" -H "Accept: application/json"
         // -X GET "http://10.95.171.115:9696/v2/networks"
-        HttpUriRequest request = openOperationUtil.createQuantumGetRequest(RESOURCE_NETWORKS, APPLICATION_XML, region,
+        HttpUriRequest request = openOperationUtil.createQuantumGetRequest(RESOURCE_NETWORKS, APPLICATION_JSON, region,
                 token, vdc);
 
         String response = null;
@@ -846,7 +846,7 @@ public class OpenStackUtilImpl implements OpenStackUtil {
         // "http://10.95.171.115:8774/v2/30c60771b6d144d2861b21e442f0bef9/servers/88y6ga216ad4s33ra6asd5fgrg7"
 
         HttpUriRequest request = openOperationUtil.createNovaGetRequest(RESOURCE_SERVERS + "/" + serverId,
-                APPLICATION_XML, region, token, vdc);
+                APPLICATION_JSON, region, token, vdc);
 
         String response = null;
 
@@ -873,7 +873,7 @@ public class OpenStackUtilImpl implements OpenStackUtil {
 
         try {
             HttpUriRequest request = openOperationUtil.createNovaGetRequest(RESOURCE_SERVERS + "/" + serverId,
-                    APPLICATION_XML, region, token, vdc);
+                    APPLICATION_JSON, region, token, vdc);
             openOperationUtil.executeNovaRequest(request);
         } catch (Exception e) {
             String errorMessage = "Server " + serverId + "  no longer exists in OpenStack: " + e;
