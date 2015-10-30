@@ -37,6 +37,7 @@ import java.io.IOException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -78,6 +79,25 @@ public class OpenStackUtilImplTest {
             + "\"admin_state_up\": true, " + "\"tenant_id\": \"08bed031f6c54c9d9b35b42aa06b51c0\", "
             + "\"routes\": [], " + "\"id\": \"5af6238b-0e9c-4c20-8981-6e4db6de2e17\"" + "} ]} ";
 
+    String FLOATING_IPS ="{\n" +
+        "    \"floating_ips\": [\n" +
+        "        {\n" +
+        "            \"instance_id\": asdfasdfasdf,\n" +
+        "            \"ip\": \"130.206.116.130\",\n" +
+        "            \"fixed_ip\": \"10.9.8.8\",\n" +
+        "            \"id\": \"619a167c-eb97-414d-bfc5-6328ddf8de43\",\n" +
+        "            \"pool\": \"public-ext-net-01\"\n" +
+        "        },\n" +
+        "        {\n" +
+        "            \"instance_id\": null,\n" +
+        "            \"ip\": \"130.206.112.238\",\n" +
+        "            \"fixed_ip\": null,\n" +
+        "            \"id\": \"8918a7d2-9bdf-4717-b9b4-6ee98251e80e\",\n" +
+        "            \"pool\": \"public-ext-net-01\"\n" +
+        "        } " +
+        "    ]\n" +
+        "}";
+
     @Before
     public void setUp() throws OpenStackException, ClientProtocolException, IOException {
         openStackUtil = new OpenStackUtilImplTestable();
@@ -98,12 +118,14 @@ public class OpenStackUtilImplTest {
         openStackUtil.setOpenOperationUtil(openOperationUtil);
 
         HttpPost httpPost = mock(HttpPost.class);
+        HttpGet httpGet = mock(HttpGet.class);
 
         when(closeableHttpClientMock.execute(any(HttpUriRequest.class))).thenReturn(httpResponse);
 
-        when(
-                openOperationUtil.createNovaPostRequest(anyString(), anyString(), anyString(), anyString(),
-                        anyString(), anyString(), anyString())).thenReturn(httpPost);
+        when(openOperationUtil.createNovaGetRequest(anyString(), anyString(), anyString(), anyString(),
+                        anyString())).thenReturn(httpGet);
+        when(openOperationUtil.createNovaPostRequest(anyString(), anyString(), anyString(), anyString(),
+            anyString(), anyString(), anyString())).thenReturn(httpPost);
 
         when(openOperationUtil.createQuantumGetRequest(anyString(), anyString(), anyString(), anyString(), anyString()))
                 .thenReturn(httpPost);
@@ -263,11 +285,8 @@ public class OpenStackUtilImplTest {
     @Test
     public void shouldDisallocateFloatingIp() throws OpenStackException, IOException {
         // given
-        String ipsXML = " <floating_ips> <floating_ip instance_id=\"None\" ip=\"130.206.81.152\" fixed_ip=\"None\" "
-                + " id=\"9c215e37-763a-43d9-b3e2-0e1339d9e238\" pool=\"ext-net\" />"
-                + " <floating_ip instance_id=\"4b4aa9a8-67e1-4880-86ec-d4b05b45b3db\" ip=\"130.206.81.148\" fixed_ip=\"11.0.0.6\" "
-                + " id=\"b0795d3d-d0b6-4568-8328-9961ac1a14c0\" pool=\"ext-net\" />  </floating_ips>";
-        when(openOperationUtil.executeNovaRequest(any(HttpUriRequest.class))).thenReturn(ipsXML);
+        when(openOperationUtil.executeNovaRequest(any(HttpUriRequest.class))).
+            thenReturn(FLOATING_IPS);
 
         openStackUtil.disAllocateFloatingIP("region", "token", "vdc", "130.206.81.152");
 
@@ -353,6 +372,21 @@ public class OpenStackUtilImplTest {
 
         // then
         assertNotNull(response);
+    }
+
+    @Test
+    public void testGetFloatingIp() throws Exception {
+
+
+        when(openOperationUtil.executeNovaRequest(any(HttpUriRequest.class))).
+            thenReturn(FLOATING_IPS);
+        when(openStackConfig.getPublicFloatingPool(any(PaasManagerUser.class), anyString())).
+            thenReturn("public-ext-net-01");
+        String floatingip = openStackUtil.getFloatingIP(paasManagerUser, "RegionOne");
+        assertEquals(floatingip, "130.206.112.238");
+
+
+
     }
 
     /**

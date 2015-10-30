@@ -24,25 +24,15 @@
 
 package com.telefonica.euro_iaas.paasmanager.util;
 
-import java.io.IOException;
-import java.io.StringReader;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 import com.telefonica.euro_iaas.paasmanager.bean.PaasManagerUser;
 import com.telefonica.euro_iaas.paasmanager.model.NetworkInstance;
@@ -258,10 +248,10 @@ public class OpenStackUtilImpl implements OpenStackUtil {
             throws OpenStackException {
         log.debug("disAllocateFloatingIP " + floatingIp);
 
-        String floatingIpsXML = this.getFloatingIPs(region, token, vdc);
-        String idFloatingIp = this.getFloatingIpId(floatingIpsXML, floatingIp);
-
         try {
+            String floatingIpsXML = this.getFloatingIPs(region, token, vdc);
+            String idFloatingIp = this.getFloatingIpId(floatingIpsXML, floatingIp);
+
             HttpUriRequest request = openOperationUtil.createNovaDeleteRequest("/" + RESOURCE_FLOATINGIP + "/"
                     + idFloatingIp, region, token, vdc);
 
@@ -322,18 +312,17 @@ public class OpenStackUtilImpl implements OpenStackUtil {
     }
 
     private String buildAllocateFloatingIPPayload(String floatingIPPool) {
-        return "<?xml version='1.0' encoding='UTF-8'?>" + "<pool>" + floatingIPPool + "</pool>";
-
+        return "{ \"pool\": \"" + floatingIPPool  + "\"}";
     }
 
     /**
      * Building the payload to assign FloatingIP.
      * 
-     * @param floatigIP
+     * @param floatingIp
      * @return
      */
-    private String buildPayloadFloatingIP(String floatigIP) {
-        return "<addFloatingIp>\n<address>" + floatigIP + "</address>\n</addFloatingIp>";
+    private String buildPayloadFloatingIP(String floatingIp) {
+        return "{ \"addFloatingIp\": { \"address\": \"" + floatingIp + "\" } }";
     }
 
     /**
@@ -630,51 +619,6 @@ public class OpenStackUtilImpl implements OpenStackUtil {
         return HttpClients.custom().setConnectionManager(httpConnectionManager).build();
     }
 
-    /**
-     * Obtains the attribute value from a node.
-     * 
-     * @param node
-     * @param attribute
-     * @return
-     */
-    private String findAttributeValueInNode(Node node, String attribute) {
-        return node.getAttributes().getNamedItem(attribute).getTextContent();
-    }
-
-    /*
-     * Obtains the list of nodes whose tag is nodeListTag
-     */
-    private NodeList findNodeList(String xmlDoc, String nodeListTag) throws OpenStackException {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder;
-        Document doc;
-        NodeList nodeList = null;
-
-        try {
-            builder = factory.newDocumentBuilder();
-            doc = builder.parse(new InputSource(new StringReader(xmlDoc)));
-
-            nodeList = doc.getElementsByTagName(nodeListTag);
-
-        } catch (SAXException e) {
-            String errorMessage = "SAXException when obtaining nodeList." + " Desc: " + e.getMessage();
-            log.warn(errorMessage);
-            throw new OpenStackException(errorMessage);
-        } catch (ParserConfigurationException e) {
-            String errorMessage = "ParserConfigurationException when obtaining " + "NodelIst. Desc: " + e.getMessage();
-            log.warn(errorMessage);
-            throw new OpenStackException(errorMessage);
-        } catch (IOException e) {
-            String errorMessage = "IOException when obtaining " + "NodeList. Desc: " + e.getMessage();
-            log.warn(errorMessage);
-            throw new OpenStackException(errorMessage);
-        } catch (Exception e) {
-            String errorMessage = "Unexpected exception : " + e.getMessage();
-            log.warn(errorMessage);
-            throw new OpenStackException(errorMessage);
-        }
-        return nodeList;
-    }
 
     public String getFloatingIP(PaasManagerUser user, String region) throws OpenStackException {
         String floatingIP = null;
@@ -682,13 +626,18 @@ public class OpenStackUtilImpl implements OpenStackUtil {
         String getFloatingIPsResponse = getFloatingIPs(region, user.getToken(), user.getTenantId());
         String floatingIpPool = openStackConfigUtil.getPublicFloatingPool(user, region);
 
-        if (isAnyFloatingIPFreeToBeAssigned(getFloatingIPsResponse)) {
-            floatingIP = getFloatingIPFree(getFloatingIPsResponse);
-        } else {
-            floatingIP = allocateFloatingIP(buildAllocateFloatingIPPayload(floatingIpPool), region, user.getToken(),
+        try {
+            if (isAnyFloatingIPFreeToBeAssigned(getFloatingIPsResponse)) {
+                floatingIP = getFloatingIPFree(getFloatingIPsResponse);
+            } else {
+                floatingIP = allocateFloatingIP(buildAllocateFloatingIPPayload(floatingIpPool), region, user.getToken(),
                     user.getTenantId());
-            getFloatingIPsResponse = getFloatingIPs(region, user.getToken(), user.getTenantId());
-            floatingIP = getFloatingIPFree(getFloatingIPsResponse);
+                getFloatingIPsResponse = getFloatingIPs(region, user.getToken(), user.getTenantId());
+                floatingIP = getFloatingIPFree(getFloatingIPsResponse);
+            }
+        } catch (JSONException e) {
+            floatingIP = null;
+            log.debug("Error to obtain the IP " + e.getMessage());
         }
 
         return floatingIP;
@@ -697,17 +646,18 @@ public class OpenStackUtilImpl implements OpenStackUtil {
     /**
      * Get a Free FloatingIP.
      * 
-     * @param xmlDoc
+     * @param response
      * @return
      * @throws Exception
      */
-    private String getFloatingIPFree(String xmlDoc) throws OpenStackException {
+    private String getFloatingIPFree(String response) throws JSONException {
         String floatingIP = null;
-        NodeList floatingIPs = findNodeList(xmlDoc, "floating_ip");
-        for (int i = 0; i < floatingIPs.getLength(); i++) {
-            Node floatingIPNode = floatingIPs.item(i);
-            if (findAttributeValueInNode(floatingIPNode, "instance_id").equals("None")) {
-                floatingIP = findAttributeValueInNode(floatingIPNode, "ip");
+        JSONArray jsonFloatingIps = new JSONObject(response).getJSONArray("floating_ips");
+
+        for (int i = 0; i < jsonFloatingIps.length(); i++) {  // **line 2**
+            JSONObject childJSONObject = jsonFloatingIps.getJSONObject(i);
+            if (childJSONObject.getString("instance_id").equals("null")) {
+                floatingIP = childJSONObject.getString("ip");
             }
         }
         return floatingIP;
@@ -886,29 +836,31 @@ public class OpenStackUtilImpl implements OpenStackUtil {
     /**
      * Is Any FloatingIP Free.
      * 
-     * @param xmlDoc
+     * @param response
      * @return
      * @throws Exception
      */
-    private boolean isAnyFloatingIPFreeToBeAssigned(String xmlDoc) throws OpenStackException {
+    private boolean isAnyFloatingIPFreeToBeAssigned(String response) throws JSONException {
 
-        NodeList floatingIPs = findNodeList(xmlDoc, "floating_ip");
-        for (int i = 0; i < floatingIPs.getLength(); i++) {
-            Node floatingIPNode = floatingIPs.item(i);
-            if (findAttributeValueInNode(floatingIPNode, "instance_id").equals("None")) {
+        JSONArray jsonFloatingIps = new JSONObject(response).getJSONArray("floating_ips");
+
+        for (int i = 0; i < jsonFloatingIps.length(); i++) {  // **line 2**
+            JSONObject childJSONObject = jsonFloatingIps.getJSONObject(i);
+            if (childJSONObject.getString("instance_id").equals("null")) {
                 return true;
             }
         }
+
         return false;
     }
 
-    private String getFloatingIpId(String xmlDoc, String ip) throws OpenStackException {
+    private String getFloatingIpId(String response, String ip) throws JSONException {
+        JSONArray jsonFloatingIps = new JSONObject(response).getJSONArray("floating_ips");
 
-        NodeList floatingIPs = findNodeList(xmlDoc, "floating_ip");
-        for (int i = 0; i < floatingIPs.getLength(); i++) {
-            Node floatingIPNode = floatingIPs.item(i);
-            if (findAttributeValueInNode(floatingIPNode, "ip").equals(ip)) {
-                return findAttributeValueInNode(floatingIPNode, "id");
+        for (int i = 0; i < jsonFloatingIps.length(); i++) {  // **line 2**
+            JSONObject childJSONObject = jsonFloatingIps.getJSONObject(i);
+            if (childJSONObject.getString("ip").equals(ip)) {
+                return childJSONObject.getString("id");
             }
         }
         return null;
