@@ -142,26 +142,32 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
 
     logger.debug(str(allproductreleases['productAndReleaseDto']))
     logger.info("There are " + str(len(allproductreleases['productAndReleaseDto'])) + " product Releases in SDC")
+    report_file.writelines("There are " + str(len(allproductreleases['productAndReleaseDto']))
+                           + " product Releases in SDC")
 
     paasmanager_client = PaaSManagerClient(user, password, tenant_id, auth_url, region_name )
     glance_url = paasmanager_client.get_paasmanager_endpoint_from_keystone(region_name, GLANCE_SERVICE_TYPE,
                                                                            GLANCE_ENDPOINT_TYPE)
     logger.info("Loading image list from glance : " + glance_url + " Region: " + region_name)
+    report_file.writelines("Loading image list from glance : " + glance_url + " Region: " + region_name  + "\n")
+    report_file.write ("------------------------------------------------------------------------------------------- \n")
 
     response_images = find_all_images_sdc_aware(glance_url, region_name, paasmanager_client.token, tenant_id)
     logger.debug(response_images)
 
-    images = []
+    sdc_aware_images = []
     for i in response_images[IMAGE_BODY_IMAGES]:
         image_name = i[IMAGE_BODY_NAME]
         image_id = i[IMAGE_BODY_ID]
         image_dict = {DICT_IMAGE_NAME: image_name, DICT_IMAGE_ID: image_id}
-        logger.info("Image id: " + image_dict['image_id']+ "| Image name: " +  image_dict['image_name'])
-        images.append(image_dict)
+        logger.info("Image id: " + image_dict['image_id']+ "| Image name: " +  image_dict['image_name']  + "\n")
+        report_file.writelines("Image id: " + image_dict['image_id']+ "| Image name: " +  image_dict['image_name'] + "\n")
+        sdc_aware_images.append(image_dict)
+    report_file.write ("------------------------------------------------------------------------------------------- \n")
 
     logger.info("Building all combinations images - product releases")
 
-    images_productReleases = get_product_releases_images (allproductreleases, images)
+    images_productReleases = get_product_releases_images (allproductreleases, sdc_aware_images)
 
     logger.info("Product Releases to TEST in different images:")
     for i in images_productReleases:
@@ -321,7 +327,7 @@ def check_recipes(report_file, envName, auth_url, tenant_id, user, password, reg
 def getTaskUrl (environment_instance_task_dict):
     return environment_instance_task_dict[TASK_BODY_HREF]
 
-def get_product_releases_images (allproductreleases, images):
+def get_product_releases_images (allproductreleases, sdc_aware_images):
     images_productReleases = []
 
     for i in allproductreleases[PRODUCTANDRELEASE_BODY_ROOT]:
@@ -351,9 +357,9 @@ def get_product_releases_images (allproductreleases, images):
 
                         if (metadata_key == PRODUCTANDRELEASE_BODY_METADATA_IMAGE) and \
                                 ((metadata_value == "") or (metadata_value is None)):
-                            for z in images:
-                                image_id = z[DICT_IMAGE_ID]
-                                image_name = z[DICT_IMAGE_NAME]
+                            for sdc_aware_image in sdc_aware_images:
+                                image_id = sdc_aware_image[DICT_IMAGE_ID]
+                                image_name = sdc_aware_image[DICT_IMAGE_NAME]
                                 image_productRelease = { DICT_IMAGE_ID : image_id,
                                                          DICT_IMAGE_NAME : image_name,
                                                          DICT_IMAGE_PRODUCTRELEASE_PRODUCTRELEASE : product_release,
@@ -362,11 +368,11 @@ def get_product_releases_images (allproductreleases, images):
                                                         }
                                 images_productReleases.append(image_productRelease)
                         else:
-                            for z in images:
+                            for sdc_aware_image in sdc_aware_images:
                                 if ((metadata_key == PRODUCTANDRELEASE_BODY_METADATA_IMAGE) and
-                                        (metadata_value == z[DICT_IMAGE_ID])):
-                                    image_id = z[DICT_IMAGE_ID]
-                                    image_name = z[DICT_IMAGE_NAME]
+                                        (sdc_aware_image[DICT_IMAGE_ID]  in metadata_value)):
+                                    image_id = sdc_aware_image[DICT_IMAGE_ID]
+                                    image_name = sdc_aware_image[DICT_IMAGE_NAME]
                                     image_productRelease = {    DICT_IMAGE_ID : image_id,
                                                                 DICT_IMAGE_NAME : image_name,
                                                                 DICT_IMAGE_PRODUCTRELEASE_PRODUCTRELEASE : product_release,
