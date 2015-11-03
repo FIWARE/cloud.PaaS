@@ -654,7 +654,7 @@ public class OpenStackUtilImpl implements OpenStackUtil {
         String floatingIP = null;
         JSONArray jsonFloatingIps = new JSONObject(response).getJSONArray("floating_ips");
 
-        for (int i = 0; i < jsonFloatingIps.length(); i++) {  // **line 2**
+        for (int i = 0; i < jsonFloatingIps.length(); i++) {
             JSONObject childJSONObject = jsonFloatingIps.getJSONObject(i);
             if (childJSONObject.getString("instance_id").equals("null")) {
                 floatingIP = childJSONObject.getString("ip");

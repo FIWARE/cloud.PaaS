@@ -593,7 +593,7 @@ public class ClaudiaClientOpenStackImpl implements ClaudiaClient {
     public List<String> getIP(ClaudiaData claudiaData, String tierName, int replica, VM vm, String region)
             throws InfrastructureException {
         List<String> ips = new ArrayList<String>();
-        String response ="";
+        String response = "";
 
         try {
             String token = claudiaData.getUser().getToken();
@@ -606,19 +606,17 @@ public class ClaudiaClientOpenStackImpl implements ClaudiaClient {
             while(iter.hasNext()){
                 String key = (String)iter.next();
                 org.json.JSONArray value = jsonAddress.getJSONArray(key);
-                for (int i = 0; i < value.length(); i++) {  // **line 2**
+                for (int i = 0; i < value.length(); i++) {
                     JSONObject childJSONObject = value.getJSONObject(i);
                     ips.add(childJSONObject.getString("addr"));
                 }
             }
-
         } catch (OpenStackException oes) {
             String errorMessage = "Error interacting getting ip from OpenStack ";
             log.error(errorMessage);
             throw new InfrastructureException(errorMessage);
         } catch (JSONException e) {
-            String errorMessage = "Error with Json ";
-            log.error(errorMessage);
+            log.error("Error with Json " + e.getMessage());
         }
         return ips;
     }
