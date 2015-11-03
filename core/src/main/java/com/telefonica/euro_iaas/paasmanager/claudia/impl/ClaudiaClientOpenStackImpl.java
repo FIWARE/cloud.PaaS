@@ -31,8 +31,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.sf.json.JSONArray;
-
 import org.apache.commons.codec.binary.Base64;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -593,22 +593,30 @@ public class ClaudiaClientOpenStackImpl implements ClaudiaClient {
     public List<String> getIP(ClaudiaData claudiaData, String tierName, int replica, VM vm, String region)
             throws InfrastructureException {
         List<String> ips = new ArrayList<String>();
+        String response = "";
 
         try {
             String token = claudiaData.getUser().getToken();
             String vdc = claudiaData.getVdc();
-            String response = openStackUtil.getServer(vm.getVmid(), region, token, vdc);
-            String[] ipsResponse = response.split("addr=");
+            response = openStackUtil.getServer(vm.getVmid(), region, token, vdc);
 
-            for (int i = 1; i < ipsResponse.length; i++) {
-                String ip = ipsResponse[i].split("\"")[1];
-                ips.add(ip);
+            JSONObject jsonNodeServers = new JSONObject(response).getJSONObject("server");
+            JSONObject jsonAddress = jsonNodeServers.getJSONObject("addresses");
+            java.util.Iterator iter = jsonAddress.keys();
+            while(iter.hasNext()){
+                String key = (String)iter.next();
+                org.json.JSONArray value = jsonAddress.getJSONArray(key);
+                for (int i = 0; i < value.length(); i++) {
+                    JSONObject childJSONObject = value.getJSONObject(i);
+                    ips.add(childJSONObject.getString("addr"));
+                }
             }
-
         } catch (OpenStackException oes) {
             String errorMessage = "Error interacting getting ip from OpenStack ";
             log.error(errorMessage);
             throw new InfrastructureException(errorMessage);
+        } catch (JSONException e) {
+            log.error("Error with Json " + e.getMessage());
         }
         return ips;
     }
