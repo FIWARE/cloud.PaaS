@@ -844,7 +844,7 @@ public class OpenStackUtilImpl implements OpenStackUtil {
 
         JSONArray jsonFloatingIps = new JSONObject(response).getJSONArray("floating_ips");
 
-        for (int i = 0; i < jsonFloatingIps.length(); i++) {  // **line 2**
+        for (int i = 0; i < jsonFloatingIps.length(); i++) {
             JSONObject childJSONObject = jsonFloatingIps.getJSONObject(i);
             if (childJSONObject.getString("instance_id").equals("null")) {
                 return true;
@@ -857,7 +857,7 @@ public class OpenStackUtilImpl implements OpenStackUtil {
     private String getFloatingIpId(String response, String ip) throws JSONException {
         JSONArray jsonFloatingIps = new JSONObject(response).getJSONArray("floating_ips");
 
-        for (int i = 0; i < jsonFloatingIps.length(); i++) {  // **line 2**
+        for (int i = 0; i < jsonFloatingIps.length(); i++) {
             JSONObject childJSONObject = jsonFloatingIps.getJSONObject(i);
             if (childJSONObject.getString("ip").equals(ip)) {
                 return childJSONObject.getString("id");
