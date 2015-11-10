@@ -1,3 +1,4 @@
+.. _Top:
 =============================
 FIWARE PaaS Manager | Pegasus
 =============================
@@ -57,7 +58,7 @@ of that.
     In addition, decoupling the management of environments from the management of applications,
     since there could be uses cases where the users of those functionalities could be different ones.
 
-contents_
+Top_
 
 Build and Install
 =================
@@ -283,7 +284,7 @@ Support
 =======
 
 Ask your thorough programmming questions using `stackoverflow`_ and your general questions on `FIWARE Q&A`_.
-In both cases please use the tag `fiware-pegassus`
+In both cases please use the tag `fiware-pegasus`
 
 
 License
@@ -303,7 +304,7 @@ License
 .. _FIWARE PaaS Manager - Apiary: https://jsapi.apiary.io/apis/fiwarepaas/reference.html
 .. _FIWARE SDC: https://github.com/telefonicaid/fiware-sdc
 .. _stackoverflow: http://stackoverflow.com/questions/ask
-.. `FIWARE Q&A`: https://ask.fiware.org
+.. _`FIWARE Q&A`: https://ask.fiware.org
 
 
 .. IMAGES
