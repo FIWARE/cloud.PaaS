@@ -57,6 +57,7 @@ of that.
     In addition, decoupling the management of environments from the management of applications,
     since there could be uses cases where the users of those functionalities could be different ones.
 
+contents_
 
 Build and Install
 =================
@@ -278,6 +279,13 @@ Advanced topics
 - `User and programmers guide <doc/user_guide.rst>`_
 
 
+Support
+=======
+
+Ask your thorough programmming questions using `stackoverflow`_ and your general questions on `FIWARE Q&A`_.
+In both cases please use the tag `fiware-pegassus`
+
+
 License
 =======
 
@@ -294,6 +302,8 @@ License
 .. _FIWARE PaaS Manager - Installation and Administration Guide: https://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/PaaS_Manager_-_Installation_and_Administration_Guide
 .. _FIWARE PaaS Manager - Apiary: https://jsapi.apiary.io/apis/fiwarepaas/reference.html
 .. _FIWARE SDC: https://github.com/telefonicaid/fiware-sdc
+.. _stackoverflow: http://stackoverflow.com/questions/ask
+.. `FIWARE Q&A`: https://ask.fiware.org
 
 
 .. IMAGES
@@ -303,4 +313,4 @@ License
 .. |Coverage Status| image:: https://coveralls.io/repos/telefonicaid/fiware-paas/badge.png?branch=develop
    :target: https://coveralls.io/r/telefonicaid/fiware-paas
 .. |StackOverflow| image:: http://b.repl.ca/v1/help-stackoverflow-orange.png
-   :target: https://travis-ci.org/telefonicaid/fiware-paas
+   :target: https://stackoverflow.com/questions/tagged/fiware-pegasus
