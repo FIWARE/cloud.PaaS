@@ -299,7 +299,7 @@ Top_
 Support
 =======
 
-Ask your thorough programmming questions using `stackoverflow`_ and your general questions on `FIWARE Q&A`_.
+Ask your thorough programming questions using `stackoverflow`_ and your general questions on `FIWARE Q&A`_.
 In both cases please use the tag `fiware-pegasus`
 
 Top_
