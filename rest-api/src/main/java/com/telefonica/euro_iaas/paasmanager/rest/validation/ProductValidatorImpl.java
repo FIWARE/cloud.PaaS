@@ -30,10 +30,14 @@ import com.telefonica.euro_iaas.paasmanager.model.Attribute;
 import com.telefonica.euro_iaas.paasmanager.model.dto.ProductReleaseDto;
 import com.telefonica.euro_iaas.paasmanager.model.dto.TierDto;
 import com.telefonica.euro_iaas.paasmanager.util.SystemPropertiesProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ProductValidatorImpl implements ProductValidator {
 
     private SystemPropertiesProvider systemPropertiesProvider;
+    private static Logger log = LoggerFactory.getLogger(ProductValidatorImpl.class);
+
 
     @Override
     public void validateAttributes(TierDto tierDto) throws InvalidEnvironmentInstanceException {
@@ -64,6 +68,7 @@ public class ProductValidatorImpl implements ProductValidator {
             error = false;
         }
         if (error) {
+            log.warn("check value: " + att.getKey()+ " " + att.getValue() + " " + att.getType() + " " + msg);
             throw new InvalidEnvironmentInstanceException(msg);
         }
     }
@@ -82,6 +87,7 @@ public class ProductValidatorImpl implements ProductValidator {
             }
         }
         if (error) {
+            log.warn("check type: " + att.getKey()+ " " + att.getValue() + " " + att.getType() + " " + msg);
             throw new InvalidEnvironmentInstanceException(msg);
         }
 
