@@ -194,12 +194,46 @@ public class OpenStackRegionImpl implements OpenStackRegion {
     }
 
     /**
+     * It obtains the endpoint for the Support server.
+     * @return the Endpoint.
+     * @throws OpenStackException
+     */
+    public String getSupportEndPoint() throws OpenStackException {
+        String msnError = "It is not possible to obtain the Support endpoint";
+        List<String> regions = getRegionsForService("support") ;
+        if (regions == null || regions.size() == 0) {
+            String msn = msnError + " : " + "No support endpoits in any region";
+            log.error(msn);
+            throw new OpenStackException(msn);
+        }
+        log.debug("Get url for Support server in region " + regions.get(0));
+        String url;
+        try {
+            url = getEndPointByNameAndRegionName("support", regions.get(0));
+        } catch (OpenStackException e) {
+            String msn = msnError + " : " + e.getMessage();
+            log.error(msn);
+            throw new OpenStackException(msn);
+
+        }
+        return url;
+    }
+
+    /**
      * Get a list with the name of all regions for token.
      */
     private List<String> getRegionNames() throws OpenStackException {
 
         OpenStackAccess openStackAccess = this.getTokenAdmin();
         return openStackAccess.getOpenStackKeystone().parseRegionNames(openStackAccess.getAccessJSON(), "nova");
+
+    }
+
+    private List<String> getRegionsForService(String service) throws OpenStackException {
+
+        OpenStackAccess openStackAccess = this.getTokenAdmin();
+        return openStackAccess.getOpenStackKeystone().parseRegionNames(openStackAccess.getAccessJSON(),
+            service);
 
     }
 

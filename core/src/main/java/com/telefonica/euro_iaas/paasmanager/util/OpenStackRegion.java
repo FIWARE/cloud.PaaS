@@ -69,6 +69,13 @@ public interface OpenStackRegion {
     String getSdcEndPoint(String regionName) throws OpenStackException;
 
     /**
+     * It Obtains the support server endpoint.
+     * @return the endpoint
+     * @throws OpenStackException
+     */
+    String getSupportEndPoint() throws OpenStackException;
+
+    /**
      * @return
      * @throws OpenStackException
      */

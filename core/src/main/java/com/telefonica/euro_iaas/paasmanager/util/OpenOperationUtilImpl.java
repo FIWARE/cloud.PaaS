@@ -74,6 +74,11 @@ public class OpenOperationUtilImpl implements OpenOperationUtil {
      */
     private static int http_code_deleted = 204;
 
+    /**
+     * HTTP code for no found..
+     */
+    private static int http_code_not_found = 404;
+
     private HttpClientConnectionManager httpConnectionManager;
 
     private OpenStackRegion openStackRegion;
@@ -379,6 +384,25 @@ public class OpenOperationUtilImpl implements OpenOperationUtil {
     }
 
     /**
+     * It obtains the request for Support Server.
+     * @param resource
+     * @param accept
+     * @return
+     * @throws OpenStackException
+     */
+    public HttpUriRequest createSupportGetRequest(String resource, String accept)
+        throws OpenStackException {
+        HttpUriRequest request;
+
+        String supportUrl = openStackRegion.getSupportEndPoint();
+        log.debug("supportUrl for region " + supportUrl);
+        request = new HttpGet(supportUrl + resource);
+
+        request.setHeader(ACCEPT, accept);
+        return request;
+    }
+
+    /**
      * Method to execute a request and get the response from NOVA.
      * 
      * @param request
@@ -453,6 +477,44 @@ public class OpenOperationUtilImpl implements OpenOperationUtil {
         }
 
         return newHeaders[responseLocation];
+    }
+
+    /**
+     * Method to execute a request and get the response from NOVA.
+     *
+     * @param request
+     *            the request to be executed
+     * @return HttpUriRequest the response from server
+     * @throws OpenStackException
+     */
+    public String executeSupportRequest(HttpUriRequest request) throws OpenStackException {
+        log.debug("executeSupportRequest " + request.getURI().toString());
+        CloseableHttpClient httpClient = getHttpClient();
+        HttpResponse response = null;
+        String result = null;
+
+        try {
+            response = httpClient.execute(request);
+            log.debug("Status : " + response.getStatusLine().getStatusCode());
+            if (response.getStatusLine().getStatusCode() == http_code_ok) {
+                InputStream is = response.getEntity().getContent();
+                result = convertStreamToString(is);
+                log.debug("Result " + result);
+
+                is.close();
+                response.getEntity().getContent().close();
+            }
+
+        } catch (Exception e) {
+            log.warn("Error in the request, message:" + e.getMessage());
+            if (response.getStatusLine().getStatusCode() == http_code_accepted) {
+                return response.getStatusLine().getReasonPhrase();
+            } else {
+                throw new OpenStackException(e.getMessage());
+            }
+
+        }
+        return result;
     }
 
     protected CloseableHttpClient getHttpClient() {

@@ -56,6 +56,7 @@ import com.telefonica.euro_iaas.paasmanager.util.FileUtils;
 import com.telefonica.euro_iaas.paasmanager.util.FileUtilsImpl;
 import com.telefonica.euro_iaas.paasmanager.util.OpenStackRegion;
 import com.telefonica.euro_iaas.paasmanager.util.OpenStackUtil;
+import com.telefonica.euro_iaas.paasmanager.util.SupportServerUtils;
 import com.telefonica.euro_iaas.paasmanager.util.SystemPropertiesProvider;
 import org.mockito.Mockito;
 
@@ -72,12 +73,18 @@ public class ClaudiaClientOpenStackImplTest {
     private NetworkInstanceManager networkInstanceManager;
     private ClaudiaClientOpenStackImpl claudiaClientOpenStack;
     private SystemPropertiesProvider systemPropertiesProvider;
+    private SupportServerUtils supportServerUtils;
 
     public static String HOSTNAME = "puppet-master.lab.fi-ware.org";
     String json = "{\n" +
-         "    \"Spain2\": \"key1\",\n" +
-         "    \"Node\": \"key2\"\n" +
+         "    \"sshkey\": \"key1\",\n" +
+         "    \"gpgkey\": \"key2\"\n" +
          "}";
+
+    String novalidJson = "{\n" +
+        "    \"sshkey\": \"key1\",\n" +
+        "    \"gpg2key\": \"key2\"\n" +
+        "}";
 
     @Before
     public void setUp() throws Exception {
@@ -164,6 +171,8 @@ public class ClaudiaClientOpenStackImplTest {
         claudiaClientOpenStack.setFileUtils(fileUtils);
         claudiaClientOpenStack.setOpenStackRegion(openStackRegion);
         claudiaClientOpenStack.setSystemPropertiesProvider(systemPropertiesProvider);
+        supportServerUtils = mock (SupportServerUtils.class);
+        claudiaClientOpenStack.setSupportServerUtils(supportServerUtils);
 
         when(openStackUtil.createServer(any(String.class), anyString(), anyString(), anyString())).thenReturn(
                 "response");
@@ -416,15 +425,25 @@ public class ClaudiaClientOpenStackImplTest {
     }
 
     @Test
-    public void testGetSupportKey() throws Exception {
+    public void testGetSupportDefaultKey() throws Exception {
         when(fileUtils.readFile(anyString())).thenReturn(json);
-        String key= claudiaClientOpenStack.getSupportKey("Spain2");
-        assertEquals(key, "key1");
+        String key = claudiaClientOpenStack.getSupportKey("Spain2");
+        String keyvalid = "fiware-support:\n   sshkey: key1\n   gpgkey: |\n      key2\n";
+        assertEquals(key, keyvalid);
+    }
+
+    @Test
+    public void testGetSupportKey() throws Exception {
+        when(supportServerUtils.getSshKey(anyString())).thenReturn("key");
+        when(supportServerUtils.getGpgKey(anyString())).thenReturn("key");
+        String key = claudiaClientOpenStack.getSupportKey("Spain2");
+        String keyvalid = "fiware-support:\n   sshkey: key\n   gpgkey: |\n      key\n";
+        assertEquals(key, keyvalid);
     }
 
     @Test
     public void testGetSupportKeyNoValid() throws Exception {
-        when(fileUtils.readFile(anyString())).thenReturn(json);
+        when(fileUtils.readFile(anyString())).thenReturn(novalidJson);
         String key= claudiaClientOpenStack.getSupportKey("novalid");
         assertEquals(key, "");
     }

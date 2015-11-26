@@ -148,6 +148,19 @@ public interface OpenOperationUtil {
      */
     String executeNovaRequest(HttpUriRequest request) throws OpenStackException;
 
+
+    String executeSupportRequest(HttpUriRequest request) throws OpenStackException;
+
+    /**
+     * It creates the Get request for the Support Server.
+     * @param resource: the resource
+     * @param accept: the acept.
+     * @return
+     * @throws OpenStackException
+     */
+    HttpUriRequest createSupportGetRequest(String resource, String accept)
+        throws OpenStackException;
+
     /**
      * @param resourceNetwoksFederated
      * @param payload
