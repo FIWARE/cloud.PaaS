@@ -48,7 +48,7 @@ public class SupportUtilImplTest {
     }
 
     /**
-     * It tests the 
+     * It tests the
      * @throws OpenStackException
      */
     @Test

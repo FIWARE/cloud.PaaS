@@ -425,14 +425,6 @@ public class ClaudiaClientOpenStackImplTest {
     }
 
     @Test
-    public void testGetSupportDefaultKey() throws Exception {
-        when(fileUtils.readFile(anyString())).thenReturn(json);
-        String key = claudiaClientOpenStack.getSupportKey("Spain2");
-        String keyvalid = "fiware-support:\n   sshkey: key1\n   gpgkey: |\n      key2\n";
-        assertEquals(key, keyvalid);
-    }
-
-    @Test
     public void testGetSupportKey() throws Exception {
         when(supportServerUtils.getSshKey(anyString())).thenReturn("key");
         when(supportServerUtils.getGpgKey(anyString())).thenReturn("key");

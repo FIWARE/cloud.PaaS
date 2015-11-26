@@ -246,13 +246,8 @@ public class ClaudiaClientOpenStackImpl implements ClaudiaClient {
         String gpgKey = supportServerUtils.getGpgKey(region);
 
         if (sshKey == null || gpgKey == null) {
-            HashMap supportKey = getDefaultKey();
-            if (supportKey == null) {
-                log.warn("Error to obtain the support key");
-                return "";
-            }
-            sshKey = (String) supportKey.get("sshkey");
-            gpgKey = (String) supportKey.get("gpgkey");
+           log.warn("Error to obtain the support key");
+           return "";
         }
         gpgKey = processGpgKey(gpgKey);
 
@@ -268,20 +263,6 @@ public class ClaudiaClientOpenStackImpl implements ClaudiaClient {
         }
         scanner.close();
         return processedKey;
-    }
-
-    private HashMap getDefaultKey() {
-        HashMap keys = new HashMap();
-        try {
-
-            String keyHash = fileUtils.readFile(systemPropertiesProvider.getProperty(SystemPropertiesProvider.SUPPORT_KEY));
-            JSONObject jsonKeys = new JSONObject(keyHash);
-            keys.put("sshkey", (String) jsonKeys.get("sshkey"));
-            keys.put("gpgkey", (String) jsonKeys.get("gpgkey"));
-        } catch (Exception e) {
-            keys = null;
-        }
-        return keys;
     }
 
     /**
