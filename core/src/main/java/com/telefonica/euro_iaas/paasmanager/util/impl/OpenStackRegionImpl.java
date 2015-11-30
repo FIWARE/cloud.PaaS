@@ -199,17 +199,17 @@ public class OpenStackRegionImpl implements OpenStackRegion {
      * @throws OpenStackException
      */
     public String getSupportEndPoint() throws OpenStackException {
-        String msnError = "It is not possible to obtain the Support endpoint";
-        List<String> regions = getRegionsForService("support") ;
+        String msnError = "It is not possible to obtain the Security endpoint";
+        List<String> regions = getRegionsForService("security") ;
         if (regions == null || regions.size() == 0) {
-            String msn = msnError + " : " + "No support endpoits in any region";
+            String msn = msnError + " : " + "No security endpoint in any region";
             log.error(msn);
             throw new OpenStackException(msn);
         }
-        log.debug("Get url for Support server in region " + regions.get(0));
+        log.debug("Get url for security server in region " + regions.get(0));
         String url;
         try {
-            url = getEndPointByNameAndRegionName("support", regions.get(0));
+            url = getEndPointByNameAndRegionName("security", regions.get(0));
         } catch (OpenStackException e) {
             String msn = msnError + " : " + e.getMessage();
             log.error(msn);

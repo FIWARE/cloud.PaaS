@@ -30,11 +30,6 @@ package com.telefonica.euro_iaas.paasmanager.util;
 public interface SupportServerUtils {
 
     /**
-     * name of the json type.
-     */
-    String APPLICATION_JSON = "application/json";
-
-    /**
      * It obtains the sshkey from the Support Server.
      * @param regionName
      * @return

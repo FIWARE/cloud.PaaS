@@ -51,7 +51,7 @@ public class SupportServerUtilsImpl implements SupportServerUtils {
         String sshKey = null;
         try {
             HttpUriRequest request = openOperationUtil.createSupportGetRequest("/v1/support/"+ regionName +
-                "/" + key, APPLICATION_JSON);
+                "/" + key, "text/plain");
             sshKey = openOperationUtil.executeSupportRequest(request);
         } catch (OpenStackException e) {
             log.debug("Error to obtain the ssh " + e.getMessage());

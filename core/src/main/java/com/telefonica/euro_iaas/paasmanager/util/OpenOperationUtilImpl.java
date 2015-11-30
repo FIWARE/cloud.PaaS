@@ -487,7 +487,7 @@ public class OpenOperationUtilImpl implements OpenOperationUtil {
      * @return HttpUriRequest the response from server
      * @throws OpenStackException
      */
-    public String executeSupportRequest(HttpUriRequest request) throws OpenStackException {
+    public String executeSupportRequest(HttpUriRequest request) {
         log.debug("executeSupportRequest " + request.getURI().toString());
         CloseableHttpClient httpClient = getHttpClient();
         HttpResponse response = null;
@@ -506,13 +506,8 @@ public class OpenOperationUtilImpl implements OpenOperationUtil {
             }
 
         } catch (Exception e) {
-            log.warn("Error in the request, message:" + e.getMessage());
-            if (response.getStatusLine().getStatusCode() == http_code_accepted) {
-                return response.getStatusLine().getReasonPhrase();
-            } else {
-                throw new OpenStackException(e.getMessage());
-            }
-
+            log.warn("Error in the request, message:" + response.getStatusLine().getStatusCode() +
+                " : " + e.getMessage());
         }
         return result;
     }

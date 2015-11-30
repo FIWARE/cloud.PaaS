@@ -83,7 +83,6 @@ public class SupportUtilImplTest {
         when(openOperationUtil.executeSupportRequest(any(HttpUriRequest.class))).thenReturn(null);
         String gpg = supportServerUtils.getGpgKey("region");
         assertNull(gpg);
-
     }
 
 }
