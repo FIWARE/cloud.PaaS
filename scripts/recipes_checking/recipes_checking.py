@@ -380,6 +380,18 @@ def get_product_releases_images (allproductreleases, sdc_aware_images):
                                                                 DICT_IMAGE_PRODUCTRELEASE_PRODUCTVERSION: product_version
                                                             }
                                     images_productReleases.append(image_productRelease)
+        else: #products without metadatas are included for all sdc_aware_images in the Catalog
+            for sdc_aware_image in sdc_aware_images:
+                 image_id = sdc_aware_image[DICT_IMAGE_ID]
+                 image_name = sdc_aware_image[DICT_IMAGE_NAME]
+                 image_productRelease = { DICT_IMAGE_ID : image_id,
+                     DICT_IMAGE_NAME : image_name,
+                     DICT_IMAGE_PRODUCTRELEASE_PRODUCTRELEASE : product_release,
+                     DICT_IMAGE_PRODUCTRELEASE_PRODUCTNAME: product_name,
+                     DICT_IMAGE_PRODUCTRELEASE_PRODUCTVERSION: product_version
+                 }
+                 images_productReleases.append(image_productRelease)
+
     return images_productReleases
 
 def find_all_images_sdc_aware(url_base, region, token, tenant_id):

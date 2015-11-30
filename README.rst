@@ -1,3 +1,4 @@
+.. _Top:
 =============================
 FIWARE PaaS Manager | Pegasus
 =============================
@@ -25,6 +26,9 @@ public wiki:
 - `FIWARE PaaS Manager - Installation and Administration Guide`_
 - `FIWARE PaaS Manager - User and Programmers Guide`_
 
+Top_
+
+
 GEi overall description
 =======================
 The PaaS Manager GE provides a
@@ -33,6 +37,8 @@ Therefore, it orchestrates the provisioning of the required virtual resources at
 of the whole software stack of the application by the SDC GE ( (see `FIWARE SDC`_), taking into account the underlying virtual infrastructure.
 It provides a flexible mechanism to perform the deployment, enabling multiple deployment architectures:
 everything in a single VM or server, several VMs or servers, or elastic architectures based on load balancers and different software tiers.
+
+Top_
 
 
 Why to get it
@@ -56,6 +62,8 @@ of that.
     and the management of the inventory (instances of what has been already deployed).
     In addition, decoupling the management of environments from the management of applications,
     since there could be uses cases where the users of those functionalities could be different ones.
+
+Top_
 
 
 Build and Install
@@ -131,6 +139,8 @@ The script will ask you the following data to configure the configuration proper
 - the admin keystone user for the authentication process
 - the admin password for the authentication process
 
+Top_
+
 
 Running
 =======
@@ -138,7 +148,7 @@ Running
 As explained in the `GEi overall description`_ section, there are a variety of
 elements involved in the PaaS Manager architecture, apart from those components
 provided by this PaaS Manager GE as the Software Deployment and Configuration and
-Openstack services. Please
+OpenStack services. Please
 refer to their respective documentation for instructions to run them.
 
 
@@ -194,6 +204,8 @@ In order to check the status of the service, use the following command
 
     $ service fiware-paas status
 
+Top_
+
 
 API Overview
 ============
@@ -212,6 +224,8 @@ API Reference Documentation
 ---------------------------
 
 - `FIWARE PaaS Manager v1 (Apiary) <https://jsapi.apiary.io/apis/fiwarepaas/reference.html>`_
+
+Top_
 
 
 Testing
@@ -265,6 +279,8 @@ the option -k should be included in the case you have not changed the security c
 If you obtain a 401 as a response, please check the admin credentials and the connectivity from the PaaS Manager machine
 to the keystone (openstack-tcloud.keystone.url in configuration_properties table)
 
+Top_
+
 
 Advanced topics
 ===============
@@ -277,12 +293,24 @@ Advanced topics
 
 - `User and programmers guide <doc/user_guide.rst>`_
 
+Top_
+
+
+Support
+=======
+
+Ask your thorough programming questions using `stackoverflow`_ and your general questions on `FIWARE Q&A`_.
+In both cases please use the tag `fiware-pegasus`
+
+Top_
+
 
 License
 =======
 
 \(c) 2013-2015 Telefónica I+D, Apache License 2.0
 
+Top_
 
 
 .. REFERENCES
@@ -294,6 +322,8 @@ License
 .. _FIWARE PaaS Manager - Installation and Administration Guide: https://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/PaaS_Manager_-_Installation_and_Administration_Guide
 .. _FIWARE PaaS Manager - Apiary: https://jsapi.apiary.io/apis/fiwarepaas/reference.html
 .. _FIWARE SDC: https://github.com/telefonicaid/fiware-sdc
+.. _stackoverflow: http://stackoverflow.com/questions/ask
+.. _`FIWARE Q&A`: https://ask.fiware.org
 
 
 .. IMAGES
@@ -303,4 +333,4 @@ License
 .. |Coverage Status| image:: https://coveralls.io/repos/telefonicaid/fiware-paas/badge.png?branch=develop
    :target: https://coveralls.io/r/telefonicaid/fiware-paas
 .. |StackOverflow| image:: http://b.repl.ca/v1/help-stackoverflow-orange.png
-   :target: https://travis-ci.org/telefonicaid/fiware-paas
+   :target: https://stackoverflow.com/questions/tagged/fiware-pegasus
