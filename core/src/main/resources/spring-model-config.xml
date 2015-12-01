@@ -194,7 +194,7 @@ http://www.springframework.org/schema/beans/spring-beans.xsd">
         <property name="openStackRegion" ref="openStackRegion"/>
         <property name="fileUtils" ref="fileUtils"/>
         <property name="systemPropertiesProvider" ref="systemPropertiesProvider"/>
-
+        <property name="supportServerUtils" ref="supportServerUtils"/>
     </bean>
 
     <bean id="productInstallator" lazy-init="true"
@@ -240,6 +240,13 @@ http://www.springframework.org/schema/beans/spring-beans.xsd">
         <property name="networkManager" ref="networkManager"/>
         <property name="tierManager" ref="tierManager"/>
     </bean>
+
+    <bean id="supportServerUtils" lazy-init="true"
+          class="com.telefonica.euro_iaas.paasmanager.util.SupportServerUtilsImpl">
+        <property name="openOperationUtil" ref="openOperationUtil"/>
+    </bean>
+
+
 
 
 </beans>

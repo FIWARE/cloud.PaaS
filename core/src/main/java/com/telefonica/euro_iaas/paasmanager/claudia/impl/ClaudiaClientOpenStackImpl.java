@@ -25,6 +25,9 @@
 package com.telefonica.euro_iaas.paasmanager.claudia.impl;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Scanner;
+import java.util.HashMap;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -56,6 +59,7 @@ import com.telefonica.euro_iaas.paasmanager.model.SubNetwork;
 import com.telefonica.euro_iaas.paasmanager.model.TierInstance;
 import com.telefonica.euro_iaas.paasmanager.model.dto.VM;
 import com.telefonica.euro_iaas.paasmanager.util.FileUtils;
+import com.telefonica.euro_iaas.paasmanager.util.SupportServerUtils;
 import com.telefonica.euro_iaas.paasmanager.util.OpenStackRegion;
 import com.telefonica.euro_iaas.paasmanager.util.OpenStackUtil;
 import com.telefonica.euro_iaas.paasmanager.util.SystemPropertiesProvider;
@@ -78,6 +82,7 @@ public class ClaudiaClientOpenStackImpl implements ClaudiaClient {
 
     private OpenStackUtil openStackUtil = null;
     private OpenStackRegion openStackRegion = null;
+    private SupportServerUtils supportServerUtils = null;
     private FileUtils fileUtils;
     private NetworkInstanceManager networkInstanceManager = null;
     private TierInstanceManager tierInstanceManager = null;
@@ -236,16 +241,28 @@ public class ClaudiaClientOpenStackImpl implements ClaudiaClient {
      * @return
      */
     public String getSupportKey (String region)  {
-        String key = null;
-        try {
 
-            String keyHash = fileUtils.readFile(systemPropertiesProvider.getProperty(SystemPropertiesProvider.SUPPORT_KEY));
-            JSONObject jsonKeys = new JSONObject(keyHash);
-            key = (String)jsonKeys.get(region);
-        } catch (Exception e) {
-            key ="";
+        String sshKey = supportServerUtils.getSshKey(region);
+        String gpgKey = supportServerUtils.getGpgKey(region);
+
+        if (sshKey == null || gpgKey == null) {
+           log.warn("Error to obtain the support key");
+           return "";
         }
-        return key;
+        gpgKey = processGpgKey(gpgKey);
+
+        String support = "fiware-support:\n   sshkey: {sshkey}\n   gpgkey: |\n{gpgkey}";
+        return support.replace("{sshkey}", sshKey).replace("{gpgkey}", gpgKey);
+    }
+
+    private String processGpgKey (String gpgKey) {
+        String processedKey = "";
+        Scanner scanner = new Scanner(gpgKey);
+        while (scanner.hasNextLine()) {
+            processedKey = processedKey + "      " + scanner.nextLine() + "\n";
+        }
+        scanner.close();
+        return processedKey;
     }
 
     /**
@@ -719,6 +736,10 @@ public class ClaudiaClientOpenStackImpl implements ClaudiaClient {
 
     public void setTierInstanceManager(TierInstanceManager tierInstanceManager) {
         this.tierInstanceManager = tierInstanceManager;
+    }
+
+    public void setSupportServerUtils(SupportServerUtils supportServerUtils) {
+        this.supportServerUtils = supportServerUtils;
     }
 
     public void setOpenStackRegion(OpenStackRegion openStackRegion) {
