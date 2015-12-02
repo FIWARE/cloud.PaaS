@@ -39,12 +39,6 @@
 chefkey: |
 {validation_key}
 
-fiware-support:
-   sshkey: {support_key}
-
-   gpgkey: |
-      {gpg_key}
-
 # Install chef and puppet and DEM monitoring
 # Key from http://apt.opscode.com/packages@opscode.com.gpg.key
 runcmd:
