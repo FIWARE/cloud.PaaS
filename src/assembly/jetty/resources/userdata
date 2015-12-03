@@ -34,14 +34,10 @@
 
 {if_up}
 
+{support_key}
+
 chefkey: |
 {validation_key}
-
-fiware-support:
-   sshkey: {support_key}
-
-   gpgkey: |
-      {gpg_key}
 
 # Install chef and puppet and DEM monitoring
 # Key from http://apt.opscode.com/packages@opscode.com.gpg.key
@@ -52,4 +48,3 @@ runcmd:
 # Capture all subprocess output into a logfile
 # Useful for troubleshooting cloud-init issues
 output: {all: '| tee -a /var/log/cloud-init-output.log'}
-
