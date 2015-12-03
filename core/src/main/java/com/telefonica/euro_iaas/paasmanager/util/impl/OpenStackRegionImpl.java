@@ -200,7 +200,7 @@ public class OpenStackRegionImpl implements OpenStackRegion {
      */
     public String getSupportEndPoint() throws OpenStackException {
         String msnError = "It is not possible to obtain the Security endpoint";
-        List<String> regions = getRegionsForService("security") ;
+        List<String> regions = getRegionsForService("aiakos") ;
         if (regions == null || regions.size() == 0) {
             String msn = msnError + " : " + "No security endpoint in any region";
             log.error(msn);
