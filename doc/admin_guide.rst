@@ -12,7 +12,9 @@ ways of installing PaaS Manager: Installation from rpm or installation from sour
 Requirements
 ============
 In order to execute the PaaS Manager, it is needed to have previously installed the following software:
-- PostgreSQL. 
+
+- PostgreSQL.
+
 You can find a small guide to install PostgresSQL in the next section. If you find some problems installing PostgreSQL,
 please refer to the postgres official site.
 
@@ -49,6 +51,7 @@ Assign the corresponding permissions to the script centos.sh and execute under r
      ./centos.sh
      
 The script will ask you the following data:
+
 - The database name for the fiware-paas
 - The postgres password of the database
 - the keytone url to connect fiware-paas for the uthentication process
@@ -269,7 +272,7 @@ To create the tables in the databases, just go to
 
 Update the following columns in the table configuration_properties:
 
-..code::
+.. code::
 
 	 openstack-tcloud.keystone.url=<keystone.url>
 	 paas_manager_url=https://{ip}:8443/paasmanager/rest
@@ -451,19 +454,19 @@ Due to the PaaS Manager basically is running over the Tomcat, the list of proces
 
 It should show something similar to the following:
 
-  .. code::
+.. code::
 
-    postgres  1327     1  0 58141  9256   0 08:26 ?        00:00:00 /usr/bin/postgres -D /var/lib/pgsql/data -p 5432
-	postgres  1328  1327  0 48078  1696   0 08:26 ?        00:00:00 postgres: logger process
-	postgres  1330  1327  0 58166  3980   0 08:26 ?        00:00:00 postgres: checkpointer process
-	postgres  1331  1327  0 58141  2068   0 08:26 ?        00:00:00 postgres: writer process
-	postgres  1332  1327  0 58141  1808   0 08:26 ?        00:00:00 postgres: wal writer process
-	postgres  1333  1327  0 58349  3172   0 08:26 ?        00:00:00 postgres: autovacuum launcher process
-	postgres  1334  1327  0 48110  2052   0 08:26 ?        00:00:00 postgres: stats collector process
-	root     14054     1  4 598402 811464 0 09:35 ?        00:00:22 java -Xmx1024m -Xms1024m -Djetty.state=/opt/fiware-paas/jetty.state -Djetty.home=/opt/fiware-paas -Djetty.base=/opt/fiware-paas -Djava.io.tmpdir=/tmp -jar /opt/fiware-paas/start.jar jetty-logging.xml jetty-started.xml
-	postgres 14114  1327  0 58414  3956   0 09:36 ?        00:00:00 postgres: postgres paasmanager 127.0.0.1(48012) idle
-	postgres 14117  1327  0 58449  3772   0 09:36 ?        00:00:00 postgres: postgres paasmanager 127.0.0.1(48013) idle
-	postgres 14118  1327  0 58449  3776   0 09:36 ?        00:00:00 postgres: postgres paasmanager 127.0.0.1(48014) idle
+   postgres  1327     1  0 58141  9256   0 08:26 ?        00:00:00 /usr/bin/postgres -D /var/lib/pgsql/data -p 5432
+   postgres  1328  1327  0 48078  1696   0 08:26 ?        00:00:00 postgres: logger process
+   postgres  1330  1327  0 58166  3980   0 08:26 ?        00:00:00 postgres: checkpointer process
+   postgres  1331  1327  0 58141  2068   0 08:26 ?        00:00:00 postgres: writer process
+   postgres  1332  1327  0 58141  1808   0 08:26 ?        00:00:00 postgres: wal writer process
+   postgres  1333  1327  0 58349  3172   0 08:26 ?        00:00:00 postgres: autovacuum launcher process
+   postgres  1334  1327  0 48110  2052   0 08:26 ?        00:00:00 postgres: stats collector process
+   root     14054     1  4 598402 811464 0 09:35 ?        00:00:22 java -Xmx1024m -Xms1024m -Djetty.state=/opt/fiware-paas/jetty.state -Djetty.home=/opt/fiware-paas -Djetty.base=/opt/fiware-paas -Djava.io.tmpdir=/tmp -jar /opt/fiware-paas/start.jar jetty-logging.xml jetty-started.xml
+   postgres 14114  1327  0 58414  3956   0 09:36 ?        00:00:00 postgres: postgres paasmanager 127.0.0.1(48012) idle
+   postgres 14117  1327  0 58449  3772   0 09:36 ?        00:00:00 postgres: postgres paasmanager 127.0.0.1(48013) idle
+   postgres 14118  1327  0 58449  3776   0 09:36 ?        00:00:00 postgres: postgres paasmanager 127.0.0.1(48014) idle
 
 
 Network interfaces Up & Open
@@ -479,6 +482,8 @@ The expected results for the postgres process must be something like this output
 
 .. code::
 
+    Active Internet connections
+    Proto Recv-Q Send-Q  Local Address          Foreign Address         State       PID/Program name
 	tcp6       0      0 [::]:pcsync-https       [::]:*                  LISTEN      14054/java
 	tcp6       0      0 localhost:48017         localhost:postgres      ESTABLISHED 14054/java
 	tcp6       0      0 localhost:48015         localhost:postgres      ESTABLISHED 14054/java
@@ -500,16 +505,22 @@ The expected results for the postgres process must be something like this output
 	tcp6       0      0 localhost:48026         localhost:postgres      ESTABLISHED 14054/java
 	tcp6       0      0 localhost:48030         localhost:postgres      ESTABLISHED 14054/java
 	tcp6       0      0 localhost:48025         localhost:postgres      ESTABLISHED 14054/java
-	unix  2      [ ]         STREAM     CONNECTED     71542    14054/java
+    Active UNIX domain sockets (servers and established)
+    Proto RefCnt Flags       Type       State         I-Node   Path
+    unix  2      [ ]         STREAM     CONNECTED     71542    14054/java
 	unix  3      [ ]         STREAM     CONNECTED     71480    14054/java
 
 and the following output for the jetty process:
 
 .. code::
 
+    Active Internet connections
+    Proto Recv-Q Send-Q  Local Address          Foreign Address         State       PID/Program name
 	tcp        0      0 localhost:postgres      0.0.0.0:*               LISTEN      1327/postgres
 	tcp6       0      0 localhost:postgres      [::]:*                  LISTEN      1327/postgres
 	udp6       0      0 localhost:53966         localhost:53966         ESTABLISHED 1327/postgres
+    Active UNIX domain sockets (servers and established)
+    Proto RefCnt Flags       Type       State         I-Node   Path
 	unix  2      [ ACC ]     STREAM     LISTENING     19508    1327/postgres        /tmp/.s.PGSQL.5432
 	unix  2      [ ACC ]     STREAM     LISTENING     19506    1327/postgres        /var/run/postgresql/.s.PGSQL.5432
 
@@ -527,9 +538,8 @@ For obtaining the tables in the database, just use
 
     paasmanager=# \dt
 
-     Schema|                Name                     | Type  |  Owner
-
-    ---------+---------------------------------------+-------+----------
+     Schema |              Name                     | Type  |  Owner
+    --------+---------------------------------------+-------+----------
     public  | applicationinstance                   | tabla | postgres
     public  | applicationrelease                    | tabla | postgres
     public  | applicationrelease_applicationrelease | tabla | postgres
@@ -562,6 +572,8 @@ CPU and I/O. For this purpose we have differentiated between:
 
 The results were obtained with a top command execution over the following machine configuration:
 
+.. code::
+
      |       Name          | Type                |
      ----------------------+----------------------
      |   Type Machine      |   Virtual Machine   |
@@ -574,10 +586,12 @@ The results were obtained with a top command execution over the following machin
 
 The results of requirements both RAM, CPU and I/O to HDD is shown in the following table:
 
+.. code::
+
      | Resource Consumption   | Low UsageType     | High Usage       |
      -------------------------+---------------------------------------
      |   RAM                  | 1GB ~ 63%         | 3GB ~ 78%        |
      |   CPU 	              | 0,8% of a 2400MHz | 90% of a 2400MHZ |
-     |   I/O HDD 	          |   6GB            | 6GB
+     |   I/O HDD 	          |   6GB             | 6GB              |
 
 
