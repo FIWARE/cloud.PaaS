@@ -482,47 +482,47 @@ The expected results for the postgres process must be something like this output
 
 .. code::
 
-    Active Internet connections
-    Proto Recv-Q Send-Q  Local Address          Foreign Address         State       PID/Program name
-    tcp6       0      0 [::]:pcsync-https       [::]:*                  LISTEN      14054/java
-    tcp6       0      0 localhost:48017         localhost:postgres      ESTABLISHED 14054/java
-    tcp6       0      0 localhost:48015         localhost:postgres      ESTABLISHED 14054/java
-    tcp6       0      0 localhost:48027         localhost:postgres      ESTABLISHED 14054/java
-    tcp6       0      0 localhost:48016         localhost:postgres      ESTABLISHED 14054/java
-    tcp6       0      0 localhost:48022         localhost:postgres      ESTABLISHED 14054/java
-    tcp6       0      0 localhost:48023         localhost:postgres      ESTABLISHED 14054/java
-    tcp6       0      0 localhost:48029         localhost:postgres      ESTABLISHED 14054/java
-    tcp6       0      0 localhost:48013         localhost:postgres      ESTABLISHED 14054/java
-    tcp6       0      0 localhost:48012         localhost:postgres      ESTABLISHED 14054/java
-    tcp6       0      0 localhost:48019         localhost:postgres      ESTABLISHED 14054/java
-    tcp6       0      0 localhost:48028         localhost:postgres      ESTABLISHED 14054/java
-    tcp6       0      0 localhost:48014         localhost:postgres      ESTABLISHED 14054/java
-    tcp6       0      0 localhost:48020         localhost:postgres      ESTABLISHED 14054/java
-    tcp6       0      0 localhost:48024         localhost:postgres      ESTABLISHED 14054/java
-    tcp6       0      0 localhost:48031         localhost:postgres      ESTABLISHED 14054/java
-    tcp6       0      0 localhost:48021         localhost:postgres      ESTABLISHED 14054/java
-    tcp6       0      0 localhost:48018         localhost:postgres      ESTABLISHED 14054/java
-    tcp6       0      0 localhost:48026         localhost:postgres      ESTABLISHED 14054/java
-    tcp6       0      0 localhost:48030         localhost:postgres      ESTABLISHED 14054/java
-    tcp6       0      0 localhost:48025         localhost:postgres      ESTABLISHED 14054/java
-    Active UNIX domain sockets (servers and established)
-    Proto RefCnt Flags       Type       State         I-Node   Path
-    unix  2      [ ]         STREAM     CONNECTED     71542    14054/java
-    unix  3      [ ]         STREAM     CONNECTED     71480    14054/java
+  Active Internet connections
+  Proto Recv-Q Send-Q  Local Address          Foreign Address         State       PID/Program name
+  tcp6       0      0 [::]:pcsync-https       [::]:*                  LISTEN      14054/java
+  tcp6       0      0 localhost:48017         localhost:postgres      ESTABLISHED 14054/java
+  tcp6       0      0 localhost:48015         localhost:postgres      ESTABLISHED 14054/java
+  tcp6       0      0 localhost:48027         localhost:postgres      ESTABLISHED 14054/java
+  tcp6       0      0 localhost:48016         localhost:postgres      ESTABLISHED 14054/java
+  tcp6       0      0 localhost:48022         localhost:postgres      ESTABLISHED 14054/java
+  tcp6       0      0 localhost:48023         localhost:postgres      ESTABLISHED 14054/java
+  tcp6       0      0 localhost:48029         localhost:postgres      ESTABLISHED 14054/java
+  tcp6       0      0 localhost:48013         localhost:postgres      ESTABLISHED 14054/java
+  tcp6       0      0 localhost:48012         localhost:postgres      ESTABLISHED 14054/java
+  tcp6       0      0 localhost:48019         localhost:postgres      ESTABLISHED 14054/java
+  tcp6       0      0 localhost:48028         localhost:postgres      ESTABLISHED 14054/java
+  tcp6       0      0 localhost:48014         localhost:postgres      ESTABLISHED 14054/java
+  tcp6       0      0 localhost:48020         localhost:postgres      ESTABLISHED 14054/java
+  tcp6       0      0 localhost:48024         localhost:postgres      ESTABLISHED 14054/java
+  tcp6       0      0 localhost:48031         localhost:postgres      ESTABLISHED 14054/java
+  tcp6       0      0 localhost:48021         localhost:postgres      ESTABLISHED 14054/java
+  tcp6       0      0 localhost:48018         localhost:postgres      ESTABLISHED 14054/java
+  tcp6       0      0 localhost:48026         localhost:postgres      ESTABLISHED 14054/java
+  tcp6       0      0 localhost:48030         localhost:postgres      ESTABLISHED 14054/java
+  tcp6       0      0 localhost:48025         localhost:postgres      ESTABLISHED 14054/java
+  Active UNIX domain sockets (servers and established)
+  Proto RefCnt Flags       Type       State         I-Node   Path
+  unix  2      [ ]         STREAM     CONNECTED     71542    14054/java
+  unix  3      [ ]         STREAM     CONNECTED     71480    14054/java
 
 and the following output for the jetty process:
 
 .. code::
 
-    Active Internet connections
-    Proto Recv-Q Send-Q  Local Address          Foreign Address         State       PID/Program name
-    tcp        0      0 localhost:postgres      0.0.0.0:*               LISTEN      1327/postgres
-    tcp6       0      0 localhost:postgres      [::]:*                  LISTEN      1327/postgres
-    udp6       0      0 localhost:53966         localhost:53966         ESTABLISHED 1327/postgres
-    Active UNIX domain sockets (servers and established)
-    Proto RefCnt Flags       Type       State         I-Node   Path
-    unix  2      [ ACC ]     STREAM     LISTENING     19508    1327/postgres        /tmp/.s.PGSQL.5432
-    unix  2      [ ACC ]     STREAM     LISTENING     19506    1327/postgres        /var/run/postgresql/.s.PGSQL.5432
+  Active Internet connections
+  Proto Recv-Q Send-Q  Local Address          Foreign Address         State       PID/Program name
+  tcp        0      0 localhost:postgres      0.0.0.0:*               LISTEN      1327/postgres
+  tcp6       0      0 localhost:postgres      [::]:*                  LISTEN      1327/postgres
+  udp6       0      0 localhost:53966         localhost:53966         ESTABLISHED 1327/postgres
+  Active UNIX domain sockets (servers and established)
+  Proto RefCnt Flags       Type       State         I-Node   Path
+  unix  2      [ ACC ]     STREAM     LISTENING     19508    1327/postgres        /tmp/.s.PGSQL.5432
+  unix  2      [ ACC ]     STREAM     LISTENING     19506    1327/postgres        /var/run/postgresql/.s.PGSQL.5432
 
 Databases
 ---------
