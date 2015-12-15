@@ -286,7 +286,7 @@ The updates of the columns are done in the following way
 
 .. code::
 
- 	su - potgres
+    su - potgres
     postgres$ psql -U postgres -d paasmanager
     Password for user postgres: <postgres-password-previously-chosen>
     postgres=# UPDATE configuration_properties SET value='/opt/fiware-paas/resources/userdata' where key='user_data_path'; 
@@ -508,7 +508,7 @@ The expected results for the postgres process must be something like this output
     Active UNIX domain sockets (servers and established)
     Proto RefCnt Flags       Type       State         I-Node   Path
     unix  2      [ ]         STREAM     CONNECTED     71542    14054/java
-	unix  3      [ ]         STREAM     CONNECTED     71480    14054/java
+    unix  3      [ ]         STREAM     CONNECTED     71480    14054/java
 
 and the following output for the jetty process:
 
@@ -574,7 +574,7 @@ The results were obtained with a top command execution over the following machin
 
 .. code::
 
-     |       Name          | Type                |
+     |       Name          |   Type              |
      ----------------------+----------------------
      |   Type Machine      |   Virtual Machine   |
      |   CPU 	           |   1 core @ 2,4Ghz   |
@@ -592,6 +592,6 @@ The results of requirements both RAM, CPU and I/O to HDD is shown in the followi
      -------------------------+---------------------------------------
      |   RAM                  | 1GB ~ 63%         | 3GB ~ 78%        |
      |   CPU 	              | 0,8% of a 2400MHz | 90% of a 2400MHZ |
-     |   I/O HDD 	          |   6GB             | 6GB              |
+     |   I/O HDD              |   6GB             | 6GB              |
 
 
