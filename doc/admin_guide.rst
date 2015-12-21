@@ -289,11 +289,16 @@ The updates of the columns are done in the following way
     su - potgres
     postgres$ psql -U postgres -d paasmanager
     Password for user postgres: <postgres-password-previously-chosen>
-    postgres=# UPDATE configuration_properties SET value='/opt/fiware-paas/resources/userdata' where key='user_data_path'; 
-    postgres=# UPDATE configuration_properties SET value='<the value>' where key='paas_manager_url';
-    postgres=# UPDATE configuration_properties SET value='<the value>' where key='openstack-tcloud.keystone.user';
-    postgres=# UPDATE configuration_properties SET value='<the value>' where key='openstack-tcloud.keystone.pass';
-    postgres=# UPDATE configuration_properties SET value='<the value>' where key='openstack-tcloud.keystone.tenant';
+    postgres=# UPDATE configuration_properties SET value='/opt/fiware-paas/resources/userdata'
+    where key='user_data_path';
+    postgres=# UPDATE configuration_properties SET value='<the value>'
+    where key='paas_manager_url';
+    postgres=# UPDATE configuration_properties SET value='<the value>'
+    where key='openstack-tcloud.keystone.user';
+    postgres=# UPDATE configuration_properties SET value='<the value>'
+    where key='openstack-tcloud.keystone.pass';
+    postgres=# UPDATE configuration_properties SET value='<the value>'
+    where key='openstack-tcloud.keystone.tenant';
     
    
 Configure PaaS Manager application
@@ -456,17 +461,24 @@ It should show something similar to the following:
 
 .. code::
 
-   postgres  1327     1  0 58141  9256   0 08:26 ?        00:00:00 /usr/bin/postgres -D /var/lib/pgsql/data -p 5432
+   postgres  1327     1  0 58141  9256   0 08:26 ?        00:00:00 /usr/bin/postgres -D /var/lib/pgsql/
+   data -p 5432
    postgres  1328  1327  0 48078  1696   0 08:26 ?        00:00:00 postgres: logger process
    postgres  1330  1327  0 58166  3980   0 08:26 ?        00:00:00 postgres: checkpointer process
    postgres  1331  1327  0 58141  2068   0 08:26 ?        00:00:00 postgres: writer process
    postgres  1332  1327  0 58141  1808   0 08:26 ?        00:00:00 postgres: wal writer process
    postgres  1333  1327  0 58349  3172   0 08:26 ?        00:00:00 postgres: autovacuum launcher process
    postgres  1334  1327  0 48110  2052   0 08:26 ?        00:00:00 postgres: stats collector process
-   root     14054     1  4 598402 811464 0 09:35 ?        00:00:22 java -Xmx1024m -Xms1024m -Djetty.state=/opt/fiware-paas/jetty.state -Djetty.home=/opt/fiware-paas -Djetty.base=/opt/fiware-paas -Djava.io.tmpdir=/tmp -jar /opt/fiware-paas/start.jar jetty-logging.xml jetty-started.xml
-   postgres 14114  1327  0 58414  3956   0 09:36 ?        00:00:00 postgres: postgres paasmanager 127.0.0.1(48012) idle
-   postgres 14117  1327  0 58449  3772   0 09:36 ?        00:00:00 postgres: postgres paasmanager 127.0.0.1(48013) idle
-   postgres 14118  1327  0 58449  3776   0 09:36 ?        00:00:00 postgres: postgres paasmanager 127.0.0.1(48014) idle
+   root     14054     1  4 598402 811464 0 09:35 ?        00:00:22 java -Xmx1024m -Xms1024m
+   -Djetty.state=/opt/fiware-paas/jetty.state -Djetty.home=/opt/fiware-paas
+   -Djetty.base=/opt/fiware-paas -Djava.io.tmpdir=/tmp -jar /opt/fiware-paas/start.jar
+   jetty-logging.xml jetty-started.xml
+   postgres 14114  1327  0 58414  3956   0 09:36 ?        00:00:00 postgres: postgres paasmanager
+   127.0.0.1(48012) idle
+   postgres 14117  1327  0 58449  3772   0 09:36 ?        00:00:00 postgres: postgres paasmanager
+   127.0.0.1(48013) idle
+   postgres 14118  1327  0 58449  3776   0 09:36 ?        00:00:00 postgres: postgres paasmanager
+   127.0.0.1(48014) idle
 
 
 Network interfaces Up & Open
@@ -522,7 +534,8 @@ and the following output for the jetty process:
   Active UNIX domain sockets (servers and established)
   Proto RefCnt Flags       Type       State         I-Node   Path
   unix  2      [ ACC ]     STREAM     LISTENING     19508    1327/postgres        /tmp/.s.PGSQL.5432
-  unix  2      [ ACC ]     STREAM     LISTENING     19506    1327/postgres        /var/run/postgresql/.s.PGSQL.5432
+  unix  2      [ ACC ]     STREAM     LISTENING     19506    1327/postgres        /var/run/postgresql
+  /.s.PGSQL.5432
 
 Databases
 ---------
@@ -572,26 +585,43 @@ CPU and I/O. For this purpose we have differentiated between:
 
 The results were obtained with a top command execution over the following machine configuration:
 
-.. code::
+.. list-table:: Resource capacities
+   :header-rows: 1
+   :widths: 10 10
+   :stub-columns: 1
 
-     |       Name          |   Type              |
-     ----------------------+----------------------
-     |   Type Machine      |   Virtual Machine   |
-     |   CPU 	           |   1 core @ 2,4Ghz   |
-     |   RAM 	           |   1,4GB             |
-     |   HDD 	           |   9,25GB            |
-     |   Operating System  |   CentOS 6.3        |
-
+   *  -  Characteristic
+      -  Value
+   *  -  Type Machine
+      -  Virtual Machine
+   *  -  CPU
+      -  1 core @ 2,4Ghz
+   *  -  RAM
+      -  1,4GB
+   *  -  HDD
+      -  9,25GB
+   *  -  Operating System
+      -  CentOS 6.3
 
 
 The results of requirements both RAM, CPU and I/O to HDD is shown in the following table:
 
-.. code::
+.. list-table:: Resource capacities
+:header-rows: 1
+   :widths: 10 10
+       :stub-columns: 1
 
-     | Resource Consumption   | Low UsageType     | High Usage       |
-     -------------------------+---------------------------------------
-     |   RAM                  | 1GB ~ 63%         | 3GB ~ 78%        |
-     |   CPU 	              | 0,8% of a 2400MHz | 90% of a 2400MHZ |
-     |   I/O HDD              |   6GB             | 6GB              |
+       *  -  Resource Consumption
+          -  Low Usage Type
+          -  High Usage Type
+       *  -  RAM
+          -  1GB ~ 63%
+          -  3GB ~ 78%
+       *  -  CPU
+          -  0,8% of a 2400MHz
+          -  90% of a 2400MHZ
+       *  -  I/O HDD
+          -  6GB
+          -  6GB
 
 
