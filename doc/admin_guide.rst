@@ -606,22 +606,22 @@ The results were obtained with a top command execution over the following machin
 
 The results of requirements both RAM, CPU and I/O to HDD is shown in the following table:
 
-.. list-table:: Resource capacities
-:header-rows: 1
-   :widths: 10 10
-       :stub-columns: 1
+.. list-table:: Resource Consumption
+   :header-rows: 1
+   :widths: 10 10 10
+   :stub-columns: 1
 
-       *  -  Resource Consumption
-          -  Low Usage Type
-          -  High Usage Type
-       *  -  RAM
-          -  1GB ~ 63%
-          -  3GB ~ 78%
-       *  -  CPU
-          -  0,8% of a 2400MHz
-          -  90% of a 2400MHZ
-       *  -  I/O HDD
-          -  6GB
-          -  6GB
+   *  -  Resource Consumption
+      -  Low Usage Type
+      -  High Usage Type
+   *  -  RAM
+      -  1GB ~ 63%
+      -  3GB ~ 78%
+   *  -  CPU
+      -  0,8% of a 2400MHz
+      -  90% of a 2400MHZ
+   *  -  I/O HDD
+      -  6GB
+      -  6GB
 
 
