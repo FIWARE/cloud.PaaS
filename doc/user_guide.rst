@@ -27,15 +27,16 @@ API Authentication
 All the operations in the PaaS Manager API needs to have a valid token to access it. To obtain the token, you need to have an account in FIWARE Lab (account.lab.fi-ware.org).
 With the credentials (username, password and tenantName) you can obtain a valid token. From now on, we asume that the value of your tenant-id is "your-tenant-id"
 
-::
+.. code:: bash shell script
 
     $ curl -v -H "Content-Type: application/json" -H "Accept: application/json" -X
     POST "http://cloud.lab.fi-ware.org:4731/v2.0/tokens" -d '{"auth":{"tenantName":
-    "your-tenant-id","passwordCredentials":{"username":"youruser","password":"yourpassword"}}}'
+    "your-tenant-id","passwordCredentials":{"username":"youruser",
+    "password":"yourpassword"}}}'
 
 You will receive the following answer, with a valid token (id).
 
-::
+.. code:: bash shell script
 
     {
     access: {
@@ -48,14 +49,14 @@ You will receive the following answer, with a valid token (id).
 	
 For all the PaaS manager request, you will need to include the following header:
 
-::
+.. code:: bash shell script
 
     X-Auth-Token: 756cfb31e062216544215f54447e2716
     Tenant-Id: your-tenant-id
 
 For the rest of the explanation, we are going to configure a set of variables:
 
-::
+.. code:: bash shell script
 
     export PAAS_MANAGER_IP =  pegasus.lab.fi-ware.org
 
@@ -68,7 +69,7 @@ Abstract Environments are environments defined by the administrator. They are av
 
 **Get the Abstract Environment list from the catalogue**
 
-::
+.. code:: bash shell script
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
@@ -76,7 +77,7 @@ Abstract Environments are environments defined by the administrator. They are av
 
 This operation lists the abstract environments stored in the catalogue. The following example shows an XML response for the list Abstract Environment API operation.
 	
-::
+.. code:: xml
 
     <environmentDtoes>
         <environmentDto>
@@ -106,7 +107,7 @@ This operation lists the abstract environments stored in the catalogue. The foll
 
 **Get a particular Abstract Environment**
 
-::
+.. code:: bash shell script
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
@@ -115,7 +116,7 @@ This operation lists the abstract environments stored in the catalogue. The foll
 
 This operation lists the abstract environments stored in the catalogue. The following example shows an XML response for the list Abstract Environment API operation.
 	
-::
+.. code:: xml
 
     <environmentDtoes>
         <environmentDto>
@@ -144,7 +145,7 @@ This operation lists the abstract environments stored in the catalogue. The foll
 
 **Add an Abstract Environment to the catalogue**
 
-::
+.. code:: bash shell script
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
@@ -152,7 +153,7 @@ This operation lists the abstract environments stored in the catalogue. The foll
 
 with the following payload
 
-::
+.. code:: xml
 
     <?xml version="1.0" encoding="UTF-8"?>
     <environmentDto>
@@ -162,7 +163,7 @@ with the following payload
 
 **Delete an abstract template for the catalogue**
 
-::
+.. code:: bash shell script
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
@@ -174,7 +175,7 @@ Abstract Tier API
 
 **Add an Tier to an existing Abstract Environment**
 
-::
+.. code:: bash shell script
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
@@ -183,7 +184,7 @@ Abstract Tier API
 
 with the following payload
 
-::
+.. code:: xml
 
 	<tierDto>
 		<minimumNumberInstances>1</minimumNumberInstances>
@@ -199,7 +200,7 @@ with the following payload
 
 **Get All Tiers associated to a Abstract Environment**
 
-::
+.. code:: bash shell script
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
@@ -208,7 +209,7 @@ with the following payload
 
 This operation obtains a response with the following format:
 
-::
+.. code:: xml
 
 	<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 	<tierDtoes>
@@ -235,7 +236,7 @@ This operation obtains a response with the following format:
 
 **Get a particular Tier associated to a Abstract Environment**
 
-::
+.. code:: bash shell script
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
@@ -244,7 +245,7 @@ This operation obtains a response with the following format:
 
 This operation obtains a response with the following format:
 
-::
+.. code:: xml
 
 	<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
  	<tierDto>
@@ -270,7 +271,7 @@ This operation obtains a response with the following format:
 
 **Update a Tier of an existing Abstract Environment**
 
-::
+.. code:: bash shell script
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
@@ -279,7 +280,7 @@ This operation obtains a response with the following format:
 
 with the following payload
 
-::
+.. code:: xml
 
 	<tierDto>
 		<minimumNumberInstances>1</minimumNumberInstances>
@@ -296,7 +297,7 @@ with the following payload
 
 **Delete a particular Tier associated to a Abstract Environment**
 
-::
+.. code:: bash shell script
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
@@ -311,7 +312,7 @@ Next we detail some operations that can be done in the catalogue managemente api
 
 **Get the blueprint template list from the catalogue**
 
-::
+.. code:: bash shell script
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
@@ -320,7 +321,7 @@ Next we detail some operations that can be done in the catalogue managemente api
 
 This operation lists the environments stored in the catalogue. The following example shows an XML response for the list Environment API operation. It is possible to see it contains a list of tiers including products to be installed.
 	
-::
+.. code:: xml
 
     <environmentDtoes>
         <environment>
@@ -363,7 +364,7 @@ This operation lists the environments stored in the catalogue. The following exa
 
 **Add a blueprint template to the catalogue**
 
-::
+.. code:: bash shell script
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
@@ -372,7 +373,7 @@ This operation lists the environments stored in the catalogue. The following exa
 
 with the following payload
 
-::
+.. code:: xml
 
     <?xml version="1.0" encoding="UTF-8"?>
     <environmentDto>
@@ -403,7 +404,7 @@ with the following payload
 
 The network and region information are including also in the payload of the environment. The following lines show a example. 
 
-::
+.. code:: xml
 
     <tierDtos>
         ...
@@ -428,7 +429,7 @@ The network and region information are including also in the payload of the envi
 
 **Delete a blueprint template from the catalogue**
 
-::
+.. code:: bash shell script
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
@@ -441,7 +442,7 @@ Tier API
 
 **Add a Tier to an existing Environment**
 
-::
+.. code:: bash shell script
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
@@ -450,7 +451,7 @@ Tier API
 
 with the following payload
 
-::
+.. code:: xml
 
 	<tierDto>
 		<minimumNumberInstances>1</minimumNumberInstances>
@@ -472,7 +473,7 @@ with the following payload
 
 **Get All Tiers associated to an Environment**
 
-::
+.. code:: bash shell script
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
@@ -481,7 +482,7 @@ with the following payload
 
 This operation obtains a response with the following format:
 
-::
+.. code:: xml
 
 	<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 	<tierDtoes>
@@ -514,7 +515,7 @@ This operation obtains a response with the following format:
 
 **Get a particular Tier associated to an Environment**
 
-::
+.. code:: bash shell script
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
@@ -523,7 +524,7 @@ This operation obtains a response with the following format:
 
 This operation obtains a response with the following format:
 
-::
+.. code:: xml
 
 	<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
  	<tierDto>
@@ -555,7 +556,7 @@ This operation obtains a response with the following format:
 
 **Update a Tier of an existing Environment**
 
-::
+.. code:: bash shell script
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
@@ -564,7 +565,7 @@ This operation obtains a response with the following format:
 
 with the following payload
 
-::
+.. code:: xml
 
 	<tierDto>
 		<minimumNumberInstances>1</minimumNumberInstances>
@@ -587,7 +588,7 @@ with the following payload
 
 **Delete a particular Tier associated to an Environment**
 
-::
+.. code:: bash shell script
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
@@ -599,7 +600,7 @@ BluePrint/Environment Instance Provisioning API
 
 **Deploy a Blueprint Instance**
 
-::
+.. code:: bash shell script
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
@@ -608,7 +609,7 @@ BluePrint/Environment Instance Provisioning API
 
 where "your-tenant-id" is the tenant-id in this guide. The payload of this request can be as follows:
 
-::
+.. code:: xml
 
     <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <environmentInstanceDto>
@@ -639,7 +640,7 @@ where "your-tenant-id" is the tenant-id in this guide. The payload of this reque
     
 The response obatined should be:
 
-::
+.. code:: xml
 
     <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <task href="https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/vdc/your-tenant-id
@@ -651,7 +652,7 @@ The response obatined should be:
 Given the URL obtained in the href in the Task, it is possible to monitor the operation status (you can check Task Management). Once the environment has been deployed, 
 the task status should be SUCCESS. 
 
-::
+.. code:: xml
 
     <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <task href="https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/vdc/your-tenant-id
@@ -663,7 +664,7 @@ the task status should be SUCCESS.
 
 **Get information about Blueprint Instances deployed**	
 
-::
+.. code:: bash shell script
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
@@ -672,7 +673,7 @@ the task status should be SUCCESS.
 
 The Response obtained includes all the blueprint instances deployed
 
-::
+.. code:: xml
 
     <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <environmentInstanceDtoes>
@@ -729,7 +730,7 @@ The Response obtained includes all the blueprint instances deployed
 
 **Get details of a certain Blueprint Instance**	
 
-::
+.. code:: bash shell script
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
@@ -738,7 +739,7 @@ The Response obtained includes all the blueprint instances deployed
 	
 This operation does not require any payload in the request and provides a BlueprintInstance XML response. 
 
-::
+.. code:: xml
 
     <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <environmentInstancePDto>
@@ -789,7 +790,7 @@ This operation does not require any payload in the request and provides a Bluepr
  
 **Undeploy a Blueprint Instance**	
 
-::
+.. code:: bash shell script
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
@@ -798,7 +799,7 @@ This operation does not require any payload in the request and provides a Bluepr
 
 This operation does not require a request body and returns the details of a generated task. 
 
-::
+.. code:: xml
 
     <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <task href="https://PAAS_MANAGER_IP:8443/paasmanager/rest/vdc/{your-tenant-id}/task/{task-id}"
@@ -809,7 +810,7 @@ This operation does not require a request body and returns the details of a gene
 
 With the URL obtained in the href in the Task, it is possible to monitor the operation status (you can checkTask Management). Once the environment has been undeployed, the task status should be SUCCESS. 
 
-::
+.. code:: xml
 
     <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <task href="https://PAAS_MANAGER_IP:8443/paasmanager/rest/vdc/{your-tenant-id}/task/{task-id}"
@@ -823,7 +824,7 @@ Task Management
 
 **Get a specific task**	
 
-::
+.. code:: bash shell script
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
@@ -831,7 +832,7 @@ Task Management
 	
 This operation recovers the status of a task created previously. It does not need any request body and the response body in XML would be the following. 
 
-::
+.. code:: xml
 
     <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <task href="http:/130.206.80.112:8080/sdc/rest/vdc/{your-tenant-id}/task/{task-id}"

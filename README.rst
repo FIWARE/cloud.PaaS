@@ -238,8 +238,8 @@ For instance, it is possible to obtain the template list in the catalogue
 .. code:: bash shell script
 
   $ curl -v -H "Content-Type: application/json" -H "Accept: application/xml"
-  -H "X-Auth-Token: your-token-id" -H "Tenant-Id: your-tenant-id"
-  -X GET "https://pegasus.lab.fi-ware.org:8443/paasmanager/rest/catalog/org/FIWARE/environment"
+  -H "X-Auth-Token: your-token-id" -H "Tenant-Id: your-tenant-id" -X GET
+  "https://pegasus.lab.fi-ware.org:8443/paasmanager/rest/catalog/org/FIWARE/environment"
 
 Please have a look at the API Reference Documentation section bellow and at the programmer guide.
 
