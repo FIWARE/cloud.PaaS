@@ -27,7 +27,7 @@ API Authentication
 All the operations in the PaaS Manager API needs to have a valid token to access it. To obtain the token, you need to have an account in FIWARE Lab (account.lab.fi-ware.org).
 With the credentials (username, password and tenantName) you can obtain a valid token. From now on, we asume that the value of your tenant-id is "your-tenant-id"
 
-.. code::
+::
 
     $ curl -v -H "Content-Type: application/json" -H "Accept: application/json" -X
     POST "http://cloud.lab.fi-ware.org:4731/v2.0/tokens" -d '{"auth":{"tenantName":
@@ -35,27 +35,27 @@ With the credentials (username, password and tenantName) you can obtain a valid 
 
 You will receive the following answer, with a valid token (id).
 
-.. code::
-  
+::
+
     {
     access: {
        token: {
           expires: "2015-07-09T15:16:07Z"
           id: "756cfb31e062216544215f54447e2716"
           tenant: {
-	  ..
+          ...
     }
 	
 For all the PaaS manager request, you will need to include the following header:
 
-.. code::
+::
 
     X-Auth-Token: 756cfb31e062216544215f54447e2716
     Tenant-Id: your-tenant-id
 
 For the rest of the explanation, we are going to configure a set of variables:
 
-.. code::
+::
 
     export PAAS_MANAGER_IP =  pegasus.lab.fi-ware.org
 
@@ -68,15 +68,15 @@ Abstract Environments are environments defined by the administrator. They are av
 
 **Get the Abstract Environment list from the catalogue**
 
-.. code::
+::
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
-	-X GET "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/environment"
+    -X GET "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/environment"
 
 This operation lists the abstract environments stored in the catalogue. The following example shows an XML response for the list Abstract Environment API operation.
 	
-.. code::	
+::
 
     <environmentDtoes>
         <environmentDto>
@@ -98,24 +98,24 @@ This operation lists the abstract environments stored in the catalogue. The foll
 				<affinity>None</affinity>
 				<region>Spain</region>
  			</tierDtos>
-			<name>orion</name>
-			<description>Environment orion</description>
- 		</environmentDto>
- 		...
-   </environmentDtoes>
+ 			<name>orion</name>
+ 			<description>Environment orion</description>
+       </environmentDto>
+       ...
+    </environmentDtoes>
 
 **Get a particular Abstract Environment**
 
-.. code::
+::
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
-	-X GET "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/environment
-	/{abstract-environment-name}"
+    -X GET "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/environment
+    /{abstract-environment-name}"
 
 This operation lists the abstract environments stored in the catalogue. The following example shows an XML response for the list Abstract Environment API operation.
 	
-.. code::	
+::
 
     <environmentDtoes>
         <environmentDto>
@@ -137,22 +137,22 @@ This operation lists the abstract environments stored in the catalogue. The foll
 				<affinity>None</affinity>
 				<region>Spain</region>
  			</tierDtos>
-			<name>orion</name>
-			<description>Environment orion</description>
- 		</environmentDto>
-   </environmentDtoes>
+ 			<name>orion</name>
+ 			<description>Environment orion</description>
+        </environmentDto>
+    </environmentDtoes>
 
 **Add an Abstract Environment to the catalogue**
 
-.. code::
+::
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
-    "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
-	-X POST "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/environment"
+    "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
+    -X POST "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/environment"
 
 with the following payload
 
-.. code::
+::
 
     <?xml version="1.0" encoding="UTF-8"?>
     <environmentDto>
@@ -162,28 +162,28 @@ with the following payload
 
 **Delete an abstract template for the catalogue**
 
-.. code::
+::
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
-    "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
-	-X DELETE "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/environment
-	/{abstract-environment-name}"
+    "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
+    -X DELETE "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/environment
+    /{abstract-environment-name}"
 
 Abstract Tier API
 -----------------
 
 **Add an Tier to an existing Abstract Environment**
 
-.. code::
+::
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
-    "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
-	-X POST "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/environment
-	/{abstract-environment-name}/tier"
+    "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
+    -X POST "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/environment
+    /{abstract-environment-name}/tier"
 
 with the following payload
 
-.. code::
+::
 
 	<tierDto>
 		<minimumNumberInstances>1</minimumNumberInstances>
@@ -199,16 +199,16 @@ with the following payload
 
 **Get All Tiers associated to a Abstract Environment**
 
-.. code::
+::
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
-    "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
-	-X GET "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/environment
-	/{abstract-environment-name}/tier"
+    "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
+    -X GET "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/environment
+    /{abstract-environment-name}/tier"
 
 This operation obtains a response with the following format:
 
-.. code::
+::
 
 	<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 	<tierDtoes>
@@ -235,16 +235,16 @@ This operation obtains a response with the following format:
 
 **Get a particular Tier associated to a Abstract Environment**
 
-.. code::
+::
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
-    "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
-	-X GET "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/environment
-	/{abstract-environment-name}/tier/{tier-name}"
+    "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
+    -X GET "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/environment
+    /{abstract-environment-name}/tier/{tier-name}"
 
 This operation obtains a response with the following format:
 
-.. code::
+::
 
 	<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
  	<tierDto>
@@ -270,16 +270,16 @@ This operation obtains a response with the following format:
 
 **Update a Tier of an existing Abstract Environment**
 
-.. code::
+::
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
-    "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
-	-X PUT "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/environment
-	/{abstract-environment-name}/tier"
+    "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
+    -X PUT "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/environment
+    /{abstract-environment-name}/tier"
 
 with the following payload
 
-.. code::
+::
 
 	<tierDto>
 		<minimumNumberInstances>1</minimumNumberInstances>
@@ -296,12 +296,12 @@ with the following payload
 
 **Delete a particular Tier associated to a Abstract Environment**
 
-.. code::
+::
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
-    "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
-	-X GET "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/environment
-	/{abstract-environment-name}/tier/{tier-name}"
+    "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
+    -X GET "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/environment
+    /{abstract-environment-name}/tier/{tier-name}"
 
 
 Blueprint Template/Environment API
@@ -311,16 +311,16 @@ Next we detail some operations that can be done in the catalogue managemente api
 
 **Get the blueprint template list from the catalogue**
 
-.. code::
+::
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
-	-X GET "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/vdc/{your-tenant-id}
-	/environment"
+    -X GET "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/vdc/{your-tenant-id}
+    /environment"
 
 This operation lists the environments stored in the catalogue. The following example shows an XML response for the list Environment API operation. It is possible to see it contains a list of tiers including products to be installed.
 	
-.. code::	
+::
 
     <environmentDtoes>
         <environment>
@@ -358,21 +358,21 @@ This operation lists the environments stored in the catalogue. The following exa
                </tier>
            </tiers>
        </environment>
-   </environmentDtoes>
+    </environmentDtoes>
 
 
 **Add a blueprint template to the catalogue**
 
-.. code::
+::
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
-    "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
-	-X POST "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/vdc/{your-tenant-id}
-	/environment"
+    "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
+    -X POST "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/vdc/{your-tenant-id}
+    /environment"
 
 with the following payload
 
-.. code::
+::
 
     <?xml version="1.0" encoding="UTF-8"?>
     <environmentDto>
@@ -403,7 +403,7 @@ with the following payload
 
 The network and region information are including also in the payload of the environment. The following lines show a example. 
 
-.. code::
+::
 
     <tierDtos>
         ...
@@ -428,12 +428,12 @@ The network and region information are including also in the payload of the envi
 
 **Delete a blueprint template from the catalogue**
 
-.. code::
+::
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
-    "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
-	-X DELETE "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/vdc/{your-tenant-id}
-	/environment/{environment-id}"
+    "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
+    -X DELETE "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/vdc/{your-tenant-id}
+    /environment/{environment-id}"
 
 
 Tier API
@@ -441,16 +441,16 @@ Tier API
 
 **Add a Tier to an existing Environment**
 
-.. code::
+::
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
-    "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
-	-X POST "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/vdc/{your-tenant-id}
-	/environment/{environment-name}/tier"
+    "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
+    -X POST "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/vdc/{your-tenant-id}
+    /environment/{environment-name}/tier"
 
 with the following payload
 
-.. code::
+::
 
 	<tierDto>
 		<minimumNumberInstances>1</minimumNumberInstances>
@@ -472,16 +472,16 @@ with the following payload
 
 **Get All Tiers associated to an Environment**
 
-.. code::
+::
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
-    "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
-	-X GET "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/vdc/{your-tenant-id}
-	/environment/{environment-name}/tier"
+    "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
+    -X GET "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/vdc/{your-tenant-id}
+    /environment/{environment-name}/tier"
 
 This operation obtains a response with the following format:
 
-.. code::
+::
 
 	<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 	<tierDtoes>
@@ -514,16 +514,16 @@ This operation obtains a response with the following format:
 
 **Get a particular Tier associated to an Environment**
 
-.. code::
+::
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
-    "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
-	-X GET "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/vdc/{your-tenant-id}
-	/environment/{environment-name}/tier/{tier-name}"
+    "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
+    -X GET "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/vdc/{your-tenant-id}
+    /environment/{environment-name}/tier/{tier-name}"
 
 This operation obtains a response with the following format:
 
-.. code::
+::
 
 	<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
  	<tierDto>
@@ -555,16 +555,16 @@ This operation obtains a response with the following format:
 
 **Update a Tier of an existing Environment**
 
-.. code::
+::
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
-    "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
-	-X PUT "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/vdc/{your-tenant-id}
-	/environment/{environment-name}/tier"
+    "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
+    -X PUT "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/vdc/{your-tenant-id}
+    /environment/{environment-name}/tier"
 
 with the following payload
 
-.. code::
+::
 
 	<tierDto>
 		<minimumNumberInstances>1</minimumNumberInstances>
@@ -587,19 +587,19 @@ with the following payload
 
 **Delete a particular Tier associated to an Environment**
 
-.. code::
+::
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
-    "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
-	-X GET "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/vdc/{your-tenant-id}
-	/environment/{environment-name}/tier/{tier-name}"
+    "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
+    -X GET "https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/vdc/{your-tenant-id}
+    /environment/{environment-name}/tier/{tier-name}"
 
 BluePrint/Environment Instance Provisioning API
 -----------------------------------------------
 
 **Deploy a Blueprint Instance**
 
-.. code::
+::
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
@@ -608,7 +608,7 @@ BluePrint/Environment Instance Provisioning API
 
 where "your-tenant-id" is the tenant-id in this guide. The payload of this request can be as follows:
 
-.. code::
+::
 
     <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <environmentInstanceDto>
@@ -639,7 +639,7 @@ where "your-tenant-id" is the tenant-id in this guide. The payload of this reque
     
 The response obatined should be:
 
-.. code::
+::
 
     <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <task href="https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/vdc/your-tenant-id
@@ -651,7 +651,7 @@ The response obatined should be:
 Given the URL obtained in the href in the Task, it is possible to monitor the operation status (you can check Task Management). Once the environment has been deployed, 
 the task status should be SUCCESS. 
 
-.. code::
+::
 
     <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <task href="https://PAAS_MANAGER_IP:8443/paasmanager/rest/catalog/org/FIWARE/vdc/your-tenant-id
@@ -663,7 +663,7 @@ the task status should be SUCCESS.
 
 **Get information about Blueprint Instances deployed**	
 
-.. code::
+::
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
@@ -672,7 +672,7 @@ the task status should be SUCCESS.
 
 The Response obtained includes all the blueprint instances deployed
 
-.. code::
+::
 
     <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <environmentInstanceDtoes>
@@ -725,11 +725,11 @@ The Response obtained includes all the blueprint instances deployed
                    </vm>
            </tierInstances>
        </environmentInstance>
-   </environmentInstanceDtoes>
+    </environmentInstanceDtoes>
 
 **Get details of a certain Blueprint Instance**	
 
-.. code::
+::
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
@@ -738,32 +738,32 @@ The Response obtained includes all the blueprint instances deployed
 	
 This operation does not require any payload in the request and provides a BlueprintInstance XML response. 
 
-.. code::
+::
 
     <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <environmentInstancePDto>
-		<environmentInstanceName>{environmentinstance-name}</environmentInstanceName>
-		<vdc>{tenant-id}</vdc>
-		<description>{description of environmentinstance}</description>
-		<status>{status of the environment installation}</status>
-		<blueprintName>{blueprint-name}</blueprintName>
-		<taskId>{task-id of the execution}</taskId>
- 		<tierDto>
-			<name>{tier-name}</name>
-			<flavour>{flavour of the vm}</flavour>
-			<image>{image-id}</image>
-			<maximumNumberInstances>1</maximumNumberInstances>
-			<minimumNumberInstances>1</minimumNumberInstances>
-			<initialNumberInstances>1</initialNumberInstances>
+        <environmentInstanceName>{environmentinstance-name}</environmentInstanceName>
+        <vdc>{tenant-id}</vdc>
+        <description>{description of environmentinstance}</description>
+        <status>{status of the environment installation}</status>
+        <blueprintName>{blueprint-name}</blueprintName>
+        <taskId>{task-id of the execution}</taskId>
+        <tierDto>
+            <name>{tier-name}</name>
+            <flavour>{flavour of the vm}</flavour>
+            <image>{image-id}</image>
+            <maximumNumberInstances>1</maximumNumberInstances>
+            <minimumNumberInstances>1</minimumNumberInstances>
+            <initialNumberInstances>1</initialNumberInstances>
  			<productReleaseDtos>
 				<productName>{product-name}</productName>
 				<version>{product-version}</version>
  			</productReleaseDtos>
-			<icono />
-			<securityGroup>{securityGroup-name}</securityGroup>
-			<keypair>{keypair-name}</keypair>
-			<floatingip>{true/false}</floatingip>
-			<region>{region-name}</region>
+ 			<icono />
+ 			<securityGroup>{securityGroup-name}</securityGroup>
+ 			<keypair>{keypair-name}</keypair>
+ 			<floatingip>{true/false}</floatingip>
+ 			<region>{region-name}</region>
  			<tierInstancePDto>
 				<tierInstanceName>{tierinstance-name}</tierInstanceName>
 				<status>{status of the tierinstallation}</status>
@@ -783,13 +783,13 @@ This operation does not require any payload in the request and provides a Bluepr
 					<ip>{ip}</ip>
 					<id>{nova-host-id}</id>
  				</vm>
-			</tierInstancePDto>
- 		</tierDto>
- 	</environmentInstancePDto>
+ 			</tierInstancePDto>
+        </tierDto>
+    </environmentInstancePDto>
  
 **Undeploy a Blueprint Instance**	
 
-.. code::
+::
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
     "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
@@ -798,8 +798,8 @@ This operation does not require any payload in the request and provides a Bluepr
 
 This operation does not require a request body and returns the details of a generated task. 
 
-.. code::	
-	
+::
+
     <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <task href="https://PAAS_MANAGER_IP:8443/paasmanager/rest/vdc/{your-tenant-id}/task/{task-id}"
     startTime="2012-11-08T09:45:44.020+01:00" status="RUNNING">
@@ -809,8 +809,8 @@ This operation does not require a request body and returns the details of a gene
 
 With the URL obtained in the href in the Task, it is possible to monitor the operation status (you can checkTask Management). Once the environment has been undeployed, the task status should be SUCCESS. 
 
-.. code::
-	
+::
+
     <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <task href="https://PAAS_MANAGER_IP:8443/paasmanager/rest/vdc/{your-tenant-id}/task/{task-id}"
     startTime="2012-11-08T09:13:19.567+01:00" status="SUCCESS">
@@ -823,15 +823,15 @@ Task Management
 
 **Get a specific task**	
 
-.. code::
+::
 
     $ curl -v -H "Content-Type: application/xml" -H "Accept: application/xml" -H
-    "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id" 
-	-X DELETE "http://pegasus.lab.fi-ware.org:8080/paasmanager/rest/vdc/your-tenant-id/task/{task-id}"
+    "X-Auth-Token: 756cfb31e062216544215f54447e2716" -H "Tenant-Id: your-tenant-id"
+    -X DELETE "http://pegasus.lab.fi-ware.org:8080/paasmanager/rest/vdc/your-tenant-id/task/{task-id}"
 	
 This operation recovers the status of a task created previously. It does not need any request body and the response body in XML would be the following. 
 
-.. code::
+::
 
     <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <task href="http:/130.206.80.112:8080/sdc/rest/vdc/{your-tenant-id}/task/{task-id}"

@@ -91,15 +91,21 @@ Using FIWARE package repository (recommended)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Refer to the documentation of your Linux distribution to set up the URL of the
-repository where FIWARE packages are available (and update cache, if needed)::
+repository where FIWARE packages are available (and update cache, if needed)
+
+::
 
     http://repositories.testbed.fiware.org/repo/rpm/x86_64
 
-Then, use the proper tool to install the packages::
+Then, use the proper tool to install the packages
+
+::
 
     $ sudo yum install fiware-paas
 
-and the latest version will be installed. In order to install a specific version::
+and the latest version will be installed. In order to install a specific version
+
+::
 
     $ sudo yum install fiware-paas-{version}-1.noarch
 
@@ -120,14 +126,18 @@ newer version of the PaaS Manager components:
 Upgrading database
 ~~~~~~~~~~~~~~~~~~
 In case the database needs to be upgrade, the script db-changelog.sql should
-be execute. To do that, it just needed to execute::
+be execute. To do that, it just needed to execute
+
+::
 
     psql -U postgres -d $db_name << EOF
     \i db-changelog.sql
 
 Using installation script
 ~~~~~~~~~~~~~~~~~~~~~~~~~
-The installation of fiware-paas can be done in the easiest way by executing the script::
+The installation of fiware-paas can be done in the easiest way by executing the script
+
+::
 
   scripts/bootstrap/centos.sh
 
@@ -153,15 +163,21 @@ refer to their respective documentation for instructions to run them.
 
 
 In order to start the PaaS Manager service, as it is based on a
-web application on top of jetty, just you should run::
+web application on top of jetty, just you should run
+
+::
 
     $ service fiware-paas start
 
-Then, to stop the service, run::
+Then, to stop the service, run
+
+::
 
     $ service fiware-paas stop
 
-We can also force a service restart::
+We can also force a service restart
+
+::
 
     $ service fiware-paas restart
 
@@ -170,7 +186,9 @@ Configuration file
 ------------------
 
 The configuration of PaaS Manager is in configuration_properties table in the database.
-There, it is required to configure::
+There, it is required to configure
+
+::
 
     $ openstack-tcloud.keystone.url: This is the url where the keystone-proxy is deployed
     $ openstack-tcloud.keystone.user: the admin user
@@ -179,7 +197,9 @@ There, it is required to configure::
     $ paas_manager_url: the final url, mainly https://paas-ip:8443/paasmanager
 
 In addition, to configue the PaaS Manager application inside the webserver, it is needed to change the context file.
-To do that, change paasmanager.xml found in distribution file and store it in folder $PAASMANAGER_HOME/webapps/::
+To do that, change paasmanager.xml found in distribution file and store it in folder $PAASMANAGER_HOME/webapps/
+
+::
 
   <New id="sdc" class="org.eclipse.jetty.plus.jndi.Resource">
     <Arg>jdbc/paasmanager</Arg>
@@ -213,11 +233,13 @@ The PaaS Manager offers a REST API, which can be used for both
 managing deploying virtual infrastructure and install software
 on top of it.
 
-For instance, it is possible to obtain the template list in the catalogue::
+For instance, it is possible to obtain the template list in the catalogue
 
-  $ curl -v -H "Content-Type: application/json" -H "Accept: application/xml"
-  -H "X-Auth-Token: your-token-id" -H "Tenant-Id: your-tenant-id"
-  -X GET "https://pegasus.lab.fi-ware.org:8443/paasmanager/rest/catalog/org/FIWARE/environment"
+::
+
+    $ curl -v -H "Content-Type: application/json" -H "Accept: application/xml"
+    -H "X-Auth-Token: your-token-id" -H "Tenant-Id: your-tenant-id"
+    -X GET "https://pegasus.lab.fi-ware.org:8443/paasmanager/rest/catalog/org/FIWARE/environment"
 
 Please have a look at the API Reference Documentation section bellow and at the programmer guide.
 
@@ -236,7 +258,9 @@ Unit tests
 ----------
 
 The ``test`` target for each module in the PaaS Manager is used for running the unit tests in both components of
-PaaS Manager GE. To execute the unit tests you just need to execute::
+PaaS Manager GE. To execute the unit tests you just need to execute
+
+::
 
     mvn test
 
@@ -254,7 +278,9 @@ end-to-end funtionalities.
 
 - `PaaS Manager Aceptance Tests <https://github.com/telefonicaid/fiware-paas/tree/develop/test>`_
 
-To execute the acceptance tests, go to the test/acceptance folder of the project and run::
+To execute the acceptance tests, go to the test/acceptance folder of the project and run
+
+::
 
   lettuce_tools --tags=-skip.
 
@@ -265,16 +291,20 @@ End to End testing
 Although one End to End testing must be associated to the Integration Test, we can show
 here a quick testing to check that everything is up and running. It involves to obtain
 the product information storaged in the catalogue. With it, we test that the service
-is running and the database configure correctly::
+is running and the database configure correctly
+
+::
 
    https://{PaaS Manager\_IP}:{port}/paasmanager/rest
 
-The request to test it in the testbed should be::
+The request to test it in the testbed should be
 
-  curl -v -k -H 'Access-Control-Request-Method: GET' -H 'Content-Type: application xml'
-  -H 'Accept: application/xml' -H 'X-Auth-Token: 5d035c3a29be41e0b7007383bdbbec57'
-  -H 'Tenant-Id: 60b4125450fc4a109f50357894ba2e28'
-  -X GET 'https://localhost:8443/paasmanager/rest/catalog/org/FIWARE/environment'
+::
+
+    curl -v -k -H 'Access-Control-Request-Method: GET' -H 'Content-Type: application xml'
+    -H 'Accept: application/xml' -H 'X-Auth-Token: 5d035c3a29be41e0b7007383bdbbec57'
+    -H 'Tenant-Id: 60b4125450fc4a109f50357894ba2e28'
+    -X GET 'https://localhost:8443/paasmanager/rest/catalog/org/FIWARE/environment'
 
 the option -k should be included in the case you have not changed the security configuration of PaaS Manager. The result should be the product catalog.
 

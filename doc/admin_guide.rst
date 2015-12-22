@@ -25,7 +25,7 @@ Installation from script
 
 The installation of fiware-paas can be done in the easiest way by executing the script
 
-.. code ::
+::
 
      scripts/bootstrap/centos.sh
 
@@ -34,19 +34,19 @@ that is in the github repository of the project.
 In order to perform the installation via script, git should be installed (yum install git). 
 Just clone the github repository:
 
-.. code ::
+::
 
      git clone https://github.com/telefonicaid/fiware-paas
 
 and go to the folder
 
-.. code ::
+::
 
      cd fiware-paas/scripts/bootstrap
 
 Assign the corresponding permissions to the script centos.sh and execute under root user
 
-.. code ::
+::
 
      ./centos.sh
      
@@ -70,13 +70,13 @@ Requirements: Install PostgreSQL
 --------------------------------
 The first thing is to install and configure the requirements, in this case, the postgresql
 
- .. code::
- 
+::
+
    yum install postgresql postgresql-server postgresql-contrib
 
 Type the following commands to install the postgresql as service and start it
 
-.. code::
+::
 
     chkconfig --add postgresql
     chkconfig postgresql on
@@ -90,8 +90,8 @@ Install PaaS Manager from RPM
 The PaaS Manager is packaged as RPM and stored in the rpm repository. Thus, the first thing to do is to create a file 
 in /etc/yum.repos.d/fiware.repo, with the following content.
 
- .. code::
- 
+::
+
 	[Fiware]
 	name=FIWARE repository
 	baseurl=http://repositories.testbed.fi-ware.eu/repo/rpm/x86_64/
@@ -100,13 +100,13 @@ in /etc/yum.repos.d/fiware.repo, with the following content.
     
 After that, you can install the PaaS Manager just doing:
 
-.. code::
+::
 
 	yum install fiware-paas
 
 or specifying the version
 
-.. code::
+::
 
 	yum install fiware-paas-{version}-1.noarch
 
@@ -128,19 +128,19 @@ please refer to the official site:
 
 Install git
 
-.. code::
+::
 
    sudo yum install git
 
 Install java 1.7
 
-.. code::
+::
 
    sudo yum install java-1.7.0-openjdk-devel
 
 Install maven 2.5
 
-.. code::
+::
 
 	sudo yum install wget
 	wget http://mirrors.gigenet.com/apache/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.tar.gz
@@ -150,7 +150,7 @@ Install maven 2.5
 
 Add the following lines to the file /etc/profile.d/maven.sh
 
-.. code::
+::
 
 	# Add the following lines to maven.sh
 	export M2_HOME=/usr/local/maven
@@ -160,7 +160,7 @@ Add the following lines to the file /etc/profile.d/maven.sh
 In order to check that your maven installation is OK, you shluld exit your current session with "exit" command, enter again
 and type
 
-.. code::
+::
 
 	mvn -version
 
@@ -172,47 +172,47 @@ The PaaS Manager is a maven application so, we should follow following instructi
 
 - Download PaaS Manager code from github
 
-.. code::
+::
 
    git clone -b develop https://github.com/telefonicaid/fiware-paas
 
 - Go to fiware-paas folder and compile, launch test and build all modules
 
-.. code::
-	
+::
+
     cd fiware-paas/
     mvn clean install
    
 - Create a zip with distribution in target/paas-manager-server-dist.zip
 
-.. code::
+::
 
    mvn assembly:assembly -DskipTests
 
 - You can generate a rpm o debian packages (using profiles in pom)   for debian/ubuntu:
 
-.. code::
+::
 
    mvn install -Pdebian -DskipTests
         (created target/paas-manager-server-XXXXX.deb)
 
 - for centOS (you need to have installed rpm-bluid. If not, please type "yum install rpm-build" )
 
-.. code::
+::
 
     mvn install -Prpm -DskipTests
         (created target/rpm/paasmanager/RPMS/noarch/paasmanager-XXXX.noarch.rpm)
 
 Finally go to the folder where the rpm has been created (target/rpm/fiware-paas/RPMS/noarch) and execute
 
-.. code::
+::
 
 	cd target/rpm/fiware-paas/RPMS/noarch
 	rpm -i <rpm-name>.rpm
 	
 Please, be aware  that the supported installation method is the RPM package. If you use other method, some extra steps may be required. For example you would need to generate manually the certificate (See the section about "Configuring the HTTPS certificate" for more information):
 
-.. code::
+::
 
    fiware-paas/bin/generateselfsigned.sh
 
@@ -223,7 +223,7 @@ Configuring the database
 We need to create the paasmanager database. To do that we need to connect as postgres user to the PostgreSQL
 server and set the password for user postgres using alter user as below:
 
-.. code::
+::
 
     su - postgres
     postgres$ psql postgres postgres;
@@ -237,7 +237,7 @@ server and set the password for user postgres using alter user as below:
 
 Edit file /var/lib/pgsql/data/pg_hba.conf and set authentication method to md5:
 
-.. code::
+::
 
     # TYPE  DATABASE    USER        CIDR-ADDRESS          METHOD
       "local" is for Unix domain socket connections only
@@ -248,19 +248,19 @@ Edit file /var/lib/pgsql/data/pg_hba.conf and set authentication method to md5:
     
 Edit file /var/lib/pgsql/data/postgresql.conf and set listen addresses to 0.0.0.0:
 
-.. code::
+::
 
      listen_addresses = '0.0.0.0'
     
 Reload configuration
 
-.. code::
+::
 
      service postgresql reload
  
 To create the tables in the databases, just go to 
 
-.. code::
+::
 
     su - potgres
     cd /opt/fiware-paas/resources
@@ -272,7 +272,7 @@ To create the tables in the databases, just go to
 
 Update the following columns in the table configuration_properties:
 
-.. code::
+::
 
 	 openstack-tcloud.keystone.url=<keystone.url>
 	 paas_manager_url=https://{ip}:8443/paasmanager/rest
@@ -284,7 +284,7 @@ Update the following columns in the table configuration_properties:
 where the values between bracket <> should be found out depending on the openstack installation.
 The updates of the columns are done in the following way
 
-.. code::
+::
 
     su - potgres
     postgres$ psql -U postgres -d paasmanager
@@ -308,7 +308,7 @@ Once the prerequisites are satisfied, you shall modify the context file at  /opt
 
 See the snipet bellow to know how it works:
 
-.. code::
+::
 
     <New id="paasmanager" class="org.eclipse.jetty.plus.jndi.Resource">
        <Arg>jdbc/paasmanager</Arg>
@@ -330,7 +330,7 @@ Configuring the PaaS Manager as service
 Once we have installed and configured the PaaS Manager, the next step is to configure it as a service. To do that just create a file in /etc/init.d/fiware-paas
 with the following content
 
-.. code::
+::
 
     #!/bin/bash
     # chkconfig: 2345 20 80
@@ -364,7 +364,7 @@ with the following content
 
 Now you need to execute:
 
-.. code::
+::
 
     chkconfig --add fiware-paas
     chkconfig fiware-paas on
@@ -384,7 +384,7 @@ The IP used in the certificate should be the public IP (i.e. the floating IP). T
 
 If you need to regenerate a self-signed certificate with a different IP address (or better, a convenient configured hostname), please run:
 
-.. code::
+::
 
     /opt/fiware-paas/bin/generateselfsigned.sh myhost.mydomain.org
 
@@ -409,7 +409,7 @@ This solution implies:
 
 It's possible that you already have a wild certificate securing your portal, but Apache server uses a different file format. A tool is provided to import a wildcard certificate, a private key and a chain of certificates, into /etc/keystorejetty:
 
-.. code::
+::
 
     # usually, on an Apache installation, the certificate files are at /etc/ssl/private
     /opt/fiware-paas/bin/importcert.sh key.pem cert.crt chain.crt
@@ -432,18 +432,18 @@ End to End testing
 ------------------
 Although one End to End testing must be associated to the Integration Test, we can show here a quick testing to check that everything is up and running. It involves to obtain the product information storaged in the catalogue. With it, we test that the service is running and the database configure correctly.
 
-.. code ::
+::
 
     http://{PaaSManagerIP}:{port}/paasmanager/rest
 
 The request to test it in the testbed should be
 
- .. code::
+ ::
 
-     curl -v -k -H 'Access-Control-Request-Method: GET' -H 'Content-Type: application xml' 
-	 -H 'Accept: application/xml' -H 'X-Auth-Token: 5d035c3a29be41e0b7007383bdbbec57' 
-	 -H 'Tenant-Id: 60b4125450fc4a109f50357894ba2e28' 
-	 -X GET 'https://{PaaSManagerIP}:8443/paasmanager/rest/catalog/org/FIWARE/environment'
+     curl -v -k -H 'Access-Control-Request-Method: GET' -H 'Content-Type: application xml'
+     -H 'Accept: application/xml' -H 'X-Auth-Token: 5d035c3a29be41e0b7007383bdbbec57'
+     -H 'Tenant-Id: 60b4125450fc4a109f50357894ba2e28'
+     -X GET 'https://{PaaSManagerIP}:8443/paasmanager/rest/catalog/org/FIWARE/environment'
 
 the option -k should be included in the case you have not changed the security configuration of PaaS Manager.
 
@@ -453,13 +453,13 @@ List of Running Processes
 -------------------------
 Due to the PaaS Manager basically is running over the Tomcat, the list of processes must be only the Jetty and PostgreSQL. If we execute the following command:
 
-.. code::
+::
 
      ps -ewF | grep 'postgres\|jetty' | grep -v grep
 
 It should show something similar to the following:
 
-.. code::
+::
 
    postgres  1327     1  0 58141  9256   0 08:26 ?        00:00:00 /usr/bin/postgres -D /var/lib/pgsql/
    data -p 5432
@@ -485,14 +485,14 @@ Network interfaces Up & Open
 ----------------------------
 Taking into account the results of the ps commands in the previous section, we take the PID in order to know the information about the network interfaces up & open. To check the ports in use and listening, execute the command:
   
-.. code::
+::
 
     netstat -p -a | grep $PID
 
 Where $PID is the PID of Java process obtained at the ps command described before, in the previous case 14054 jetty and 1327 (postgresql). 
 The expected results for the postgres process must be something like this output:
 
-.. code::
+::
 
   Active Internet connections
   Proto Recv-Q Send-Q  Local Address          Foreign Address         State       PID/Program name
@@ -524,7 +524,7 @@ The expected results for the postgres process must be something like this output
 
 and the following output for the jetty process:
 
-.. code::
+::
 
   Active Internet connections
   Proto Recv-Q Send-Q  Local Address          Foreign Address         State       PID/Program name
@@ -541,13 +541,13 @@ Databases
 ---------
 The last step in the sanity check, once that we have identified the processes and ports is to check the different databases that have to be up and accept queries. Fort he first one, if we execute the following commands:
 
-.. code::
+::
 
     psql -U postgres -d paasmanager
 
 For obtaining the tables in the database, just use
 
-.. code::
+::
 
     paasmanager=# \dt
 
