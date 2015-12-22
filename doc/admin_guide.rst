@@ -619,6 +619,7 @@ The results were obtained with a top command execution over the following machin
       -  CentOS 6.3
 
 
+
 The results of requirements both RAM, CPU and I/O to HDD is shown in the following table:
 
 .. list-table:: Resource Consumption

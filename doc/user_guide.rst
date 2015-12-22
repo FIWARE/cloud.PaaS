@@ -236,7 +236,7 @@ This operation obtains a response with the following format:
  		</tierDto>
 	</tierDtoes>
 
-**Get a particular Tier associated to a Abstract Environment**
+**Get a particular Tier associated to an Abstract Environment**
 
 Source code::
 
@@ -264,7 +264,7 @@ This operation obtains a response with the following format:
  		</productReleaseDtos>
 		<icono>
 		  http://blog.theinit.com/wp-content/uploads/2012/03/bc358_MongoDB.png
-        </icono>
+		</icono>
 		<securityGroup />
 		<keypair />
 		<floatingip>false</floatingip>
@@ -509,7 +509,7 @@ This operation obtains a response with the following format:
 				<version>2.2.3</version>
  			</productReleaseDtos>
 			<icono>
-			    http://blog.theinit.com/wp-content/uploads/2012/03/bc358_MongoDB.png
+			  http://blog.theinit.com/wp-content/uploads/2012/03/bc358_MongoDB.png
 			</icono>
 			<securityGroup />
 			<keypair />
