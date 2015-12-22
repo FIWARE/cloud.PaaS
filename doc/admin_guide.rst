@@ -140,17 +140,19 @@ Install java 1.7
 
 Install maven 2.5
 
-::
+Source code::
 
 	sudo yum install wget
-	wget http://mirrors.gigenet.com/apache/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.tar.gz
+	wget http://mirrors.gigenet.com/apache/maven/maven-3/3.2.5/binaries
+	/apache-maven-3.2.5-bin.tar.gz
+
 	su -c "tar -zxvf apache-maven-3.2.5-bin.tar.gz -C /usr/local"
 	cd /usr/local
 	sudo ln -s apache-maven-3.2.5 maven
 
 Add the following lines to the file /etc/profile.d/maven.sh
 
-::
+Source code::
 
 	# Add the following lines to maven.sh
 	export M2_HOME=/usr/local/maven
@@ -160,7 +162,7 @@ Add the following lines to the file /etc/profile.d/maven.sh
 In order to check that your maven installation is OK, you shluld exit your current session with "exit" command, enter again
 and type
 
-::
+Source code::
 
 	mvn -version
 
@@ -172,47 +174,47 @@ The PaaS Manager is a maven application so, we should follow following instructi
 
 - Download PaaS Manager code from github
 
-::
+Source code::
 
    git clone -b develop https://github.com/telefonicaid/fiware-paas
 
 - Go to fiware-paas folder and compile, launch test and build all modules
 
-::
+Source code::
 
     cd fiware-paas/
     mvn clean install
    
 - Create a zip with distribution in target/paas-manager-server-dist.zip
 
-::
+Source code::
 
    mvn assembly:assembly -DskipTests
 
 - You can generate a rpm o debian packages (using profiles in pom)   for debian/ubuntu:
 
-::
+Source code::
 
    mvn install -Pdebian -DskipTests
         (created target/paas-manager-server-XXXXX.deb)
 
 - for centOS (you need to have installed rpm-bluid. If not, please type "yum install rpm-build" )
 
-::
+Source code::
 
     mvn install -Prpm -DskipTests
         (created target/rpm/paasmanager/RPMS/noarch/paasmanager-XXXX.noarch.rpm)
 
 Finally go to the folder where the rpm has been created (target/rpm/fiware-paas/RPMS/noarch) and execute
 
-::
+Source code::
 
 	cd target/rpm/fiware-paas/RPMS/noarch
 	rpm -i <rpm-name>.rpm
 	
 Please, be aware  that the supported installation method is the RPM package. If you use other method, some extra steps may be required. For example you would need to generate manually the certificate (See the section about "Configuring the HTTPS certificate" for more information):
 
-::
+Source code::
 
    fiware-paas/bin/generateselfsigned.sh
 
@@ -223,7 +225,7 @@ Configuring the database
 We need to create the paasmanager database. To do that we need to connect as postgres user to the PostgreSQL
 server and set the password for user postgres using alter user as below:
 
-::
+Source code::
 
     su - postgres
     postgres$ psql postgres postgres;
@@ -237,7 +239,7 @@ server and set the password for user postgres using alter user as below:
 
 Edit file /var/lib/pgsql/data/pg_hba.conf and set authentication method to md5:
 
-::
+Source code::
 
     # TYPE  DATABASE    USER        CIDR-ADDRESS          METHOD
       "local" is for Unix domain socket connections only
@@ -248,19 +250,19 @@ Edit file /var/lib/pgsql/data/pg_hba.conf and set authentication method to md5:
     
 Edit file /var/lib/pgsql/data/postgresql.conf and set listen addresses to 0.0.0.0:
 
-::
+Source code::
 
      listen_addresses = '0.0.0.0'
     
 Reload configuration
 
-::
+Source code::
 
      service postgresql reload
  
 To create the tables in the databases, just go to 
 
-::
+Source code::
 
     su - potgres
     cd /opt/fiware-paas/resources
@@ -272,7 +274,7 @@ To create the tables in the databases, just go to
 
 Update the following columns in the table configuration_properties:
 
-::
+Source code::
 
 	 openstack-tcloud.keystone.url=<keystone.url>
 	 paas_manager_url=https://{ip}:8443/paasmanager/rest
@@ -284,19 +286,25 @@ Update the following columns in the table configuration_properties:
 where the values between bracket <> should be found out depending on the openstack installation.
 The updates of the columns are done in the following way
 
-::
+Source code::
 
     su - potgres
+
     postgres$ psql -U postgres -d paasmanager
     Password for user postgres: <postgres-password-previously-chosen>
-    postgres=# UPDATE configuration_properties SET value='/opt/fiware-paas/resources/userdata'
-    where key='user_data_path';
+
+    postgres=# UPDATE configuration_properties SET
+    value='/opt/fiware-paas/resources/userdata' where key='user_data_path';
+
     postgres=# UPDATE configuration_properties SET value='<the value>'
     where key='paas_manager_url';
+
     postgres=# UPDATE configuration_properties SET value='<the value>'
     where key='openstack-tcloud.keystone.user';
+
     postgres=# UPDATE configuration_properties SET value='<the value>'
     where key='openstack-tcloud.keystone.pass';
+
     postgres=# UPDATE configuration_properties SET value='<the value>'
     where key='openstack-tcloud.keystone.tenant';
     
@@ -308,7 +316,7 @@ Once the prerequisites are satisfied, you shall modify the context file at  /opt
 
 See the snipet bellow to know how it works:
 
-::
+.. code:: xml
 
     <New id="paasmanager" class="org.eclipse.jetty.plus.jndi.Resource">
        <Arg>jdbc/paasmanager</Arg>
@@ -316,11 +324,10 @@ See the snipet bellow to know how it works:
            <New class="org.postgresql.ds.PGSimpleDataSource">
                <Set name="User"> {database user} </Set>
                <Set name="Password"> {database password} </Set>
-               <Set name="DatabaseName"> {database name}   </Set>
+               <Set name="DatabaseName"> {database name} </Set>
                <Set name="ServerName"> {IP database hostname - localhost default} </Set>
-               <Set name="PortNumber"> {port database - 5432 default}</Set>
+               <Set name="PortNumber"> {port database - 5432 default} </Set>
            </New>
-
        </Arg>
     </New>
 
@@ -330,7 +337,7 @@ Configuring the PaaS Manager as service
 Once we have installed and configured the PaaS Manager, the next step is to configure it as a service. To do that just create a file in /etc/init.d/fiware-paas
 with the following content
 
-::
+Source code::
 
     #!/bin/bash
     # chkconfig: 2345 20 80
@@ -364,7 +371,7 @@ with the following content
 
 Now you need to execute:
 
-::
+Source code::
 
     chkconfig --add fiware-paas
     chkconfig fiware-paas on
@@ -384,7 +391,7 @@ The IP used in the certificate should be the public IP (i.e. the floating IP). T
 
 If you need to regenerate a self-signed certificate with a different IP address (or better, a convenient configured hostname), please run:
 
-::
+Source code::
 
     /opt/fiware-paas/bin/generateselfsigned.sh myhost.mydomain.org
 
@@ -409,7 +416,7 @@ This solution implies:
 
 It's possible that you already have a wild certificate securing your portal, but Apache server uses a different file format. A tool is provided to import a wildcard certificate, a private key and a chain of certificates, into /etc/keystorejetty:
 
-::
+Source code::
 
     # usually, on an Apache installation, the certificate files are at /etc/ssl/private
     /opt/fiware-paas/bin/importcert.sh key.pem cert.crt chain.crt
@@ -432,18 +439,19 @@ End to End testing
 ------------------
 Although one End to End testing must be associated to the Integration Test, we can show here a quick testing to check that everything is up and running. It involves to obtain the product information storaged in the catalogue. With it, we test that the service is running and the database configure correctly.
 
-::
+Source code::
 
     http://{PaaSManagerIP}:{port}/paasmanager/rest
 
 The request to test it in the testbed should be
 
- ::
+ Source code::
 
-     curl -v -k -H 'Access-Control-Request-Method: GET' -H 'Content-Type: application xml'
+     curl -v -k -H 'Access-Control-Request-Method: GET'
+     -H 'Content-Type: application xml'
      -H 'Accept: application/xml' -H 'X-Auth-Token: 5d035c3a29be41e0b7007383bdbbec57'
-     -H 'Tenant-Id: 60b4125450fc4a109f50357894ba2e28'
-     -X GET 'https://{PaaSManagerIP}:8443/paasmanager/rest/catalog/org/FIWARE/environment'
+     -H 'Tenant-Id: 60b4125450fc4a109f50357894ba2e28' -X GET
+     'https://{PaaSManagerIP}:8443/paasmanager/rest/catalog/org/FIWARE/environment'
 
 the option -k should be included in the case you have not changed the security configuration of PaaS Manager.
 
@@ -453,70 +461,76 @@ List of Running Processes
 -------------------------
 Due to the PaaS Manager basically is running over the Tomcat, the list of processes must be only the Jetty and PostgreSQL. If we execute the following command:
 
-::
+Source code::
 
      ps -ewF | grep 'postgres\|jetty' | grep -v grep
 
 It should show something similar to the following:
 
-::
+Source code::
 
-   postgres  1327     1  0 58141  9256   0 08:26 ?        00:00:00 /usr/bin/postgres -D /var/lib/pgsql/
-   data -p 5432
-   postgres  1328  1327  0 48078  1696   0 08:26 ?        00:00:00 postgres: logger process
-   postgres  1330  1327  0 58166  3980   0 08:26 ?        00:00:00 postgres: checkpointer process
-   postgres  1331  1327  0 58141  2068   0 08:26 ?        00:00:00 postgres: writer process
-   postgres  1332  1327  0 58141  1808   0 08:26 ?        00:00:00 postgres: wal writer process
-   postgres  1333  1327  0 58349  3172   0 08:26 ?        00:00:00 postgres: autovacuum launcher process
-   postgres  1334  1327  0 48110  2052   0 08:26 ?        00:00:00 postgres: stats collector process
-   root     14054     1  4 598402 811464 0 09:35 ?        00:00:22 java -Xmx1024m -Xms1024m
-   -Djetty.state=/opt/fiware-paas/jetty.state -Djetty.home=/opt/fiware-paas
+   postgres  1327     1  0 58141  9256   0 08:26 ?        00:00:00 /usr/bin/postgres
+   -D /var/lib/pgsql/data -p 5432
+   postgres  1328  1327  0 48078  1696   0 08:26 ?        00:00:00 postgres:
+   logger process
+   postgres  1330  1327  0 58166  3980   0 08:26 ?        00:00:00 postgres:
+   checkpointer process
+   postgres  1331  1327  0 58141  2068   0 08:26 ?        00:00:00 postgres:
+   writer process
+   postgres  1332  1327  0 58141  1808   0 08:26 ?        00:00:00 postgres:
+   wal writer process
+   postgres  1333  1327  0 58349  3172   0 08:26 ?        00:00:00 postgres:
+   autovacuum launcher process
+   postgres  1334  1327  0 48110  2052   0 08:26 ?        00:00:00 postgres:
+   stats collector process
+   root     14054     1  4 598402 811464 0 09:35 ?        00:00:22 java -Xmx1024m
+   -Xms1024m -Djetty.state=/opt/fiware-paas/jetty.state -Djetty.home=/opt/fiware-paas
    -Djetty.base=/opt/fiware-paas -Djava.io.tmpdir=/tmp -jar /opt/fiware-paas/start.jar
    jetty-logging.xml jetty-started.xml
-   postgres 14114  1327  0 58414  3956   0 09:36 ?        00:00:00 postgres: postgres paasmanager
-   127.0.0.1(48012) idle
-   postgres 14117  1327  0 58449  3772   0 09:36 ?        00:00:00 postgres: postgres paasmanager
-   127.0.0.1(48013) idle
-   postgres 14118  1327  0 58449  3776   0 09:36 ?        00:00:00 postgres: postgres paasmanager
-   127.0.0.1(48014) idle
+   postgres 14114  1327  0 58414  3956   0 09:36 ?        00:00:00 postgres:
+   postgres paasmanager 127.0.0.1(48012) idle
+   postgres 14117  1327  0 58449  3772   0 09:36 ?        00:00:00 postgres:
+   postgres paasmanager 127.0.0.1(48013) idle
+   postgres 14118  1327  0 58449  3776   0 09:36 ?        00:00:00 postgres:
+   postgres paasmanager 127.0.0.1(48014) idle
 
 
 Network interfaces Up & Open
 ----------------------------
 Taking into account the results of the ps commands in the previous section, we take the PID in order to know the information about the network interfaces up & open. To check the ports in use and listening, execute the command:
   
-::
+Source code::
 
     netstat -p -a | grep $PID
 
 Where $PID is the PID of Java process obtained at the ps command described before, in the previous case 14054 jetty and 1327 (postgresql). 
 The expected results for the postgres process must be something like this output:
 
-::
+Source code::
 
   Active Internet connections
-  Proto Recv-Q Send-Q  Local Address          Foreign Address         State       PID/Program name
-  tcp6       0      0 [::]:pcsync-https       [::]:*                  LISTEN      14054/java
-  tcp6       0      0 localhost:48017         localhost:postgres      ESTABLISHED 14054/java
-  tcp6       0      0 localhost:48015         localhost:postgres      ESTABLISHED 14054/java
-  tcp6       0      0 localhost:48027         localhost:postgres      ESTABLISHED 14054/java
-  tcp6       0      0 localhost:48016         localhost:postgres      ESTABLISHED 14054/java
-  tcp6       0      0 localhost:48022         localhost:postgres      ESTABLISHED 14054/java
-  tcp6       0      0 localhost:48023         localhost:postgres      ESTABLISHED 14054/java
-  tcp6       0      0 localhost:48029         localhost:postgres      ESTABLISHED 14054/java
-  tcp6       0      0 localhost:48013         localhost:postgres      ESTABLISHED 14054/java
-  tcp6       0      0 localhost:48012         localhost:postgres      ESTABLISHED 14054/java
-  tcp6       0      0 localhost:48019         localhost:postgres      ESTABLISHED 14054/java
-  tcp6       0      0 localhost:48028         localhost:postgres      ESTABLISHED 14054/java
-  tcp6       0      0 localhost:48014         localhost:postgres      ESTABLISHED 14054/java
-  tcp6       0      0 localhost:48020         localhost:postgres      ESTABLISHED 14054/java
-  tcp6       0      0 localhost:48024         localhost:postgres      ESTABLISHED 14054/java
-  tcp6       0      0 localhost:48031         localhost:postgres      ESTABLISHED 14054/java
-  tcp6       0      0 localhost:48021         localhost:postgres      ESTABLISHED 14054/java
-  tcp6       0      0 localhost:48018         localhost:postgres      ESTABLISHED 14054/java
-  tcp6       0      0 localhost:48026         localhost:postgres      ESTABLISHED 14054/java
-  tcp6       0      0 localhost:48030         localhost:postgres      ESTABLISHED 14054/java
-  tcp6       0      0 localhost:48025         localhost:postgres      ESTABLISHED 14054/java
+  Proto Recv-Q Send-Q  Local Address     Foreign Address      State     PID/Program name
+  tcp6       0      0 [::]:pcsync-https  [::]:*               LISTEN        14054/java
+  tcp6       0      0 localhost:48017    localhost:postgres   ESTABLISHED   14054/java
+  tcp6       0      0 localhost:48015    localhost:postgres   ESTABLISHED   14054/java
+  tcp6       0      0 localhost:48027    localhost:postgres   ESTABLISHED   14054/java
+  tcp6       0      0 localhost:48016    localhost:postgres   ESTABLISHED   14054/java
+  tcp6       0      0 localhost:48022    localhost:postgres   ESTABLISHED   14054/java
+  tcp6       0      0 localhost:48023    localhost:postgres   ESTABLISHED   14054/java
+  tcp6       0      0 localhost:48029    localhost:postgres   ESTABLISHED   14054/java
+  tcp6       0      0 localhost:48013    localhost:postgres   ESTABLISHED   14054/java
+  tcp6       0      0 localhost:48012    localhost:postgres   ESTABLISHED   14054/java
+  tcp6       0      0 localhost:48019    localhost:postgres   ESTABLISHED   14054/java
+  tcp6       0      0 localhost:48028    localhost:postgres   ESTABLISHED   14054/java
+  tcp6       0      0 localhost:48014    localhost:postgres   ESTABLISHED   14054/java
+  tcp6       0      0 localhost:48020    localhost:postgres   ESTABLISHED   14054/java
+  tcp6       0      0 localhost:48024    localhost:postgres   ESTABLISHED   14054/java
+  tcp6       0      0 localhost:48031    localhost:postgres   ESTABLISHED   14054/java
+  tcp6       0      0 localhost:48021    localhost:postgres   ESTABLISHED   14054/java
+  tcp6       0      0 localhost:48018    localhost:postgres   ESTABLISHED   14054/java
+  tcp6       0      0 localhost:48026    localhost:postgres   ESTABLISHED   14054/java
+  tcp6       0      0 localhost:48030    localhost:postgres   ESTABLISHED   14054/java
+  tcp6       0      0 localhost:48025    localhost:postgres   ESTABLISHED   14054/java
   Active UNIX domain sockets (servers and established)
   Proto RefCnt Flags       Type       State         I-Node   Path
   unix  2      [ ]         STREAM     CONNECTED     71542    14054/java
@@ -524,30 +538,31 @@ The expected results for the postgres process must be something like this output
 
 and the following output for the jetty process:
 
-::
+Source code::
 
   Active Internet connections
-  Proto Recv-Q Send-Q  Local Address          Foreign Address         State       PID/Program name
-  tcp        0      0 localhost:postgres      0.0.0.0:*               LISTEN      1327/postgres
-  tcp6       0      0 localhost:postgres      [::]:*                  LISTEN      1327/postgres
-  udp6       0      0 localhost:53966         localhost:53966         ESTABLISHED 1327/postgres
+  Proto Recv-Q Send-Q  Local Address       Foreign Address   State     PID/Program name
+  tcp        0      0 localhost:postgres   0.0.0.0:*         LISTEN      1327/postgres
+  tcp6       0      0 localhost:postgres   [::]:*            LISTEN      1327/postgres
+  udp6       0      0 localhost:53966      localhost:53966   ESTABLISHED 1327/postgres
   Active UNIX domain sockets (servers and established)
   Proto RefCnt Flags       Type       State         I-Node   Path
-  unix  2      [ ACC ]     STREAM     LISTENING     19508    1327/postgres        /tmp/.s.PGSQL.5432
-  unix  2      [ ACC ]     STREAM     LISTENING     19506    1327/postgres        /var/run/postgresql
-  /.s.PGSQL.5432
+  unix  2      [ ACC ]     STREAM     LISTENING     19508    1327/postgres
+  /tmp/.s.PGSQL.5432
+  unix  2      [ ACC ]     STREAM     LISTENING     19506    1327/postgres
+  /var/run/postgresql/.s.PGSQL.5432
 
 Databases
 ---------
 The last step in the sanity check, once that we have identified the processes and ports is to check the different databases that have to be up and accept queries. Fort he first one, if we execute the following commands:
 
-::
+Source code::
 
     psql -U postgres -d paasmanager
 
 For obtaining the tables in the database, just use
 
-::
+Source code::
 
     paasmanager=# \dt
 
@@ -602,6 +617,7 @@ The results were obtained with a top command execution over the following machin
       -  9,25GB
    *  -  Operating System
       -  CentOS 6.3
+
 
 
 The results of requirements both RAM, CPU and I/O to HDD is shown in the following table:
