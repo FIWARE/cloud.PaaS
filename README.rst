@@ -235,7 +235,7 @@ on top of it.
 
 For instance, it is possible to obtain the template list in the catalogue
 
-.. code:: bash shell script
+Source code::
 
   $ curl -v -H "Content-Type: application/json" -H "Accept: application/xml"
   -H "X-Auth-Token: your-token-id" -H "Tenant-Id: your-tenant-id" -X GET
