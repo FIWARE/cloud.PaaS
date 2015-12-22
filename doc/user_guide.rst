@@ -226,8 +226,8 @@ This operation obtains a response with the following format:
 				<version>2.2.3</version>
  			</productReleaseDtos>
 			<icono>
-			    http://blog.theinit.com/wp-content/uploads/2012/03/bc358_MongoDB.png
-            </icono>
+			   http://blog.theinit.com/wp-content/uploads/2012/03/bc358_MongoDB.png
+			</icono>
 			<securityGroup />
 			<keypair />
 			<floatingip>false</floatingip>
@@ -263,7 +263,7 @@ This operation obtains a response with the following format:
 			<version>2.2.3</version>
  		</productReleaseDtos>
 		<icono>
-		    http://blog.theinit.com/wp-content/uploads/2012/03/bc358_MongoDB.png
+		  http://blog.theinit.com/wp-content/uploads/2012/03/bc358_MongoDB.png
         </icono>
 		<securityGroup />
 		<keypair />

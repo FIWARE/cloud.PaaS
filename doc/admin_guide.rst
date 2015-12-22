@@ -328,7 +328,6 @@ See the snipet bellow to know how it works:
                <Set name="ServerName"> {IP database hostname - localhost default} </Set>
                <Set name="PortNumber"> {port database - 5432 default} </Set>
            </New>
-
        </Arg>
     </New>
 
