@@ -215,8 +215,9 @@ on top of it.
 
 For instance, it is possible to obtain the template list in the catalogue::
 
-  $ curl -v -H "Content-Type: application/json" -H "Accept: application/xml" -H "X-Auth-Token: your-token-id" -H "Tenant-Id: your-tenant-id"
-    -X GET "https://pegasus.lab.fi-ware.org:8443/paasmanager/rest/catalog/org/FIWARE/environment"
+  $ curl -v -H "Content-Type: application/json" -H "Accept: application/xml"
+  -H "X-Auth-Token: your-token-id" -H "Tenant-Id: your-tenant-id"
+  -X GET "https://pegasus.lab.fi-ware.org:8443/paasmanager/rest/catalog/org/FIWARE/environment"
 
 Please have a look at the API Reference Documentation section bellow and at the programmer guide.
 
@@ -270,8 +271,9 @@ is running and the database configure correctly::
 
 The request to test it in the testbed should be::
 
-  curl -v -k -H 'Access-Control-Request-Method: GET' -H 'Content-Type: application xml' -H 'Accept: application/xml'
-  -H 'X-Auth-Token: 5d035c3a29be41e0b7007383bdbbec57' -H 'Tenant-Id: 60b4125450fc4a109f50357894ba2e28'
+  curl -v -k -H 'Access-Control-Request-Method: GET' -H 'Content-Type: application xml'
+  -H 'Accept: application/xml' -H 'X-Auth-Token: 5d035c3a29be41e0b7007383bdbbec57'
+  -H 'Tenant-Id: 60b4125450fc4a109f50357894ba2e28'
   -X GET 'https://localhost:8443/paasmanager/rest/catalog/org/FIWARE/environment'
 
 the option -k should be included in the case you have not changed the security configuration of PaaS Manager. The result should be the product catalog.
