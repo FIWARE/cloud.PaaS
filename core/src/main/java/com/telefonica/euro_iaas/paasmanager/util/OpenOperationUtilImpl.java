@@ -395,6 +395,9 @@ public class OpenOperationUtilImpl implements OpenOperationUtil {
         HttpUriRequest request;
 
         String supportUrl = openStackRegion.getSupportEndPoint();
+        if (!supportUrl.contains("v1")) {
+            supportUrl = supportUrl + "/v1/";
+        }
         log.debug("supportUrl for region " + supportUrl);
         request = new HttpGet(supportUrl + resource);
 
