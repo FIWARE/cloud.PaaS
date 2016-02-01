@@ -50,7 +50,7 @@ public class SupportServerUtilsImpl implements SupportServerUtils {
     public String getKey (String regionName, String key) {
         String sshKey = null;
         try {
-            HttpUriRequest request = openOperationUtil.createSupportGetRequest("/v1/support/"+ regionName +
+            HttpUriRequest request = openOperationUtil.createSupportGetRequest("/support/"+ regionName +
                 "/" + key, "text/plain");
             sshKey = openOperationUtil.executeSupportRequest(request);
         } catch (OpenStackException e) {
