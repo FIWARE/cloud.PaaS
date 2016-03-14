@@ -3,7 +3,7 @@
 FIWARE PaaS Manager | Pegasus
 =============================
 
-| |Build Status| |Coverage Status| |StackOverflow|
+|Build Status| |Coverage Status| |StackOverflow| |License Badge| |Documentation Badge|
 
 .. contents:: :local:
 
@@ -364,5 +364,9 @@ Top_
    :target: https://travis-ci.org/telefonicaid/fiware-paas
 .. |Coverage Status| image:: https://coveralls.io/repos/telefonicaid/fiware-paas/badge.png?branch=develop
    :target: https://coveralls.io/r/telefonicaid/fiware-paas
-.. |StackOverflow| image:: http://b.repl.ca/v1/help-stackoverflow-orange.png
+.. |StackOverflow| image:: https://img.shields.io/badge/support-sof-yellowgreen.svg
    :target: https://stackoverflow.com/questions/tagged/fiware-pegasus
+.. |License Badge| image:: https://img.shields.io/badge/license-AGPL-blue.svg
+   :target: https://opensource.org/licenses/AGPL-3.0
+.. |Documentation Badge| image:: https://readthedocs.org/projects/fiware-paas/badge/?version=latest
+   :target: http://fiware-paas.readthedocs.org/en/latest/?badge=latest
