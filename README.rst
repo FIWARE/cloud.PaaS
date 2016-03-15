@@ -366,7 +366,7 @@ Top_
    :target: https://coveralls.io/r/telefonicaid/fiware-paas
 .. |StackOverflow| image:: https://img.shields.io/badge/support-sof-yellowgreen.svg
    :target: https://stackoverflow.com/questions/tagged/fiware-pegasus
-.. |License Badge| image:: https://img.shields.io/badge/license-AGPL-blue.svg
-   :target: https://opensource.org/licenses/AGPL-3.0
+.. |License Badge| image:: https://img.shields.io/badge/license-Apache_2.0-blue.svg
+   :target: LICENSE.txt
 .. |Documentation Badge| image:: https://readthedocs.org/projects/fiware-paas/badge/?version=latest
    :target: http://fiware-paas.readthedocs.org/en/latest/?badge=latest
