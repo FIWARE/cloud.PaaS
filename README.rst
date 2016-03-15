@@ -3,7 +3,7 @@
 FIWARE PaaS Manager | Pegasus
 =============================
 
-|Build Status| |Coverage Status| |License Badge| |Documentation Badge| |StackOverflow|
+|License Badge| |Documentation Badge| |StackOverflow| |Build Status| |Coverage Status|
 
 .. contents:: :local:
 
